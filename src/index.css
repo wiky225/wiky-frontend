@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-gray-50 text-wiky-gray;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply px-6 py-3 rounded-lg font-semibold transition-all duration-200 inline-block text-center;
+  }
+  
+  .btn-primary {
+    @apply bg-wiky-blue text-white hover:bg-wiky-blue-dark hover:shadow-lg hover:-translate-y-0.5;
+  }
+  
+  .btn-secondary {
+    @apply bg-wiky-orange text-white hover:bg-wiky-orange-dark hover:shadow-lg hover:-translate-y-0.5;
+  }
+
+  .btn-outline {
+    @apply border-2 border-wiky-blue text-wiky-blue hover:bg-wiky-blue hover:text-white;
+  }
+  
+  .card {
+    @apply bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden;
+  }
+  
+  .input {
+    @apply w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-wiky-blue focus:outline-none transition-colors;
+  }
+
+  .section-title {
+    @apply text-3xl md:text-4xl font-bold text-wiky-blue mb-8 text-center;
+  }
+
+  .container-custom {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+}
+
+@layer utilities {
+  .gradient-wiky {
+    background: linear-gradient(135deg, #253b56 0%, #1a2d43 100%);
+  }
+
+  .gradient-orange {
+    background: linear-gradient(135deg, #ed6d1d 0%, #d45c0f 100%);
+  }
+}
