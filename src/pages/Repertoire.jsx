@@ -1,125 +1,116 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
-function Repertoire() {
-  // Données mockées pour la démo
-  const [conducteurs] = useState([
-    {
-      id: 1,
-      nom: 'Kouadio Jean',
-      age: 32,
-      experience: '5 ans',
-      localisation: 'Cocody',
-      photo: '👨',
-      statut: 'Disponible'
-    },
-    {
-      id: 2,
-      nom: 'Amani Michel',
-      age: 28,
-      experience: '3 ans',
-      localisation: 'Marcory',
-      photo: '👨',
-      statut: 'Disponible'
-    },
-    {
-      id: 3,
-      nom: 'Yao Fabrice',
-      age: 35,
-      experience: '7 ans',
-      localisation: 'Plateau',
-      photo: '👨',
-      statut: 'Disponible'
-    },
-    {
-      id: 4,
-      nom: 'Koné Ibrahim',
-      age: 30,
-      experience: '4 ans',
-      localisation: 'Yopougon',
-      photo: '👨',
-      statut: 'Disponible'
-    }
-  ])
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
-  return (
-    <div className="py-12 bg-wiky-gray-light min-h-screen">
-      <div className="container-custom">
-        {/* Header */}
-        <div className="bg-white rounded-xl shadow-md p-8 mb-8">
-          <h1 className="text-4xl font-bold text-wiky-blue mb-4">Répertoire des Conducteurs</h1>
-          <p className="text-wiky-gray mb-6">Trouvez le conducteur VTC idéal parmi {conducteurs.length} profils vérifiés</p>
-          
-          {/* Filtres */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <input 
-              type="text" 
-              placeholder="Rechercher par nom..." 
-              className="input"
-            />
-            <select className="input">
-              <option>Toutes les localisations</option>
-              <option>Cocody</option>
-              <option>Marcory</option>
-              <option>Plateau</option>
-              <option>Yopougon</option>
-            </select>
-            <select className="input">
-              <option>Toutes les expériences</option>
-              <option>1-3 ans</option>
-              <option>3-5 ans</option>
-              <option>5+ ans</option>
-            </select>
-          </div>
-        </div>
+export default function Repertoire() {
+  const [conducteurs, setConducteurs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-        {/* Grille des conducteurs */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {conducteurs.map(conducteur => (
-            <Link 
-              key={conducteur.id}
-              to={`/profil/${conducteur.id}`}
-              className="card p-6 hover:-translate-y-2 transition-all"
-            >
-              <div className="text-6xl mb-4 text-center">{conducteur.photo}</div>
-              <h3 className="text-xl font-bold text-wiky-blue mb-2 text-center">{conducteur.nom}</h3>
-              <div className="space-y-2 text-sm text-wiky-gray">
-                <div className="flex justify-between">
-                  <span className="font-semibold">Âge:</span>
-                  <span>{conducteur.age} ans</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="font-semibold">Expérience:</span>
-                  <span>{conducteur.experience}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="font-semibold">Zone:</span>
-                  <span>{conducteur.localisation}</span>
-                </div>
-              </div>
-              <div className="mt-4 pt-4 border-t">
-                <span className="inline-block px-3 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full">
-                  {conducteur.statut}
-                </span>
-              </div>
-              <button className="btn btn-primary w-full mt-4">
-                Voir le profil
-              </button>
-            </Link>
-          ))}
-        </div>
+  useEffect(() => {
+    const fetchConducteurs = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(`${API_URL}/api/conducteurs`);
+        
+        if (!response.ok) {
+          throw new Error('Erreur de chargement');
+        }
+        
+        const data = await response.json();
+        setConducteurs(data.data || data);
+        setError(null);
+      } catch (err) {
+        console.error('Erreur:', err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-        {/* Message pour recruteurs */}
-        <div className="mt-12 bg-wiky-blue text-white rounded-xl p-8 text-center">
-          <h2 className="text-2xl font-bold mb-4">Accédez à tous les profils</h2>
-          <p className="mb-6">Abonnez-vous pour contacter les conducteurs et voir leurs informations complètes</p>
-          <Link to="/inscription-recruteur" className="btn bg-wiky-orange hover:bg-wiky-orange-dark">
-            S'abonner - 15.000 FCFA/mois
-          </Link>
+    fetchConducteurs();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-wiky-orange mx-auto mb-4"></div>
+          <p className="text-gray-600">Chargement des conducteurs...</p>
         </div>
       </div>
-    </div>
-  )
-}
+    );
+  }
 
-export default Repertoire
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600 mb-4">Erreur : {error}</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="btn btn-primary"
+          >
+            Réessayer
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <div className="container-custom py-12">
+        <h1 className="section-title text-center mb-12">
+          Trouvez Votre Conducteur VTC Idéal
+        </h1>
+
+        {conducteurs.length === 0 ? (
+          <p className="text-center text-gray-600">Aucun conducteur disponible pour le moment.</p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {conducteurs.map((conducteur) => (
+              <Link 
+                key={conducteur.id} 
+                to={`/conducteur/${conducteur.id}`}
+                className="card hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+              >
+                <div className="w-full h-48 bg-gradient-wiky rounded-t-lg flex items-center justify-center text-white text-6xl">
+                  🚗
+                </div>
+                
+                <div className="p-6">
+                  <h3 className="text-xl font-bold text-wiky-blue mb-2">
+                    {conducteur.prenom} {conducteur.nom}
+                  </h3>
+                  
+                  <div className="space-y-2 text-sm text-gray-600 mb-4">
+                    <p>📍 {conducteur.commune}, {conducteur.quartier}</p>
+                    <p>⏱️ {conducteur.annees_experience} d'expérience</p>
+                    <p>🚕 {conducteur.plateformes_vtc}</p>
+                  </div>
+
+                  {conducteur.description && (
+                    <p className="text-gray-700 text-sm mb-4 line-clamp-2">
+                      {conducteur.description}
+                    </p>
+                  )}
+
+                  <div className="flex justify-between items-center pt-4 border-t">
+                    <span className="text-xs text-gray-500">
+                      👁️ {conducteur.vues_profil || 0} vues
+                    </span>
+                    <span className="text-xs text-gray-500">
+                      ⭐ {conducteur.nb_favoris || 0} favoris
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
