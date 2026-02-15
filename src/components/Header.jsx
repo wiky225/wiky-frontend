@@ -10,7 +10,7 @@ export default function Header() {
             <img 
               src="/assets/wiky-logo.png" 
               alt="Wiky by ATL Cars" 
-              className="h-16"
+              className="h-14"
             />
           </Link>
 
