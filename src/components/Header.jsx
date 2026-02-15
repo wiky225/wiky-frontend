@@ -5,20 +5,12 @@ export default function Header() {
     <header className="bg-white shadow-md sticky top-0 z-50">
       <nav className="container-custom py-4">
         <div className="flex items-center justify-between">
-          {/* Logo - Pictogramme + Texte */}
-          <Link to="/" className="flex items-center space-x-3">
-            {/* Pictogramme - toujours visible sur tous les écrans */}
-            <img 
-              src="/assets/wiky-icon.png" 
-              alt="Wiky" 
-              className="h-10 w-10"
-            />
-            
-            {/* Logo complet avec texte - visible uniquement sur desktop/tablette */}
+          {/* Logo Wiky by ATL Cars uniquement */}
+          <Link to="/" className="flex items-center">
             <img 
               src="/assets/wiky-logo.png" 
               alt="Wiky by ATL Cars" 
-              className="h-8 hidden sm:block"
+              className="h-12"
             />
           </Link>
 
