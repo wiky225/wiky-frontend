@@ -29,7 +29,7 @@ export default function Header() {
               Trouver un Conducteur
             </Link>
             <Link 
-              to="/login" 
+              to="/connexion" 
               className="text-wiky-gray hover:text-wiky-orange transition-colors"
             >
               Connexion

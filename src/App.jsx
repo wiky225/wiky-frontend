@@ -1,3 +1,4 @@
+import ConducteurDetail from './pages/ConducteurDetail';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Header from './components/Header'
 import Footer from './components/Footer'
@@ -18,7 +19,8 @@ function App() {
         <Header />
         <main className="flex-grow">
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/conducteur/:id" element={<ConducteurDetail />} />
+			<Route path="/" element={<Home />} />
             <Route path="/repertoire" element={<Repertoire />} />
             <Route path="/profil/:id" element={<ProfilConducteur />} />
             <Route path="/inscription-conducteur" element={<InscriptionConducteur />} />
