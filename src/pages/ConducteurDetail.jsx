@@ -36,7 +36,6 @@ export default function ConducteurDetail() {
         
         <div className="bg-white rounded-lg shadow-lg p-8">
           <div className="grid md:grid-cols-3 gap-8">
-            {/* Photo */}
             <div className="md:col-span-1">
               <img 
                 src={conducteur.photo_url || `https://ui-avatars.com/api/?name=${conducteur.prenom}+${conducteur.nom}&size=400&background=253b56&color=fff`}
@@ -45,7 +44,6 @@ export default function ConducteurDetail() {
               />
             </div>
 
-            {/* Infos */}
             <div className="md:col-span-2">
               <h1 className="text-3xl font-bold text-wiky-blue mb-2">{conducteur.prenom} {conducteur.nom}</h1>
               <p className="text-xl text-gray-600 mb-6">{conducteur.commune}, {conducteur.quartier}</p>
@@ -91,10 +89,6 @@ export default function ConducteurDetail() {
                   <h3 className="font-semibold text-wiky-blue">📧 Contact</h3>
                   <p>Email: {conducteur.email}</p>
                   <p>Téléphone: {conducteur.telephone}</p>
-                </div>
-
-                <div className="pt-4 text-sm text-gray-500">
-                  👁️ {conducteur.vues_profil || 0} vues
                 </div>
               </div>
 

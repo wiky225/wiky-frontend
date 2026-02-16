@@ -62,8 +62,7 @@ export default function Repertoire() {
                 {conducteur.description && (
                   <p className="text-sm text-gray-700 mt-2 line-clamp-2">{conducteur.description}</p>
                 )}
-                <div className="mt-4 flex justify-between items-center">
-                  <span className="text-xs text-gray-400">👁️ {conducteur.vues_profil || 0} vues</span>
+                <div className="mt-4 flex justify-end">
                   <span className="text-wiky-orange font-semibold">Voir profil →</span>
                 </div>
               </div>
