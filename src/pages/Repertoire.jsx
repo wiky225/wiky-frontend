@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
@@ -7,6 +9,7 @@ export default function Repertoire() {
   const [conducteurs, setConducteurs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const location = useLocation(); 
 
   useEffect(() => {
     const fetchConducteurs = async () => {
@@ -31,6 +34,7 @@ export default function Repertoire() {
 
     fetchConducteurs();
   }, []);
+ }, [location]); 
 
   if (loading) {
     return (
