@@ -11,6 +11,17 @@ import Login from './pages/Login'
 import DashboardConducteur from './pages/DashboardConducteur'
 import DashboardRecruteur from './pages/DashboardRecruteur'
 import Paiement from './pages/Paiement'
+import PrivateRoute from './components/PrivateRoute'
+
+function NotFound() {
+  return (
+    <div className="py-20 text-center min-h-screen bg-wiky-gray-light flex flex-col items-center justify-center">
+      <div className="text-8xl font-bold text-wiky-blue mb-4">404</div>
+      <h1 className="text-2xl font-semibold text-wiky-gray mb-6">Page introuvable</h1>
+      <a href="/" className="btn btn-primary">Retour à l'accueil</a>
+    </div>
+  )
+}
 
 function App() {
   return (
@@ -26,9 +37,10 @@ function App() {
             <Route path="/inscription-conducteur" element={<InscriptionConducteur />} />
             <Route path="/inscription-recruteur" element={<InscriptionRecruteur />} />
             <Route path="/connexion" element={<Login />} />
-            <Route path="/dashboard-conducteur" element={<DashboardConducteur />} />
-            <Route path="/dashboard-recruteur" element={<DashboardRecruteur />} />
+            <Route path="/dashboard-conducteur" element={<PrivateRoute><DashboardConducteur /></PrivateRoute>} />
+            <Route path="/dashboard-recruteur" element={<PrivateRoute><DashboardRecruteur /></PrivateRoute>} />
             <Route path="/paiement" element={<Paiement />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
         <Footer />

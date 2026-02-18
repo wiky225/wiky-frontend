@@ -30,7 +30,7 @@ function Home() {
     {
       icon: '💰',
       title: 'Tarif Transparent',
-      description: 'Abonnement simple à 15.000 FCFA/mois. Accès illimité aux profils pendant 30 jours.',
+      description: 'Abonnement simple à 10.000 FCFA/mois. Accès illimité aux profils pendant 30 jours.',
       badge: null
     }
   ]

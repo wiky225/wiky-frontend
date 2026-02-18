@@ -90,7 +90,7 @@ function ProfilConducteur() {
           <h3 className="text-xl font-bold mb-2">Accédez aux informations complètes</h3>
           <p className="mb-4">Abonnez-vous pour voir tous les détails et contacter les conducteurs</p>
           <Link to="/inscription-recruteur" className="btn bg-white text-wiky-orange hover:bg-gray-100">
-            S'abonner Maintenant - 15.000 FCFA/mois
+            S'abonner Maintenant - 10.000 FCFA/mois
           </Link>
         </div>
       </div>

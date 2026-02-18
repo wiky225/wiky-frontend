@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
@@ -7,13 +7,13 @@ export default function Repertoire() {
   const [conducteurs, setConducteurs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const location = useLocation();
 
   useEffect(() => {
     const fetchConducteurs = async () => {
       try {
         setLoading(true);
         const response = await fetch(`${API_URL}/api/conducteurs`);
+        if (!response.ok) throw new Error(`Erreur serveur : ${response.status}`);
         const data = await response.json();
         setConducteurs(data.data || data);
       } catch (err) {
@@ -23,7 +23,7 @@ export default function Repertoire() {
       }
     };
     fetchConducteurs();
-  }, [location]);
+  }, []);
 
   if (loading) {
     return <div className="container-custom py-20 text-center">Chargement des conducteurs...</div>;
