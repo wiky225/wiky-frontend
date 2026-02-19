@@ -117,7 +117,10 @@ export default function ConducteurDetail() {
         headers: { 'Authorization': `Bearer ${session.access_token}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({ conducteur_id: id, note: noteForm, commentaire: commentaireForm, badges: badgesForm })
       });
-      if (!res.ok) throw new Error('Erreur lors de la soumission');
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error || `Erreur ${res.status}`);
+      }
       const nouvelAvis = await res.json();
       setAvis(prev => [nouvelAvis, ...prev.filter(a => a.id !== nouvelAvis.id)]);
       setAvisSuccess(true);
