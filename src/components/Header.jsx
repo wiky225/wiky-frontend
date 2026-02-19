@@ -50,13 +50,10 @@ export default function Header() {
               </>
             ) : (
               <>
-                <Link to="/connexion" className="text-wiky-gray hover:text-wiky-orange transition-colors">
+                <Link to="/connexion" className="btn btn-outline">
                   Connexion
                 </Link>
-                <Link to="/inscription-recruteur" className="text-wiky-gray hover:text-wiky-orange transition-colors text-sm">
-                  Je recrute
-                </Link>
-                <Link to="/inscription-conducteur" className="btn btn-primary">
+                <Link to="/inscription" className="btn btn-primary">
                   S'inscrire
                 </Link>
               </>
