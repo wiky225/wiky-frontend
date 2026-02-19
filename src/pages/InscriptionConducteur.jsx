@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
@@ -19,9 +19,9 @@ const VILLES_CI = [
 const SITUATIONS = ['Célibataire', 'Fiancé(e)', 'Marié(e)', 'Veuf(ve)'];
 
 export default function InscriptionConducteur() {
-  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
   const [formData, setFormData] = useState({
     nom: '', prenom: '', date_naissance: '', email: '', telephone: '',
     password: '', password_confirm: '',
@@ -85,13 +85,33 @@ export default function InscriptionConducteur() {
         throw new Error(data.error || 'Erreur lors de la création du profil.');
       }
 
-      navigate('/dashboard-conducteur');
+      setSuccess(true);
     } catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
   };
+
+  if (success) {
+    return (
+      <div className="min-h-screen bg-wiky-gray-light flex items-center justify-center py-12">
+        <div className="card p-8 max-w-md text-center">
+          <div className="text-6xl mb-4">✅</div>
+          <h2 className="text-2xl font-bold text-wiky-blue mb-3">Compte créé avec succès !</h2>
+          <p className="text-wiky-gray mb-2">
+            Un email de confirmation a été envoyé à <strong>{formData.email}</strong>.
+          </p>
+          <p className="text-wiky-gray mb-6">
+            Cliquez sur le lien dans l'email pour activer votre compte, puis connectez-vous.
+          </p>
+          <Link to="/connexion" className="btn btn-primary w-full">
+            Aller à la Connexion
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 py-12">

@@ -61,7 +61,7 @@ function Login() {
               />
             </div>
 
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-3">
               <label className="flex items-center gap-2">
                 <input type="checkbox" />
                 <span className="text-sm text-wiky-gray">Se souvenir de moi</span>

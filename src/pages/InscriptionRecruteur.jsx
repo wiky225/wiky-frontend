@@ -1,13 +1,13 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 function InscriptionRecruteur() {
-  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
   const [formData, setFormData] = useState({
     nom_entreprise: '',
     nom_responsable: '',
@@ -70,14 +70,37 @@ function InscriptionRecruteur() {
         throw new Error(data.error || 'Erreur lors de la création du profil.');
       }
 
-      // 3. Rediriger vers le paiement
-      navigate('/paiement');
+      // 3. Afficher le succès
+      setSuccess(true);
     } catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
   };
+
+  if (success) {
+    return (
+      <div className="min-h-screen bg-wiky-gray-light flex items-center justify-center py-12">
+        <div className="card p-8 max-w-md text-center">
+          <div className="text-6xl mb-4">✅</div>
+          <h2 className="text-2xl font-bold text-wiky-blue mb-3">Compte créé avec succès !</h2>
+          <p className="text-wiky-gray mb-2">
+            Un email de confirmation a été envoyé à <strong>{formData.email}</strong>.
+          </p>
+          <p className="text-wiky-gray mb-6">
+            Confirmez votre email puis connectez-vous pour accéder à la page de paiement et activer votre abonnement.
+          </p>
+          <Link to="/connexion" className="btn btn-primary w-full mb-3">
+            Aller à la Connexion
+          </Link>
+          <Link to="/paiement" className="btn btn-secondary w-full">
+            Accéder au Paiement maintenant
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="py-12 bg-wiky-gray-light min-h-screen">
