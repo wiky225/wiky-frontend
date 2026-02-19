@@ -217,15 +217,24 @@ export default function ConducteurDetail() {
                 </div>
               </div>
 
-              <div className="flex gap-3 mt-8 flex-wrap">
+              <div className="flex gap-3 mt-8 flex-wrap items-center">
                 <a
                   href={`https://wa.me/${conducteur.telephone?.replace(/\D/g, '').replace(/^0/, '225')}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="btn btn-primary"
                 >
-                  Contacter ce conducteur
+                  Contacter sur WhatsApp
                 </a>
+                <a
+                  href={`tel:+${conducteur.telephone?.replace(/\D/g, '').replace(/^0/, '225')}`}
+                  className="btn btn-outline flex items-center gap-2"
+                >
+                  📞 Appeler
+                </a>
+                <span className="text-lg font-bold text-wiky-blue tracking-widest select-all">
+                  {conducteur.telephone}
+                </span>
                 {isRecruteur && (
                   <>
                     <button
