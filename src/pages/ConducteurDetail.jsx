@@ -1,13 +1,19 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 export default function ConducteurDetail() {
   const { id } = useParams();
+  const { user, session } = useAuth();
   const [conducteur, setConducteur] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [favoriId, setFavoriId] = useState(null);
+  const [favoriLoading, setFavoriLoading] = useState(false);
+
+  const isRecruteur = user?.user_metadata?.role === 'recruteur';
 
   useEffect(() => {
     const fetchConducteur = async () => {
@@ -24,6 +30,40 @@ export default function ConducteurDetail() {
     };
     fetchConducteur();
   }, [id]);
+
+  useEffect(() => {
+    const checkFavori = async () => {
+      if (!isRecruteur || !session?.access_token) return;
+      try {
+        const res = await fetch(`${API_URL}/api/favoris`, {
+          headers: { 'Authorization': `Bearer ${session.access_token}` }
+        });
+        if (!res.ok) return;
+        const favoris = await res.json();
+        const found = favoris.find(f => f.conducteurs?.id === id);
+        if (found) setFavoriId(found.id);
+      } catch {}
+    };
+    checkFavori();
+  }, [id, isRecruteur, session]);
+
+  const toggleFavori = async () => {
+    if (!session?.access_token) return;
+    setFavoriLoading(true);
+    try {
+      const headers = { 'Authorization': `Bearer ${session.access_token}`, 'Content-Type': 'application/json' };
+      if (favoriId) {
+        await fetch(`${API_URL}/api/favoris/${favoriId}`, { method: 'DELETE', headers });
+        setFavoriId(null);
+      } else {
+        const res = await fetch(`${API_URL}/api/favoris`, { method: 'POST', headers, body: JSON.stringify({ conducteur_id: id }) });
+        const data = await res.json();
+        setFavoriId(data.id);
+      }
+    } catch {} finally {
+      setFavoriLoading(false);
+    }
+  };
 
   if (loading) return <div className="container-custom py-20 text-center">Chargement...</div>;
   if (error) return <div className="container-custom py-20 text-center text-red-600">{error}</div>;
@@ -92,7 +132,18 @@ export default function ConducteurDetail() {
                 </div>
               </div>
 
-              <button className="btn btn-primary mt-8">Contacter ce conducteur</button>
+              <div className="flex gap-3 mt-8 flex-wrap">
+                <button className="btn btn-primary">Contacter ce conducteur</button>
+                {isRecruteur && (
+                  <button
+                    onClick={toggleFavori}
+                    disabled={favoriLoading}
+                    className={`btn ${favoriId ? 'btn-outline' : 'btn-secondary'} disabled:opacity-60`}
+                  >
+                    {favoriLoading ? '...' : favoriId ? '⭐ Retirer des favoris' : '☆ Ajouter aux favoris'}
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         </div>
