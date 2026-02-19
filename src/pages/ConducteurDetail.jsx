@@ -99,9 +99,12 @@ export default function ConducteurDetail() {
   };
 
   const toggleBadge = (badge) => {
-    setBadgesForm(prev =>
-      prev.includes(badge) ? prev.filter(b => b !== badge) : [...prev, badge]
-    );
+    const isNegatif = BADGES_NEGATIFS.includes(badge);
+    setBadgesForm(prev => {
+      if (prev.includes(badge)) return prev.filter(b => b !== badge);
+      if (isNegatif) return [badge]; // Négatif seul, efface tout
+      return [...prev.filter(b => !BADGES_NEGATIFS.includes(b)), badge]; // Retire les négatifs
+    });
   };
 
   const submitAvis = async (e) => {
