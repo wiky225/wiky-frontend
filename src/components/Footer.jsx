@@ -84,10 +84,15 @@ function Footer() {
         href="https://wa.me/2250575421717"
         target="_blank"
         rel="noopener noreferrer"
-        className="fixed bottom-6 right-6 w-14 h-14 bg-green-500 text-white rounded-full flex items-center justify-center text-2xl shadow-lg hover:scale-110 transition-transform z-50 animate-pulse"
-        title="Contactez-nous sur WhatsApp"
+        className="fixed bottom-6 right-6 w-16 h-16 rounded-full flex items-center justify-center shadow-xl hover:scale-110 transition-transform z-50"
+        title="Contactez-nous sur WhatsApp Business"
+        style={{ backgroundColor: '#25D366' }}
       >
-        💬
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" className="w-9 h-9">
+          <path fill="#fff" d="M24 4C13 4 4 13 4 24c0 3.6 1 7 2.7 9.9L4 44l10.4-2.7C17.2 43 20.5 44 24 44c11 0 20-9 20-20S35 4 24 4z"/>
+          <path fill="#25D366" d="M24 6c-9.9 0-18 8.1-18 18 0 3.3.9 6.5 2.6 9.3l.4.7-1.7 6.2 6.4-1.7.7.4C16.9 40.6 20.4 42 24 42c9.9 0 18-8.1 18-18S33.9 6 24 6z"/>
+          <path fill="#fff" d="M35.2 31.2c-.5 1.3-2.5 2.5-3.5 2.6-.9.1-2.1.1-3.4-.2-1.3-.3-3-.9-5.2-1.9-4.5-2-7.3-6.7-7.6-7-.2-.3-1.9-2.5-1.9-4.8s1.2-3.4 1.6-3.9c.4-.4.9-.6 1.2-.6h.9c.3 0 .6.1.9.8.3.8 1.2 2.9 1.3 3.1.1.2.2.5.1.8-.1.3-.2.5-.4.7-.2.2-.4.5-.6.7-.2.2-.4.4-.2.8.2.4 1 1.6 2.1 2.6 1.5 1.3 2.7 1.8 3.1 2 .4.2.6.1.9-.1.2-.2.9-1 1.2-1.4.2-.4.5-.3.9-.2.4.1 2.5 1.2 2.9 1.4.4.2.7.3.8.5.1.1.1.8-.4 2.1z"/>
+        </svg>
       </a>
     </footer>
   )
