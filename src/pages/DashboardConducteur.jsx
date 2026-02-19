@@ -16,7 +16,7 @@ function DashboardConducteur() {
           .from('conducteurs')
           .select('*')
           .eq('user_id', user.id)
-          .single();
+          .maybeSingle();
 
         if (error) throw error;
         setProfil(data);
@@ -44,6 +44,23 @@ function DashboardConducteur() {
         <div className="text-center">
           <p className="text-red-600 mb-4">Erreur : {error}</p>
           <button onClick={() => window.location.reload()} className="btn btn-primary">Réessayer</button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!profil) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-wiky-gray-light">
+        <div className="card p-8 max-w-md text-center">
+          <div className="text-5xl mb-4">⚠️</div>
+          <h2 className="text-xl font-bold text-wiky-blue mb-3">Profil non trouvé</h2>
+          <p className="text-wiky-gray mb-6">
+            Votre profil conducteur n'a pas encore été créé. Cela peut arriver si vous venez de confirmer votre email.
+          </p>
+          <Link to="/inscription-conducteur" className="btn btn-primary w-full">
+            Compléter mon inscription
+          </Link>
         </div>
       </div>
     );
