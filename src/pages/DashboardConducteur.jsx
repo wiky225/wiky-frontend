@@ -12,13 +12,35 @@ function DashboardConducteur() {
   useEffect(() => {
     const fetchProfil = async () => {
       try {
-        const { data, error } = await supabase
+        // 1. Cherche par user_id
+        let { data, error } = await supabase
           .from('conducteurs')
           .select('*')
           .eq('user_id', user.id)
           .maybeSingle();
 
         if (error) throw error;
+
+        // 2. Si pas trouvé, cherche par email et lie le profil
+        if (!data && user.email) {
+          const { data: byEmail, error: emailError } = await supabase
+            .from('conducteurs')
+            .select('*')
+            .eq('email', user.email)
+            .is('user_id', null)
+            .maybeSingle();
+
+          if (emailError) throw emailError;
+
+          if (byEmail) {
+            await supabase
+              .from('conducteurs')
+              .update({ user_id: user.id })
+              .eq('id', byEmail.id);
+            data = { ...byEmail, user_id: user.id };
+          }
+        }
+
         setProfil(data);
       } catch (err) {
         setError(err.message);
