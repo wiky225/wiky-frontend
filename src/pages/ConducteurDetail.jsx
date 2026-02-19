@@ -218,7 +218,14 @@ export default function ConducteurDetail() {
               </div>
 
               <div className="flex gap-3 mt-8 flex-wrap">
-                <button className="btn btn-primary">Contacter ce conducteur</button>
+                <a
+                  href={`https://wa.me/${conducteur.telephone?.replace(/\D/g, '').replace(/^0/, '225')}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn-primary"
+                >
+                  Contacter ce conducteur
+                </a>
                 {isRecruteur && (
                   <>
                     <button
