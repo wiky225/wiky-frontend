@@ -8,9 +8,9 @@ const TYPES_VEHICULES = ['Moto', 'Tricycle', 'Camionette', 'Véhicule standard',
 const TYPES_CONTRAT = ['Location simple (VTC uniquement)', 'Achat progressif (véhicule au conducteur après X ans)', 'Les deux propositions'];
 
 function CarteOffre({ offre, hasContact }) {
-  const nom = offre.type_recruteur === 'entreprise'
-    ? offre.nom_entreprise
-    : `${offre.prenom_responsable} ${offre.nom_responsable}`;
+  const nom = offre.nom_entreprise || (offre.nom_responsable
+    ? `${offre.prenom_responsable} ${offre.nom_responsable}`
+    : offre.type_recruteur === 'entreprise' ? 'Entreprise' : 'Particulier');
 
   const totalVehicules = (offre.vehicules || []).reduce((s, v) => s + (parseInt(v.nombre) || 0), 0);
 
