@@ -48,27 +48,40 @@ function Sidebar({ profil, activeTab, setActiveTab, onStatutChange }) {
   const statut = STATUTS.find(s => s.value === profil.statut) || STATUTS[0];
 
   return (
-    <aside className="md:w-64 shrink-0 flex flex-col gap-4">
-      {/* Photo + nom */}
-      <div className="bg-white rounded-xl shadow-sm p-5 flex flex-col items-center gap-3 text-center">
+    <aside className="w-full md:w-64 md:shrink-0 flex flex-col gap-3">
+      {/* Photo + nom : ligne sur mobile, colonne sur desktop */}
+      <div className="bg-white rounded-xl shadow-sm p-4 flex items-center gap-4 md:flex-col md:items-center md:text-center md:gap-3 md:p-5">
         <img
           src={profil.photo_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(profil.prenom + ' ' + profil.nom)}&size=200&background=253b56&color=fff`}
           alt={`${profil.prenom} ${profil.nom}`}
-          className="w-24 h-24 rounded-full object-cover ring-4 ring-blue-100"
+          className="w-14 h-14 md:w-24 md:h-24 rounded-full object-cover ring-4 ring-blue-100 shrink-0"
         />
-        <div>
-          <p className="font-bold text-wiky-blue text-lg leading-tight">{profil.prenom} {profil.nom}</p>
-          <p className="text-xs text-gray-400 mt-0.5">{profil.email}</p>
+        <div className="flex-1 min-w-0">
+          <p className="font-bold text-wiky-blue leading-tight truncate">{profil.prenom} {profil.nom}</p>
+          <p className="text-xs text-gray-400 mt-0.5 truncate">{profil.email}</p>
+          <select
+            value={profil.statut || 'disponible'}
+            onChange={e => onStatutChange(e.target.value)}
+            className={`mt-1.5 text-xs font-medium px-3 py-1 rounded-full border-0 cursor-pointer focus:outline-none ${statut.color}`}
+          >
+            {STATUTS.map(s => (
+              <option key={s.value} value={s.value}>{s.label}</option>
+            ))}
+          </select>
         </div>
-        <select
-          value={profil.statut || 'disponible'}
-          onChange={e => onStatutChange(e.target.value)}
-          className={`text-xs font-medium px-3 py-1 rounded-full border-0 cursor-pointer focus:outline-none ${statut.color}`}
-        >
-          {STATUTS.map(s => (
-            <option key={s.value} value={s.value}>{s.label}</option>
-          ))}
-        </select>
+        {/* Lien profil public — icône seule sur mobile */}
+        {profil.id && (
+          <Link
+            to={`/conducteur/${profil.id}`}
+            title="Voir mon profil public"
+            className="md:hidden shrink-0 text-wiky-blue border border-wiky-blue rounded-lg p-2 hover:bg-blue-50 transition-colors"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+          </Link>
+        )}
       </div>
 
       {/* Score de complétude */}
@@ -90,13 +103,13 @@ function Sidebar({ profil, activeTab, setActiveTab, onStatutChange }) {
         )}
       </div>
 
-      {/* Navigation onglets */}
-      <div className="bg-white rounded-xl shadow-sm p-2 flex md:flex-col gap-1 overflow-x-auto">
+      {/* Navigation onglets — grille 2×2 sur mobile, liste sur desktop */}
+      <div className="bg-white rounded-xl shadow-sm p-2 grid grid-cols-2 md:flex md:flex-col gap-1">
         {TABS.map(tab => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`shrink-0 md:shrink text-left px-4 py-2.5 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${
+            className={`text-center md:text-left px-3 py-2.5 md:px-4 rounded-lg text-sm font-medium transition-colors ${
               activeTab === tab.id ? 'bg-wiky-blue text-white' : 'text-gray-600 hover:bg-gray-50'
             }`}
           >
@@ -105,9 +118,9 @@ function Sidebar({ profil, activeTab, setActiveTab, onStatutChange }) {
         ))}
       </div>
 
-      {/* Lien profil public */}
+      {/* Lien profil public — visible uniquement sur desktop */}
       {profil.id && (
-        <Link to={`/conducteur/${profil.id}`} className="btn btn-outline text-sm text-center">
+        <Link to={`/conducteur/${profil.id}`} className="hidden md:block btn btn-outline text-sm text-center">
           Voir mon profil public →
         </Link>
       )}
