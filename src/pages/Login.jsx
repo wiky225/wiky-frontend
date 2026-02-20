@@ -17,7 +17,12 @@ function Login() {
     try {
       const { user } = await login(email, password);
       const role = user?.user_metadata?.role;
-      navigate(role === 'conducteur' ? '/dashboard-conducteur' : '/dashboard-recruteur');
+      const destination = role === 'conducteur'
+        ? '/dashboard-conducteur'
+        : role === 'admin'
+        ? '/dashboard-admin'
+        : '/dashboard-recruteur';
+      navigate(destination);
     } catch (err) {
       setError('Email ou mot de passe incorrect.');
     } finally {
