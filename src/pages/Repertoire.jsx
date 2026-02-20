@@ -1,4 +1,4 @@
-import { useState, useEffect, Fragment } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import AdBanner from '../components/AdBanner';
 
@@ -44,36 +44,32 @@ export default function Repertoire() {
       <div className="container-custom">
         <h1 className="text-4xl font-bold text-wiky-blue mb-8">Répertoire des Conducteurs VTC</h1>
         
+        <AdBanner position="repertoire-inline" className="mb-6" />
+
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {conducteurs.map((conducteur, index) => (
-            <Fragment key={conducteur.id}>
-              <Link
-                to={`/conducteur/${conducteur.id}`}
-                className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
-              >
-                <img
-                  src={conducteur.photo_url || `https://ui-avatars.com/api/?name=${conducteur.prenom}+${conducteur.nom}&size=300&background=253b56&color=fff`}
-                  alt={`${conducteur.prenom} ${conducteur.nom}`}
-                  className="w-full h-48 object-cover"
-                />
-                <div className="p-4">
-                  <h3 className="text-xl font-bold text-wiky-blue">{conducteur.prenom} {conducteur.nom}</h3>
-                  <p className="text-gray-600">{conducteur.commune}</p>
-                  <p className="text-sm text-gray-500 mt-2">⏱️ {conducteur.annees_experience}</p>
-                  {conducteur.description && (
-                    <p className="text-sm text-gray-700 mt-2 line-clamp-2">{conducteur.description}</p>
-                  )}
-                  <div className="mt-4 flex justify-end">
-                    <span className="text-wiky-orange font-semibold">Voir profil →</span>
-                  </div>
+          {conducteurs.map((conducteur) => (
+            <Link
+              key={conducteur.id}
+              to={`/conducteur/${conducteur.id}`}
+              className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
+            >
+              <img
+                src={conducteur.photo_url || `https://ui-avatars.com/api/?name=${conducteur.prenom}+${conducteur.nom}&size=300&background=253b56&color=fff`}
+                alt={`${conducteur.prenom} ${conducteur.nom}`}
+                className="w-full h-48 object-cover"
+              />
+              <div className="p-4">
+                <h3 className="text-xl font-bold text-wiky-blue">{conducteur.prenom} {conducteur.nom}</h3>
+                <p className="text-gray-600">{conducteur.commune}</p>
+                <p className="text-sm text-gray-500 mt-2">⏱️ {conducteur.annees_experience}</p>
+                {conducteur.description && (
+                  <p className="text-sm text-gray-700 mt-2 line-clamp-2">{conducteur.description}</p>
+                )}
+                <div className="mt-4 flex justify-end">
+                  <span className="text-wiky-orange font-semibold">Voir profil →</span>
                 </div>
-              </Link>
-              {index === 2 && (
-                <div className="md:col-span-2 lg:col-span-3">
-                  <AdBanner position="repertoire-inline" />
-                </div>
-              )}
-            </Fragment>
+              </div>
+            </Link>
           ))}
         </div>
 
