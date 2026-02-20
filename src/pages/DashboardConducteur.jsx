@@ -608,10 +608,45 @@ function DashboardConducteur() {
   return (
     <div className="min-h-screen bg-gray-50 py-10">
       <div className="container-custom">
-        <div className="mb-8">
+        <div className="mb-6">
           <h1 className="text-2xl font-bold text-wiky-blue">Bonjour, {profil.prenom} 👋</h1>
           <p className="text-gray-500 text-sm">Gérez votre profil et suivez vos statistiques.</p>
         </div>
+
+        {/* Bannière abonnement */}
+        {!profil.abonnement_actif ? (
+          <div className="bg-wiky-blue text-white rounded-xl p-4 mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div>
+              <p className="font-semibold">🔒 Votre profil n'est pas encore contactable</p>
+              <p className="text-blue-200 text-sm mt-0.5">
+                Activez votre abonnement pour apparaître dans les résultats et recevoir des propositions.
+              </p>
+            </div>
+            <Link
+              to="/paiement?role=conducteur"
+              className="btn bg-wiky-orange text-white hover:bg-wiky-orange-dark text-sm shrink-0"
+            >
+              S'abonner — 1 000 FCFA / 2 mois
+            </Link>
+          </div>
+        ) : profil.date_fin_abonnement && Math.ceil((new Date(profil.date_fin_abonnement) - new Date()) / (1000 * 60 * 60 * 24)) <= 7 ? (
+          <div className="bg-orange-50 border border-orange-200 text-orange-800 rounded-xl p-4 mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div>
+              <p className="font-semibold">
+                ⚠️ Abonnement expirant dans {Math.ceil((new Date(profil.date_fin_abonnement) - new Date()) / (1000 * 60 * 60 * 24))} jour(s)
+              </p>
+              <p className="text-orange-600 text-sm mt-0.5">
+                Renouvelez avant expiration pour rester contactable sans interruption.
+              </p>
+            </div>
+            <Link
+              to="/paiement?role=conducteur"
+              className="btn bg-wiky-orange text-white hover:bg-wiky-orange-dark text-sm shrink-0"
+            >
+              Renouveler — 1 000 FCFA
+            </Link>
+          </div>
+        ) : null}
 
         <div className="flex flex-col md:flex-row gap-6 items-start">
           <Sidebar

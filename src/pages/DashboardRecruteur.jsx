@@ -426,7 +426,7 @@ function Sidebar({ abonnement, offres, favoris, profil }) {
             <p className="text-xs text-gray-500 mb-3">Abonnez-vous pour accéder aux contacts.</p>
           </>
         )}
-        <Link to="/paiement" className={`text-xs font-semibold px-3 py-1.5 rounded-lg block text-center transition-colors ${abonnement?.active ? 'bg-gray-100 text-gray-600 hover:bg-gray-200' : 'bg-wiky-orange text-white hover:bg-wiky-orange-dark'}`}>
+        <Link to="/paiement?role=recruteur" className={`text-xs font-semibold px-3 py-1.5 rounded-lg block text-center transition-colors ${abonnement?.active ? 'bg-gray-100 text-gray-600 hover:bg-gray-200' : 'bg-wiky-orange text-white hover:bg-wiky-orange-dark'}`}>
           {abonnement?.active ? 'Renouveler' : "S'abonner — 10 000 FCFA"}
         </Link>
       </div>
