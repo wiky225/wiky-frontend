@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
+import PhoneInput from '../components/PhoneInput';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
@@ -151,7 +152,7 @@ function InscriptionRecruteur() {
 
             <div>
               <label className="block text-sm font-semibold text-wiky-gray mb-2">Téléphone *</label>
-              <input type="tel" name="telephone" className="input" placeholder="+225 XX XX XX XX XX" required onChange={handleChange} />
+              <PhoneInput name="telephone" value={formData.telephone} onChange={handleChange} required />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

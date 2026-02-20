@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import PhoneInput from '../components/PhoneInput';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
@@ -220,11 +221,11 @@ export default function Finalisation() {
             <div className="grid md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium mb-1">Téléphone principal *</label>
-                <input type="tel" name="telephone" value={form.telephone} onChange={handleChange} required className="w-full border rounded px-3 py-2" />
+                <PhoneInput name="telephone" value={form.telephone} onChange={handleChange} required />
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1">Téléphone secondaire</label>
-                <input type="tel" name="contact_secondaire" value={form.contact_secondaire} onChange={handleChange} className="w-full border rounded px-3 py-2" />
+                <PhoneInput name="contact_secondaire" value={form.contact_secondaire} onChange={handleChange} />
               </div>
             </div>
           </div>

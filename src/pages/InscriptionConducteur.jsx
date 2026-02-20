@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
+import PhoneInput from '../components/PhoneInput';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
@@ -159,7 +160,7 @@ export default function InscriptionConducteur() {
             </div>
             <div>
               <label className="block text-sm font-medium mb-2">Téléphone *</label>
-              <input type="tel" name="telephone" required onChange={handleChange} placeholder="+225 07 XX XX XX XX" className="w-full border rounded px-3 py-2" />
+              <PhoneInput name="telephone" value={formData.telephone} onChange={handleChange} required />
             </div>
           </div>
 
