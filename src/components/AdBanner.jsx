@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
@@ -11,6 +11,7 @@ const FORMAT_SIZES = {
 
 export default function AdBanner({ position, className = '' }) {
   const [annonce, setAnnonce] = useState(null);
+  const impressionFired = useRef(false);
 
   useEffect(() => {
     fetch(`${API_URL}/api/annonces?position=${encodeURIComponent(position)}`)
@@ -23,9 +24,21 @@ export default function AdBanner({ position, className = '' }) {
       .catch(() => {});
   }, [position]);
 
+  // Comptage impression (une seule fois par affichage)
+  useEffect(() => {
+    if (annonce && !impressionFired.current) {
+      impressionFired.current = true;
+      fetch(`${API_URL}/api/annonces/${annonce.id}/impression`, { method: 'POST' }).catch(() => {});
+    }
+  }, [annonce]);
+
   if (!annonce) return null;
 
   const size = FORMAT_SIZES[annonce.format] || FORMAT_SIZES.medium_rectangle;
+
+  const handleClic = () => {
+    fetch(`${API_URL}/api/annonces/${annonce.id}/clic`, { method: 'POST' }).catch(() => {});
+  };
 
   const img = (
     <img
@@ -40,7 +53,7 @@ export default function AdBanner({ position, className = '' }) {
     <div className={`flex flex-col items-center py-3 ${className}`}>
       <span className="text-xs text-gray-400 mb-1">Publicité</span>
       {annonce.lien_url ? (
-        <a href={annonce.lien_url} target="_blank" rel="noopener noreferrer nofollow">
+        <a href={annonce.lien_url} target="_blank" rel="noopener noreferrer nofollow" onClick={handleClic}>
           {img}
         </a>
       ) : img}

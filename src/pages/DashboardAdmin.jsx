@@ -506,6 +506,15 @@ function TabAnnonces({ token }) {
     load();
   };
 
+  const resetStats = async (id) => {
+    if (!confirm('Réinitialiser les stats (impressions et clics) de cette annonce ?')) return;
+    await fetch(`${API_URL}/api/admin/annonces/${id}/reset-stats`, {
+      method: 'PATCH',
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    load();
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSaving(true);
@@ -611,16 +620,30 @@ function TabAnnonces({ token }) {
                 )}
                 {a.lien_url && <p className="text-xs text-wiky-blue truncate mt-0.5">{a.lien_url}</p>}
               </div>
-              <div className="flex gap-2 items-center shrink-0">
-                <button
-                  onClick={() => toggleActif(a)}
-                  className={`text-xs px-3 py-1 rounded-full font-medium ${a.actif ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}
-                >
-                  {a.actif ? '✅ Actif' : '⏸ Inactif'}
-                </button>
-                <button onClick={() => deleteAnnonce(a.id)} className="text-xs px-2 py-1 bg-red-50 text-red-600 rounded hover:bg-red-100">
-                  Supprimer
-                </button>
+              <div className="flex flex-col items-end gap-1 shrink-0 text-right">
+                <div className="flex gap-1 text-xs text-gray-500">
+                  <span className="bg-gray-100 rounded px-2 py-0.5">👁 {(a.nb_impressions || 0).toLocaleString('fr-FR')}</span>
+                  <span className="bg-gray-100 rounded px-2 py-0.5">🖱 {(a.nb_clics || 0).toLocaleString('fr-FR')}</span>
+                  {a.nb_impressions > 0 && (
+                    <span className="bg-blue-50 text-wiky-blue rounded px-2 py-0.5 font-medium">
+                      CTR {((a.nb_clics || 0) / a.nb_impressions * 100).toFixed(1)}%
+                    </span>
+                  )}
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => toggleActif(a)}
+                    className={`text-xs px-3 py-1 rounded-full font-medium ${a.actif ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}
+                  >
+                    {a.actif ? '✅ Actif' : '⏸ Inactif'}
+                  </button>
+                  <button onClick={() => resetStats(a.id)} className="text-xs px-2 py-1 bg-gray-50 text-gray-500 rounded hover:bg-gray-100">
+                    Réinitialiser
+                  </button>
+                  <button onClick={() => deleteAnnonce(a.id)} className="text-xs px-2 py-1 bg-red-50 text-red-600 rounded hover:bg-red-100">
+                    Supprimer
+                  </button>
+                </div>
               </div>
             </div>
           ))}
