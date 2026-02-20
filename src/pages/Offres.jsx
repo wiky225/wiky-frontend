@@ -139,7 +139,8 @@ export default function Offres() {
   }, [session]);
 
   const offresFiltrees = offres.filter(o => {
-    if (filtreVehicule && !o.vehicules?.some(v => v.type === filtreVehicule)) return false;
+    if (!o.vehicules?.length) return false;
+    if (filtreVehicule && !o.vehicules.some(v => v.type === filtreVehicule)) return false;
     if (filtreContrat && o.type_contrat !== filtreContrat) return false;
     return true;
   });
