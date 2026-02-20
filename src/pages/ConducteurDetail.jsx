@@ -43,12 +43,16 @@ export default function ConducteurDetail() {
   const [avisSuccess, setAvisSuccess] = useState(false);
 
   const isRecruteur = user?.user_metadata?.role === 'recruteur';
+  const isAdmin = user?.user_metadata?.role === 'admin';
+  const hasFullAccess = isRecruteur || isAdmin;
 
   useEffect(() => {
     const fetchAll = async () => {
       try {
+        const headers = {};
+        if (session?.access_token) headers['Authorization'] = `Bearer ${session.access_token}`;
         const [condRes, avisRes] = await Promise.all([
-          fetch(`${API_URL}/api/conducteurs/${id}`),
+          fetch(`${API_URL}/api/conducteurs/${id}`, { headers }),
           fetch(`${API_URL}/api/avis/${id}`)
         ]);
         if (!condRes.ok) throw new Error('Conducteur non trouvé');
@@ -62,7 +66,7 @@ export default function ConducteurDetail() {
       }
     };
     fetchAll();
-  }, [id]);
+  }, [id, session]);
 
   useEffect(() => {
     const checkFavori = async () => {
@@ -151,108 +155,183 @@ export default function ConducteurDetail() {
 
         <div className="bg-white rounded-lg shadow-lg p-8 mb-6">
           <div className="grid md:grid-cols-3 gap-8">
+            {/* Colonne gauche : photo + note + badges (recruteurs uniquement) */}
             <div className="md:col-span-1">
-              <img
-                src={conducteur.photo_url || `https://ui-avatars.com/api/?name=${conducteur.prenom}+${conducteur.nom}&size=400&background=253b56&color=fff`}
-                alt={`${conducteur.prenom} ${conducteur.nom}`}
-                className="w-full rounded-lg"
-              />
-              {/* Note moyenne */}
-              <div className="mt-4 text-center">
-                <div className="flex justify-center mb-1">
-                  <Etoiles note={Math.round(noteMoyenne)} />
-                </div>
-                <p className="text-wiky-blue font-bold text-xl">{noteMoyenne > 0 ? noteMoyenne.toFixed(1) : '—'}/5</p>
-                <p className="text-sm text-gray-500">{nbAvis} avis</p>
-              </div>
-              {/* Top badges */}
-              {topBadges.length > 0 && (
-                <div className="mt-4 flex flex-wrap gap-2 justify-center">
-                  {topBadges.map(b => (
-                    <span key={b} className="text-xs bg-gray-100 rounded-full px-3 py-1">{b}</span>
-                  ))}
+              {hasFullAccess ? (
+                <>
+                  <img
+                    src={conducteur.photo_url || `https://ui-avatars.com/api/?name=${conducteur.prenom}+${conducteur.nom}&size=400&background=253b56&color=fff`}
+                    alt={`${conducteur.prenom} ${conducteur.nom}`}
+                    className="w-full rounded-lg"
+                  />
+                  <div className="mt-4 text-center">
+                    <div className="flex justify-center mb-1">
+                      <Etoiles note={Math.round(noteMoyenne)} />
+                    </div>
+                    <p className="text-wiky-blue font-bold text-xl">{noteMoyenne > 0 ? noteMoyenne.toFixed(1) : '—'}/5</p>
+                    <p className="text-sm text-gray-500">{nbAvis} avis</p>
+                  </div>
+                  {topBadges.length > 0 && (
+                    <div className="mt-4 flex flex-wrap gap-2 justify-center">
+                      {topBadges.map(b => (
+                        <span key={b} className="text-xs bg-gray-100 rounded-full px-3 py-1">{b}</span>
+                      ))}
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div className="w-full aspect-square rounded-lg bg-wiky-blue flex items-center justify-center">
+                  <span className="text-6xl text-white font-bold">
+                    {conducteur.prenom?.[0]}{conducteur.nom?.[0]}
+                  </span>
                 </div>
               )}
             </div>
 
             <div className="md:col-span-2">
               <h1 className="text-3xl font-bold text-wiky-blue mb-2">{conducteur.prenom} {conducteur.nom}</h1>
-              <p className="text-xl text-gray-600 mb-6">{conducteur.commune}, {conducteur.quartier}</p>
+              <p className="text-xl text-gray-600 mb-6">{conducteur.ville || conducteur.commune}{conducteur.commune && conducteur.ville ? ` — ${conducteur.commune}` : conducteur.commune || ''}</p>
 
+              {/* Infos publiques */}
               <div className="space-y-4">
-                <div>
-                  <h3 className="font-semibold text-wiky-blue">📍 Localisation</h3>
-                  <p>{conducteur.commune} - {conducteur.quartier}</p>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-wiky-blue">⏱️ Expérience</h3>
-                  <p>{conducteur.annees_experience}</p>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-wiky-blue">🚕 Plateformes VTC</h3>
-                  <p>{conducteur.plateformes_vtc}</p>
-                </div>
-                {conducteur.description && (
+                {(conducteur.ville || conducteur.commune || conducteur.quartier) && (
                   <div>
-                    <h3 className="font-semibold text-wiky-blue">📝 Description</h3>
-                    <p>{conducteur.description}</p>
+                    <h3 className="font-semibold text-wiky-blue">📍 Localisation</h3>
+                    <p>{[conducteur.ville, conducteur.commune, conducteur.quartier].filter(Boolean).join(' — ')}</p>
                   </div>
                 )}
-                {conducteur.situation_matrimoniale && (
+                {conducteur.annees_experience && (
                   <div>
-                    <h3 className="font-semibold text-wiky-blue">💍 Situation matrimoniale</h3>
-                    <p>{conducteur.situation_matrimoniale}</p>
+                    <h3 className="font-semibold text-wiky-blue">⏱️ Expérience</h3>
+                    <p>{conducteur.annees_experience}</p>
                   </div>
                 )}
-                {conducteur.nombre_enfants !== null && (
+                {conducteur.plateformes_vtc && (
                   <div>
-                    <h3 className="font-semibold text-wiky-blue">👶 Nombre d'enfants</h3>
-                    <p>{conducteur.nombre_enfants}</p>
+                    <h3 className="font-semibold text-wiky-blue">🚕 Plateformes VTC</h3>
+                    <p>{conducteur.plateformes_vtc}</p>
                   </div>
                 )}
-                <div>
-                  <h3 className="font-semibold text-wiky-blue">📧 Contact</h3>
-                  <p>Email: {conducteur.email}</p>
-                  <p>Téléphone: {conducteur.telephone}</p>
-                </div>
-              </div>
+                {conducteur.disponibilite && (
+                  <div>
+                    <h3 className="font-semibold text-wiky-blue">📅 Disponibilité</h3>
+                    <p>{conducteur.disponibilite}</p>
+                  </div>
+                )}
 
-              <div className="flex gap-3 mt-8 flex-wrap items-center">
-                <a
-                  href={`https://wa.me/${conducteur.telephone?.replace(/\D/g, '').replace(/^0/, '225')}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn btn-primary"
-                >
-                  Contacter sur WhatsApp
-                </a>
-                <a
-                  href={`tel:+${conducteur.telephone?.replace(/\D/g, '').replace(/^0/, '225')}`}
-                  className="btn btn-outline flex items-center gap-2"
-                >
-                  📞 Appeler
-                </a>
-                <span className="text-lg font-bold text-wiky-blue tracking-widest select-all">
-                  {conducteur.telephone}
-                </span>
-                {isRecruteur && (
+                {/* Infos recruteurs uniquement */}
+                {hasFullAccess && (
                   <>
-                    <button
-                      onClick={toggleFavori}
-                      disabled={favoriLoading}
-                      className={`btn ${favoriId ? 'btn-outline' : 'btn-secondary'} disabled:opacity-60`}
-                    >
-                      {favoriLoading ? '...' : favoriId ? '⭐ Retirer des favoris' : '☆ Ajouter aux favoris'}
-                    </button>
-                    <button
-                      onClick={() => { setShowAvisForm(!showAvisForm); setAvisSuccess(false); }}
-                      className="btn btn-outline"
-                    >
-                      ✏️ Laisser un avis
-                    </button>
+                    {conducteur.date_naissance && (
+                      <div>
+                        <h3 className="font-semibold text-wiky-blue">🎂 Date de naissance</h3>
+                        <p>{new Date(conducteur.date_naissance).toLocaleDateString('fr-FR')}</p>
+                      </div>
+                    )}
+                    {conducteur.situation_matrimoniale && (
+                      <div>
+                        <h3 className="font-semibold text-wiky-blue">💍 Situation matrimoniale</h3>
+                        <p>{conducteur.situation_matrimoniale}{conducteur.nombre_enfants != null ? ` — ${conducteur.nombre_enfants} enfant(s)` : ''}</p>
+                      </div>
+                    )}
+                    {conducteur.type_collaboration?.length > 0 && (
+                      <div>
+                        <h3 className="font-semibold text-wiky-blue">🤝 Type de collaboration</h3>
+                        <div className="flex flex-wrap gap-2 mt-1">
+                          {conducteur.type_collaboration.map(t => (
+                            <span key={t} className="text-xs bg-blue-50 text-wiky-blue border border-wiky-blue rounded-full px-3 py-1">{t}</span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    {conducteur.preferences_yango?.length > 0 && (
+                      <div>
+                        <h3 className="font-semibold text-wiky-blue">🚗 Préférences Yango</h3>
+                        <div className="flex flex-wrap gap-2 mt-1">
+                          {conducteur.preferences_yango.map(p => (
+                            <span key={p} className="text-xs bg-orange-50 text-wiky-orange border border-wiky-orange rounded-full px-3 py-1">{p}</span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    {(conducteur.permis_recto_url || conducteur.permis_verso_url) && (
+                      <div>
+                        <h3 className="font-semibold text-wiky-blue">🪪 Permis de conduire</h3>
+                        <div className="flex gap-3 mt-2">
+                          {conducteur.permis_recto_url && (
+                            <a href={conducteur.permis_recto_url} target="_blank" rel="noopener noreferrer" className="btn btn-outline text-sm">Voir recto</a>
+                          )}
+                          {conducteur.permis_verso_url && (
+                            <a href={conducteur.permis_verso_url} target="_blank" rel="noopener noreferrer" className="btn btn-outline text-sm">Voir verso</a>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                    <div>
+                      <h3 className="font-semibold text-wiky-blue">📧 Contact</h3>
+                      <p className="text-gray-700">{conducteur.email}</p>
+                      {conducteur.contact_secondaire && <p className="text-gray-500 text-sm">Contact secondaire : {conducteur.contact_secondaire}</p>}
+                    </div>
+                    {conducteur.personne_urgence && (
+                      <div>
+                        <h3 className="font-semibold text-wiky-blue">🆘 Personne à contacter en cas d'urgence</h3>
+                        <p>{conducteur.personne_urgence}</p>
+                      </div>
+                    )}
                   </>
                 )}
               </div>
+
+              {/* CTA connexion pour les visiteurs */}
+              {!user && (
+                <div className="mt-6 p-4 bg-blue-50 border border-wiky-blue rounded-lg">
+                  <p className="text-wiky-blue font-semibold mb-2">Accédez aux coordonnées complètes</p>
+                  <p className="text-sm text-gray-600 mb-3">Connectez-vous en tant que recruteur pour voir le contact, le permis, les avis et recruter ce conducteur.</p>
+                  <a href="/connexion" className="btn btn-primary text-sm">Se connecter</a>
+                </div>
+              )}
+
+              {/* Boutons contact */}
+              {hasFullAccess && conducteur.telephone && (
+                <div className="flex gap-3 mt-8 flex-wrap items-center">
+                  <a
+                    href={`https://wa.me/${conducteur.telephone?.replace(/\D/g, '').replace(/^0/, '225')}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn btn-primary"
+                  >
+                    Contacter sur WhatsApp
+                  </a>
+                  <a
+                    href={`tel:+${conducteur.telephone?.replace(/\D/g, '').replace(/^0/, '225')}`}
+                    className="btn btn-outline flex items-center gap-2"
+                  >
+                    📞 Appeler
+                  </a>
+                  <span className="text-lg font-bold text-wiky-blue tracking-widest select-all">
+                    {conducteur.telephone}
+                  </span>
+                </div>
+              )}
+
+              {/* Boutons favoris + avis (recruteurs) */}
+              {isRecruteur && (
+                <div className="flex gap-3 mt-4 flex-wrap">
+                  <button
+                    onClick={toggleFavori}
+                    disabled={favoriLoading}
+                    className={`btn ${favoriId ? 'btn-outline' : 'btn-secondary'} disabled:opacity-60`}
+                  >
+                    {favoriLoading ? '...' : favoriId ? '⭐ Retirer des favoris' : '☆ Ajouter aux favoris'}
+                  </button>
+                  <button
+                    onClick={() => { setShowAvisForm(!showAvisForm); setAvisSuccess(false); }}
+                    className="btn btn-outline"
+                  >
+                    ✏️ Laisser un avis
+                  </button>
+                </div>
+              )}
 
               {/* Formulaire avis */}
               {showAvisForm && (
@@ -309,8 +388,8 @@ export default function ConducteurDetail() {
           </div>
         </div>
 
-        {/* Section avis */}
-        {avis.length > 0 && (
+        {/* Section avis — recruteurs et admins uniquement */}
+        {hasFullAccess && avis.length > 0 && (
           <div className="bg-white rounded-lg shadow-lg p-8">
             <h2 className="text-2xl font-bold text-wiky-blue mb-6">Avis des recruteurs ({avis.length})</h2>
             <div className="space-y-4">
