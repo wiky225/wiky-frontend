@@ -474,6 +474,7 @@ function TabAnnonces({ token }) {
   const [loading, setLoading] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState(null);
   const [form, setForm] = useState({
     annonceur: '', image_url: '', lien_url: '',
     format: 'medium_rectangle', position: 'repertoire-inline',
@@ -508,15 +509,23 @@ function TabAnnonces({ token }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSaving(true);
-    await fetch(`${API_URL}/api/admin/annonces`, {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...form, date_debut: form.date_debut || null, date_fin: form.date_fin || null })
-    });
-    setSaving(false);
-    setShowForm(false);
-    setForm({ annonceur: '', image_url: '', lien_url: '', format: 'medium_rectangle', position: 'repertoire-inline', actif: true, date_debut: '', date_fin: '' });
-    load();
+    setSaveError(null);
+    try {
+      const res = await fetch(`${API_URL}/api/admin/annonces`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...form, date_debut: form.date_debut || null, date_fin: form.date_fin || null })
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || `Erreur ${res.status}`);
+      setShowForm(false);
+      setForm({ annonceur: '', image_url: '', lien_url: '', format: 'medium_rectangle', position: 'repertoire-inline', actif: true, date_debut: '', date_fin: '' });
+      load();
+    } catch (err) {
+      setSaveError(err.message);
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -569,6 +578,11 @@ function TabAnnonces({ token }) {
               <label htmlFor="actif-form" className="text-sm font-medium">Activer immédiatement</label>
             </div>
           </div>
+          {saveError && (
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded text-sm">
+              Erreur : {saveError}
+            </div>
+          )}
           <button type="submit" disabled={saving} className="btn btn-primary disabled:opacity-60">
             {saving ? 'Enregistrement...' : 'Créer l\'annonce'}
           </button>
