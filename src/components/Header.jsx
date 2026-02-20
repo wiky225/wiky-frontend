@@ -39,11 +39,9 @@ export default function Header() {
             <Link to="/repertoire" className="text-wiky-gray hover:text-wiky-orange transition-colors">
               Trouver un Conducteur
             </Link>
-            {!isRecruteur && (
-              <Link to="/offres" className="text-wiky-gray hover:text-wiky-orange transition-colors">
-                Offres Recruteurs
-              </Link>
-            )}
+            <Link to="/offres" className="text-wiky-gray hover:text-wiky-orange transition-colors">
+              {isRecruteur ? 'Mon Offre' : 'Offres Recruteurs'}
+            </Link>
 
             {user ? (
               <>

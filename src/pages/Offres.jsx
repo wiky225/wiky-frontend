@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
@@ -112,7 +111,6 @@ function CarteOffre({ offre, hasContact }) {
 
 export default function Offres() {
   const { user, session } = useAuth();
-  const navigate = useNavigate();
   const [offres, setOffres] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filtreVehicule, setFiltreVehicule] = useState('');
@@ -124,33 +122,65 @@ export default function Offres() {
   const hasContact = isConducteur || isAdmin;
 
   useEffect(() => {
-    if (isRecruteur) navigate('/dashboard-recruteur', { replace: true });
-  }, [isRecruteur, navigate]);
-
-  useEffect(() => {
     const fetchOffres = async () => {
       try {
         const headers = {};
         if (session?.access_token) headers['Authorization'] = `Bearer ${session.access_token}`;
-        const res = await fetch(`${API_URL}/api/recruteurs/offres`, { headers });
-        if (!res.ok) throw new Error('Erreur chargement');
-        const data = await res.json();
-        setOffres(data);
+
+        if (isRecruteur) {
+          // Un recruteur voit uniquement sa propre offre
+          const res = await fetch(`${API_URL}/api/recruteurs/me`, { headers });
+          if (!res.ok) throw new Error('Erreur chargement');
+          const data = await res.json();
+          setOffres(data ? [data] : []);
+        } else {
+          // Conducteurs, admin et visiteurs voient toutes les offres
+          const res = await fetch(`${API_URL}/api/recruteurs/offres`, { headers });
+          if (!res.ok) throw new Error('Erreur chargement');
+          const data = await res.json();
+          setOffres(data);
+        }
       } catch (err) {
         console.error(err);
       } finally {
         setLoading(false);
       }
     };
-    fetchOffres();
-  }, [session]);
+    if (session !== undefined) fetchOffres();
+  }, [session, isRecruteur]);
 
-  const offresFiltrees = offres.filter(o => {
-    if (!o.vehicules?.length) return false;
-    if (filtreVehicule && !o.vehicules.some(v => v.type === filtreVehicule)) return false;
-    if (filtreContrat && o.type_contrat !== filtreContrat) return false;
-    return true;
-  });
+  const offresFiltrees = isRecruteur
+    ? offres.filter(o => o.vehicules?.length)
+    : offres.filter(o => {
+        if (!o.vehicules?.length) return false;
+        if (filtreVehicule && !o.vehicules.some(v => v.type === filtreVehicule)) return false;
+        if (filtreContrat && o.type_contrat !== filtreContrat) return false;
+        return true;
+      });
+
+  if (isRecruteur) {
+    const monOffre = offresFiltrees[0];
+    return (
+      <div className="min-h-screen bg-gray-50 py-12">
+        <div className="container-custom max-w-xl">
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-wiky-blue mb-2">Mon offre</h1>
+            <p className="text-gray-600">Aperçu de votre offre telle que les conducteurs la voient.</p>
+          </div>
+          {loading ? (
+            <div className="text-center py-20 text-gray-500">Chargement...</div>
+          ) : monOffre ? (
+            <CarteOffre offre={monOffre} hasContact={true} />
+          ) : (
+            <div className="text-center py-20 text-gray-400">
+              <p className="mb-4">Vous n'avez pas encore configuré votre offre.</p>
+              <a href="/dashboard-recruteur" className="btn btn-primary">Configurer mon offre</a>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 py-12">
