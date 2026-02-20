@@ -23,7 +23,7 @@ const emptyOffre = () => ({
 });
 
 // ── FORMULAIRE OFFRE ──────────────────────────────────────────
-function FormulaireOffre({ form, setForm, onSave, onCancel, saving }) {
+function FormulaireOffre({ form, setForm, onSave, onCancel, saving, error }) {
   const toggleJour = (jour) => {
     setForm(prev => ({
       ...prev,
@@ -178,6 +178,12 @@ function FormulaireOffre({ form, setForm, onSave, onCancel, saving }) {
         </div>
       </div>
 
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+          Erreur : {error}
+        </div>
+      )}
+
       {/* Actions */}
       <div className="flex gap-3 pt-2">
         <button onClick={onCancel} className="btn btn-outline text-sm">Annuler</button>
@@ -264,6 +270,7 @@ function DashboardRecruteur() {
   const [editingId, setEditingId] = useState(null);
   const [formOffre, setFormOffre] = useState(emptyOffre());
   const [offreSaving, setOffreSaving] = useState(false);
+  const [offreError, setOffreError] = useState(null);
 
   const headers = useCallback(() => ({
     'Authorization': `Bearer ${session?.access_token}`,
@@ -329,6 +336,7 @@ function DashboardRecruteur() {
 
   const saveOffre = async () => {
     setOffreSaving(true);
+    setOffreError(null);
     try {
       const payload = {
         ...formOffre,
@@ -341,13 +349,16 @@ function DashboardRecruteur() {
       const method = editingId ? 'PATCH' : 'POST';
 
       const res = await fetch(url, { method, headers: headers(), body: JSON.stringify(payload) });
-      if (!res.ok) throw new Error('Erreur lors de la sauvegarde');
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error || `Erreur ${res.status}`);
+      }
 
       setShowForm(false);
       setEditingId(null);
       await fetchOffres();
     } catch (err) {
-      alert(err.message);
+      setOffreError(err.message);
     } finally {
       setOffreSaving(false);
     }
@@ -452,8 +463,9 @@ function DashboardRecruteur() {
                 form={formOffre}
                 setForm={setFormOffre}
                 onSave={saveOffre}
-                onCancel={() => { setShowForm(false); setEditingId(null); }}
+                onCancel={() => { setShowForm(false); setEditingId(null); setOffreError(null); }}
                 saving={offreSaving}
+                error={offreError}
               />
             </div>
           )}
