@@ -14,6 +14,7 @@ import Paiement from './pages/Paiement'
 import Inscription from './pages/Inscription'
 import Finalisation from './pages/Finalisation'
 import DashboardAdmin from './pages/DashboardAdmin'
+import Offres from './pages/Offres'
 import PrivateRoute from './components/PrivateRoute'
 
 function NotFound() {
@@ -44,6 +45,7 @@ function App() {
             <Route path="/dashboard-conducteur" element={<PrivateRoute><DashboardConducteur /></PrivateRoute>} />
             <Route path="/dashboard-recruteur" element={<PrivateRoute><DashboardRecruteur /></PrivateRoute>} />
             <Route path="/paiement" element={<Paiement />} />
+            <Route path="/offres" element={<Offres />} />
             <Route path="/finaliser/:token" element={<Finalisation />} />
             <Route path="/dashboard-admin" element={<PrivateRoute><DashboardAdmin /></PrivateRoute>} />
             <Route path="*" element={<NotFound />} />
