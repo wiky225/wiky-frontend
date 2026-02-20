@@ -6,7 +6,7 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 const JOURS = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
 const HEURES_PRESETS = ['6h - 22h', '8h - 20h', '24h/24', 'Flexible'];
-const TYPES_VEHICULES = ['Moto', 'Tricycle', 'Camionette', 'Véhicule', 'GOYA'];
+const TYPES_VEHICULES = ['Moto', 'Tricycle', 'Camionette', 'Véhicule standard', 'Véhicule électrique', 'Véhicule business'];
 
 function DashboardRecruteur() {
   const { session } = useAuth();
