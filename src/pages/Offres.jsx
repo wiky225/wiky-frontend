@@ -129,14 +129,14 @@ export default function Offres() {
         if (session?.access_token) headers['Authorization'] = `Bearer ${session.access_token}`;
 
         if (isRecruteur) {
-          // Un recruteur voit uniquement sa propre offre
-          const res = await fetch(`${API_URL}/api/recruteurs/me`, { headers });
+          // Un recruteur voit uniquement ses propres offres
+          const res = await fetch(`${API_URL}/api/offres/me`, { headers });
           if (!res.ok) throw new Error('Erreur chargement');
           const data = await res.json();
-          setOffres(data ? [data] : []);
+          setOffres(Array.isArray(data) ? data : []);
         } else {
           // Conducteurs, admin et visiteurs voient toutes les offres
-          const res = await fetch(`${API_URL}/api/recruteurs/offres`, { headers });
+          const res = await fetch(`${API_URL}/api/offres`, { headers });
           if (!res.ok) throw new Error('Erreur chargement');
           const data = await res.json();
           setOffres(data);
@@ -160,22 +160,29 @@ export default function Offres() {
       });
 
   if (isRecruteur) {
-    const monOffre = offresFiltrees[0];
     return (
       <div className="min-h-screen bg-gray-50 py-12">
-        <div className="container-custom max-w-xl">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-wiky-blue mb-2">Mon offre</h1>
-            <p className="text-gray-600">Aperçu de votre offre telle que les conducteurs la voient.</p>
+        <div className="container-custom max-w-3xl">
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <h1 className="text-3xl font-bold text-wiky-blue mb-1">Mes offres</h1>
+              <p className="text-gray-600">Aperçu de vos offres telles que les conducteurs les voient.</p>
+            </div>
+            <a href="/dashboard-recruteur" className="btn btn-primary text-sm">+ Gérer mes offres</a>
           </div>
           {loading ? (
             <div className="text-center py-20 text-gray-500">Chargement...</div>
-          ) : monOffre ? (
-            <CarteOffre offre={monOffre} hasContact={true} />
-          ) : (
+          ) : offresFiltrees.length === 0 ? (
             <div className="text-center py-20 text-gray-400">
-              <p className="mb-4">Vous n'avez pas encore configuré votre offre.</p>
-              <a href="/dashboard-recruteur" className="btn btn-primary">Configurer mon offre</a>
+              <p className="text-4xl mb-4">💼</p>
+              <p className="mb-4">Vous n'avez pas encore créé d'offre.</p>
+              <a href="/dashboard-recruteur" className="btn btn-primary">Créer une offre</a>
+            </div>
+          ) : (
+            <div className="space-y-6">
+              {offresFiltrees.map(o => (
+                <CarteOffre key={o.id} offre={o} hasContact={true} />
+              ))}
             </div>
           )}
         </div>
