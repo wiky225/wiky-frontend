@@ -12,6 +12,7 @@ import DashboardConducteur from './pages/DashboardConducteur'
 import DashboardRecruteur from './pages/DashboardRecruteur'
 import Paiement from './pages/Paiement'
 import Inscription from './pages/Inscription'
+import Finalisation from './pages/Finalisation'
 import PrivateRoute from './components/PrivateRoute'
 
 function NotFound() {
@@ -42,6 +43,7 @@ function App() {
             <Route path="/dashboard-conducteur" element={<PrivateRoute><DashboardConducteur /></PrivateRoute>} />
             <Route path="/dashboard-recruteur" element={<PrivateRoute><DashboardRecruteur /></PrivateRoute>} />
             <Route path="/paiement" element={<Paiement />} />
+            <Route path="/finaliser/:token" element={<Finalisation />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
