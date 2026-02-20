@@ -15,7 +15,6 @@ function InscriptionRecruteur() {
     prenom_responsable: '',
     email: '',
     telephone: '',
-    taille_flotte: '1-5 conducteurs',
     password: '',
     password_confirm: ''
   });
@@ -52,7 +51,7 @@ function InscriptionRecruteur() {
 
       // 2. Créer le profil recruteur
       const { nom_entreprise, nom_responsable, prenom_responsable,
-        email, telephone, taille_flotte } = formData;
+        email, telephone } = formData;
 
       const response = await fetch(`${API_URL}/api/recruteurs`, {
         method: 'POST',
@@ -62,7 +61,7 @@ function InscriptionRecruteur() {
         },
         body: JSON.stringify({
           nom_entreprise, nom_responsable, prenom_responsable,
-          email, telephone, taille_flotte
+          email, telephone
         })
       });
 
@@ -164,16 +163,6 @@ function InscriptionRecruteur() {
                 <label className="block text-sm font-semibold text-wiky-gray mb-2">Confirmer le mot de passe *</label>
                 <input type="password" name="password_confirm" className="input" required onChange={handleChange} />
               </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-semibold text-wiky-gray mb-2">Taille de la flotte souhaitée</label>
-              <select name="taille_flotte" className="input" onChange={handleChange}>
-                <option>1-5 conducteurs</option>
-                <option>6-10 conducteurs</option>
-                <option>11-20 conducteurs</option>
-                <option>Plus de 20 conducteurs</option>
-              </select>
             </div>
 
             <div className="flex items-start gap-3">

@@ -4,12 +4,21 @@ import { useAuth } from '../context/AuthContext';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
+const JOURS = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
+
 function DashboardRecruteur() {
   const { session } = useAuth();
   const [abonnement, setAbonnement] = useState(null);
   const [favoris, setFavoris] = useState([]);
+  const [profil, setProfil] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // Offre
+  const [offreEdit, setOffreEdit] = useState(false);
+  const [offre, setOffre] = useState(null);
+  const [offreSaving, setOffreSaving] = useState(false);
+  const [offreSuccess, setOffreSuccess] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -18,9 +27,10 @@ function DashboardRecruteur() {
       try {
         const headers = { 'Authorization': `Bearer ${session.access_token}` };
 
-        const [abonnementRes, favorisRes] = await Promise.all([
+        const [abonnementRes, favorisRes, profilRes] = await Promise.all([
           fetch(`${API_URL}/api/abonnements/check`, { headers }),
-          fetch(`${API_URL}/api/favoris`, { headers })
+          fetch(`${API_URL}/api/favoris`, { headers }),
+          fetch(`${API_URL}/api/recruteurs/me`, { headers })
         ]);
 
         if (!abonnementRes.ok) throw new Error(`Erreur abonnement : ${abonnementRes.status}`);
@@ -33,6 +43,19 @@ function DashboardRecruteur() {
 
         setAbonnement(abonnementData);
         setFavoris(favorisData);
+
+        if (profilRes.ok) {
+          const profilData = await profilRes.json();
+          setProfil(profilData);
+          setOffre({
+            nombre_vehicules: profilData.nombre_vehicules ?? '',
+            recette_journaliere: profilData.recette_journaliere ?? '',
+            heures_travail: profilData.heures_travail ?? '',
+            jours_travail: profilData.jours_travail ?? [],
+            garde_vehicule: profilData.garde_vehicule ?? '',
+            type_contrat: profilData.type_contrat ?? ''
+          });
+        }
       } catch (err) {
         setError(err.message);
       } finally {
@@ -42,6 +65,43 @@ function DashboardRecruteur() {
 
     fetchData();
   }, [session]);
+
+  const toggleJour = (jour) => {
+    setOffre(prev => ({
+      ...prev,
+      jours_travail: prev.jours_travail.includes(jour)
+        ? prev.jours_travail.filter(j => j !== jour)
+        : [...prev.jours_travail, jour]
+    }));
+  };
+
+  const saveOffre = async () => {
+    if (!profil?.id) return;
+    setOffreSaving(true);
+    setOffreSuccess(false);
+    try {
+      const res = await fetch(`${API_URL}/api/recruteurs/${profil.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          ...offre,
+          nombre_vehicules: offre.nombre_vehicules ? parseInt(offre.nombre_vehicules) : null,
+          recette_journaliere: offre.recette_journaliere ? parseInt(offre.recette_journaliere) : null
+        })
+      });
+      if (!res.ok) throw new Error('Erreur lors de la sauvegarde');
+      setOffreEdit(false);
+      setOffreSuccess(true);
+      setTimeout(() => setOffreSuccess(false), 3000);
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      setOffreSaving(false);
+    }
+  };
 
   const joursRestants = () => {
     if (!abonnement?.date_fin) return 0;
@@ -113,6 +173,132 @@ function DashboardRecruteur() {
             {abonnement?.active ? "Renouveler l'Abonnement" : "S'abonner — 10.000 FCFA/mois"}
           </Link>
         </div>
+
+        {/* Mon offre */}
+        {offre !== null && (
+          <div className="card p-8 mb-6">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-2xl font-bold text-wiky-blue">Mon Offre</h2>
+              {!offreEdit ? (
+                <button onClick={() => setOffreEdit(true)} className="btn btn-outline text-sm">
+                  ✏️ Modifier
+                </button>
+              ) : (
+                <div className="flex gap-2">
+                  <button onClick={() => setOffreEdit(false)} className="btn btn-outline text-sm">Annuler</button>
+                  <button onClick={saveOffre} disabled={offreSaving} className="btn btn-primary text-sm disabled:opacity-60">
+                    {offreSaving ? 'Sauvegarde...' : '✅ Sauvegarder'}
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {offreSuccess && (
+              <div className="mb-4 bg-green-50 border border-green-200 text-green-700 px-4 py-2 rounded text-sm">
+                ✅ Offre mise à jour avec succès !
+              </div>
+            )}
+
+            {!offreEdit ? (
+              /* Affichage */
+              <div className="grid md:grid-cols-2 gap-4 text-sm">
+                <div><span className="font-semibold text-wiky-blue">Véhicules disponibles :</span> {offre.nombre_vehicules || <span className="text-gray-400">Non renseigné</span>}</div>
+                <div><span className="font-semibold text-wiky-blue">Recette journalière :</span> {offre.recette_journaliere ? `${Number(offre.recette_journaliere).toLocaleString('fr-FR')} FCFA` : <span className="text-gray-400">Non renseigné</span>}</div>
+                <div><span className="font-semibold text-wiky-blue">Heures de travail :</span> {offre.heures_travail || <span className="text-gray-400">Non renseigné</span>}</div>
+                <div><span className="font-semibold text-wiky-blue">Garde du véhicule :</span> {offre.garde_vehicule || <span className="text-gray-400">Non renseigné</span>}</div>
+                <div><span className="font-semibold text-wiky-blue">Type de contrat :</span> {offre.type_contrat || <span className="text-gray-400">Non renseigné</span>}</div>
+                <div>
+                  <span className="font-semibold text-wiky-blue">Jours de travail :</span>{' '}
+                  {offre.jours_travail?.length > 0
+                    ? offre.jours_travail.join(', ')
+                    : <span className="text-gray-400">Non renseigné</span>}
+                </div>
+              </div>
+            ) : (
+              /* Formulaire d'édition */
+              <div className="space-y-4">
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Nombre de véhicules</label>
+                    <input
+                      type="number" min="1"
+                      value={offre.nombre_vehicules}
+                      onChange={e => setOffre(o => ({ ...o, nombre_vehicules: e.target.value }))}
+                      className="w-full border rounded px-3 py-2"
+                      placeholder="Ex: 5"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Recette journalière (FCFA)</label>
+                    <input
+                      type="number" min="0"
+                      value={offre.recette_journaliere}
+                      onChange={e => setOffre(o => ({ ...o, recette_journaliere: e.target.value }))}
+                      className="w-full border rounded px-3 py-2"
+                      placeholder="Ex: 25000"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-1">Heures de travail</label>
+                  <input
+                    type="text"
+                    value={offre.heures_travail}
+                    onChange={e => setOffre(o => ({ ...o, heures_travail: e.target.value }))}
+                    className="w-full border rounded px-3 py-2"
+                    placeholder="Ex: 06h00 - 22h00"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2">Jours de travail</label>
+                  <div className="flex flex-wrap gap-2">
+                    {JOURS.map(jour => (
+                      <button
+                        key={jour} type="button"
+                        onClick={() => toggleJour(jour)}
+                        className={`px-3 py-1 rounded-full text-sm border transition-colors ${offre.jours_travail.includes(jour) ? 'bg-wiky-blue text-white border-wiky-blue' : 'bg-white border-gray-300 hover:border-wiky-blue'}`}
+                      >
+                        {jour}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2">Garde du véhicule</label>
+                  <div className="flex gap-3">
+                    {['Avec le conducteur', 'À garer au dépôt'].map(opt => (
+                      <button
+                        key={opt} type="button"
+                        onClick={() => setOffre(o => ({ ...o, garde_vehicule: opt }))}
+                        className={`flex-1 py-2 px-3 rounded border text-sm transition-colors ${offre.garde_vehicule === opt ? 'bg-wiky-blue text-white border-wiky-blue' : 'bg-white border-gray-300 hover:border-wiky-blue'}`}
+                      >
+                        {opt}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2">Type de contrat</label>
+                  <div className="flex flex-col gap-2">
+                    {['Location simple (VTC uniquement)', 'Achat progressif (véhicule au conducteur après X ans)', 'Les deux propositions'].map(opt => (
+                      <button
+                        key={opt} type="button"
+                        onClick={() => setOffre(o => ({ ...o, type_contrat: opt }))}
+                        className={`py-2 px-4 rounded border text-sm text-left transition-colors ${offre.type_contrat === opt ? 'bg-wiky-blue text-white border-wiky-blue' : 'bg-white border-gray-300 hover:border-wiky-blue'}`}
+                      >
+                        {opt}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Favoris */}
         <div className="card p-8">
