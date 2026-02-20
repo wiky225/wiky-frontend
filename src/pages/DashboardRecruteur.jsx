@@ -8,6 +8,12 @@ const JOURS = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dim
 const HEURES_PRESETS = ['6h - 22h', '8h - 20h', '24h/24', 'Flexible'];
 const TYPES_VEHICULES = ['Moto', 'Tricycle', 'Camionette', 'Véhicule standard', 'Véhicule électrique', 'Véhicule business'];
 
+const formatMilliers = (val) => {
+  const n = String(val).replace(/\D/g, '');
+  return n.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+};
+const parseMilliers = (val) => parseInt(String(val).replace(/\s/g, '')) || '';
+
 function DashboardRecruteur() {
   const { session } = useAuth();
   const [abonnement, setAbonnement] = useState(null);
@@ -310,10 +316,10 @@ function DashboardRecruteur() {
                           className="border rounded px-2 py-2 text-sm"
                         />
                         <input
-                          type="number" min="0"
-                          value={v.recette}
-                          onChange={e => updateVehicule(i, 'recette', e.target.value)}
-                          placeholder="Recette FCFA"
+                          type="text"
+                          value={formatMilliers(v.recette)}
+                          onChange={e => updateVehicule(i, 'recette', parseMilliers(e.target.value))}
+                          placeholder="25 000"
                           className="border rounded px-2 py-2 text-sm"
                         />
                         <button type="button" onClick={() => removeVehicule(i)} className="text-red-400 hover:text-red-600 text-lg leading-none">×</button>
