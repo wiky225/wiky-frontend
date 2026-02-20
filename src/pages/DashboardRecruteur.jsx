@@ -61,14 +61,15 @@ function FormulaireOffre({ form, setForm, onSave, onCancel, saving, error }) {
         {form.vehicules.length === 0 && <p className="text-gray-400 text-sm">Aucun véhicule ajouté.</p>}
         <div className="space-y-2">
           {form.vehicules.map((v, i) => (
-            <div key={i} className="grid grid-cols-[1fr_80px_140px_32px] gap-2 items-center">
+            <div key={i} className="grid grid-cols-[1fr_64px] sm:grid-cols-[1fr_80px_150px_32px] gap-2 items-start">
               <select value={v.type} onChange={e => updateVehicule(i, 'type', e.target.value)} className="border rounded px-2 py-2 text-sm">
                 <option value="">Type...</option>
                 {TYPES_VEHICULES.map(t => <option key={t} value={t}>{t}</option>)}
               </select>
               <input type="number" min="1" value={v.nombre} onChange={e => updateVehicule(i, 'nombre', e.target.value)} placeholder="Nb" className="border rounded px-2 py-2 text-sm" />
-              <input type="text" value={formatMilliers(v.recette)} onChange={e => updateVehicule(i, 'recette', parseMilliers(e.target.value))} placeholder="25 000 FCFA/j" className="border rounded px-2 py-2 text-sm" />
-              <button type="button" onClick={() => removeVehicule(i)} className="text-red-400 hover:text-red-600 text-xl leading-none">×</button>
+              <input type="text" value={formatMilliers(v.recette)} onChange={e => updateVehicule(i, 'recette', parseMilliers(e.target.value))} placeholder="Recette FCFA/j" className="border rounded px-2 py-2 text-sm col-span-2 sm:col-span-1" />
+              <button type="button" onClick={() => removeVehicule(i)} className="text-red-400 hover:text-red-600 text-xl leading-none hidden sm:block">×</button>
+              <button type="button" onClick={() => removeVehicule(i)} className="text-xs text-red-400 hover:text-red-600 underline sm:hidden col-span-2 text-left">Supprimer</button>
             </div>
           ))}
         </div>
@@ -549,10 +550,10 @@ export default function DashboardRecruteur() {
           {/* Contenu principal */}
           <div className="flex-1 min-w-0">
             {/* Onglets */}
-            <div className="flex gap-1 mb-6 bg-white rounded-xl p-1 shadow-sm border">
+            <div className="flex gap-1 mb-6 bg-white rounded-xl p-1 shadow-sm border overflow-x-auto">
               {TABS.map(tab => (
                 <button key={tab.id} onClick={() => setActiveTab(tab.id)}
-                  className={`flex-1 py-2 px-3 text-sm font-medium rounded-lg transition-colors ${activeTab === tab.id ? 'bg-wiky-blue text-white shadow-sm' : 'text-gray-500 hover:text-wiky-blue'}`}>
+                  className={`shrink-0 sm:flex-1 py-2 px-3 text-sm font-medium rounded-lg transition-colors whitespace-nowrap ${activeTab === tab.id ? 'bg-wiky-blue text-white shadow-sm' : 'text-gray-500 hover:text-wiky-blue'}`}>
                   {tab.label}
                 </button>
               ))}

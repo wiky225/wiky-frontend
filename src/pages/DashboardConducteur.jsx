@@ -91,12 +91,12 @@ function Sidebar({ profil, activeTab, setActiveTab, onStatutChange }) {
       </div>
 
       {/* Navigation onglets */}
-      <div className="bg-white rounded-xl shadow-sm p-2 flex flex-col gap-1">
+      <div className="bg-white rounded-xl shadow-sm p-2 flex md:flex-col gap-1 overflow-x-auto">
         {TABS.map(tab => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`text-left px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+            className={`shrink-0 md:shrink text-left px-4 py-2.5 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${
               activeTab === tab.id ? 'bg-wiky-blue text-white' : 'text-gray-600 hover:bg-gray-50'
             }`}
           >

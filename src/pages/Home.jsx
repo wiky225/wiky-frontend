@@ -150,7 +150,7 @@ function SliderConducteurs() {
                   <Link
                     key={c.id}
                     to={`/conducteur/${c.id}`}
-                    className="flex-none w-60 md:w-72 bg-white border rounded-xl shadow-sm hover:shadow-md transition-all hover:-translate-y-1 overflow-hidden"
+                    className="flex-none w-[78vw] sm:w-64 md:w-72 bg-white border rounded-xl shadow-sm hover:shadow-md transition-all hover:-translate-y-1 overflow-hidden"
                   >
                     <div className="relative">
                       <img
@@ -219,7 +219,7 @@ function ApercuOffres() {
   const [offres, setOffres] = useState([]);
 
   useEffect(() => {
-    fetch(`${API_URL}/api/recruteurs/offres`)
+    fetch(`${API_URL}/api/offres`)
       .then(r => r.ok ? r.json() : [])
       .then(data => setOffres((Array.isArray(data) ? data : []).filter(o => o.vehicules?.length).slice(0, 3)))
       .catch(() => {});

@@ -241,7 +241,7 @@ export default function Repertoire() {
             placeholder="🔍 Rechercher par nom ou prénom..."
             className="w-full border rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-wiky-blue"
           />
-          <div className="flex flex-wrap gap-3 items-center">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
             <select value={filtreVille} onChange={e => setFiltreVille(e.target.value)} className="border rounded-lg px-3 py-2 text-sm">
               <option value="">📍 Toutes les villes</option>
               {villes.map(v => <option key={v} value={v}>{v}</option>)}
@@ -254,12 +254,14 @@ export default function Repertoire() {
               <option value="">🚕 Toutes les plateformes</option>
               {plateformes.map(p => <option key={p} value={p}>{p}</option>)}
             </select>
-            {hasFilters && (
+          </div>
+          <div className="flex items-center justify-between">
+            {hasFilters ? (
               <button onClick={resetFiltres} className="text-sm text-wiky-orange hover:underline">
-                Réinitialiser
+                Réinitialiser les filtres
               </button>
-            )}
-            <div className="ml-auto flex items-center gap-3">
+            ) : <span />}
+            <div className="flex items-center gap-3">
               <span className="text-sm text-gray-500">
                 {loading ? '...' : `${conducteursFiltres.length} conducteur${conducteursFiltres.length > 1 ? 's' : ''}`}
               </span>
