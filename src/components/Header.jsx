@@ -10,6 +10,8 @@ export default function Header() {
     navigate('/');
   };
 
+  const isRecruteur = user?.user_metadata?.role === 'recruteur';
+
   const dashboardPath = user?.user_metadata?.role === 'conducteur'
     ? '/dashboard-conducteur'
     : user?.user_metadata?.role === 'admin'
@@ -37,9 +39,11 @@ export default function Header() {
             <Link to="/repertoire" className="text-wiky-gray hover:text-wiky-orange transition-colors">
               Trouver un Conducteur
             </Link>
-            <Link to="/offres" className="text-wiky-gray hover:text-wiky-orange transition-colors">
-              Offres Recruteurs
-            </Link>
+            {!isRecruteur && (
+              <Link to="/offres" className="text-wiky-gray hover:text-wiky-orange transition-colors">
+                Offres Recruteurs
+              </Link>
+            )}
 
             {user ? (
               <>

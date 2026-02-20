@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
@@ -111,14 +112,20 @@ function CarteOffre({ offre, hasContact }) {
 
 export default function Offres() {
   const { user, session } = useAuth();
+  const navigate = useNavigate();
   const [offres, setOffres] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filtreVehicule, setFiltreVehicule] = useState('');
   const [filtreContrat, setFiltreContrat] = useState('');
 
   const isConducteur = user?.user_metadata?.role === 'conducteur';
+  const isRecruteur = user?.user_metadata?.role === 'recruteur';
   const isAdmin = user?.user_metadata?.role === 'admin';
   const hasContact = isConducteur || isAdmin;
+
+  useEffect(() => {
+    if (isRecruteur) navigate('/dashboard-recruteur', { replace: true });
+  }, [isRecruteur, navigate]);
 
   useEffect(() => {
     const fetchOffres = async () => {
