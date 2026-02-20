@@ -5,6 +5,8 @@ import { useAuth } from '../context/AuthContext';
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 const JOURS = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
+const HEURES_PRESETS = ['6h - 22h', '8h - 20h', '24h/24', 'Flexible'];
+const TYPES_VEHICULES = ['Moto', 'Tricycle', 'Camionette', 'Véhicule', 'GOYA'];
 
 function DashboardRecruteur() {
   const { session } = useAuth();
@@ -48,9 +50,10 @@ function DashboardRecruteur() {
           const profilData = await profilRes.json();
           setProfil(profilData);
           setOffre({
-            nombre_vehicules: profilData.nombre_vehicules ?? '',
-            recette_journaliere: profilData.recette_journaliere ?? '',
+            vehicules: profilData.vehicules ?? [],
             heures_travail: profilData.heures_travail ?? '',
+            heures_custom_debut: '',
+            heures_custom_fin: '',
             jours_travail: profilData.jours_travail ?? [],
             garde_vehicule: profilData.garde_vehicule ?? '',
             type_contrat: profilData.type_contrat ?? ''
@@ -75,22 +78,58 @@ function DashboardRecruteur() {
     }));
   };
 
+  const addVehicule = () => {
+    setOffre(prev => ({
+      ...prev,
+      vehicules: [...prev.vehicules, { type: '', nombre: '', recette: '' }]
+    }));
+  };
+
+  const updateVehicule = (index, field, value) => {
+    setOffre(prev => {
+      const updated = [...prev.vehicules];
+      updated[index] = { ...updated[index], [field]: value };
+      return { ...prev, vehicules: updated };
+    });
+  };
+
+  const removeVehicule = (index) => {
+    setOffre(prev => ({
+      ...prev,
+      vehicules: prev.vehicules.filter((_, i) => i !== index)
+    }));
+  };
+
+  const setHeuresPreset = (preset) => {
+    setOffre(prev => ({ ...prev, heures_travail: preset, heures_custom_debut: '', heures_custom_fin: '' }));
+  };
+
+  const setHeuresCustom = (debut, fin) => {
+    const val = debut && fin ? `${debut} - ${fin}` : '';
+    setOffre(prev => ({ ...prev, heures_travail: val, heures_custom_debut: debut, heures_custom_fin: fin }));
+  };
+
   const saveOffre = async () => {
     if (!profil?.id) return;
     setOffreSaving(true);
     setOffreSuccess(false);
     try {
+      const payload = {
+        heures_travail: offre.heures_travail,
+        jours_travail: offre.jours_travail,
+        garde_vehicule: offre.garde_vehicule,
+        type_contrat: offre.type_contrat,
+        vehicules: offre.vehicules
+          .filter(v => v.type)
+          .map(v => ({ type: v.type, nombre: parseInt(v.nombre) || 0, recette: parseInt(v.recette) || 0 }))
+      };
       const res = await fetch(`${API_URL}/api/recruteurs/${profil.id}`, {
         method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${session.access_token}`,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          ...offre,
-          nombre_vehicules: offre.nombre_vehicules ? parseInt(offre.nombre_vehicules) : null,
-          recette_journaliere: offre.recette_journaliere ? parseInt(offre.recette_journaliere) : null
-        })
+        body: JSON.stringify(payload)
       });
       if (!res.ok) throw new Error('Erreur lors de la sauvegarde');
       setOffreEdit(false);
@@ -201,95 +240,145 @@ function DashboardRecruteur() {
 
             {!offreEdit ? (
               /* Affichage */
-              <div className="grid md:grid-cols-2 gap-4 text-sm">
-                <div><span className="font-semibold text-wiky-blue">Véhicules disponibles :</span> {offre.nombre_vehicules || <span className="text-gray-400">Non renseigné</span>}</div>
-                <div><span className="font-semibold text-wiky-blue">Recette journalière :</span> {offre.recette_journaliere ? `${Number(offre.recette_journaliere).toLocaleString('fr-FR')} FCFA` : <span className="text-gray-400">Non renseigné</span>}</div>
-                <div><span className="font-semibold text-wiky-blue">Heures de travail :</span> {offre.heures_travail || <span className="text-gray-400">Non renseigné</span>}</div>
-                <div><span className="font-semibold text-wiky-blue">Garde du véhicule :</span> {offre.garde_vehicule || <span className="text-gray-400">Non renseigné</span>}</div>
-                <div><span className="font-semibold text-wiky-blue">Type de contrat :</span> {offre.type_contrat || <span className="text-gray-400">Non renseigné</span>}</div>
+              <div className="space-y-4 text-sm">
+                {/* Véhicules */}
                 <div>
-                  <span className="font-semibold text-wiky-blue">Jours de travail :</span>{' '}
-                  {offre.jours_travail?.length > 0
-                    ? offre.jours_travail.join(', ')
-                    : <span className="text-gray-400">Non renseigné</span>}
+                  <span className="font-semibold text-wiky-blue block mb-2">Flotte de véhicules :</span>
+                  {offre.vehicules?.length > 0 ? (
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-sm border rounded">
+                        <thead className="bg-gray-50">
+                          <tr>
+                            <th className="text-left px-3 py-2 font-medium text-gray-600">Type</th>
+                            <th className="text-left px-3 py-2 font-medium text-gray-600">Nombre</th>
+                            <th className="text-left px-3 py-2 font-medium text-gray-600">Recette/jour</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {offre.vehicules.map((v, i) => (
+                            <tr key={i} className="border-t">
+                              <td className="px-3 py-2">{v.type}</td>
+                              <td className="px-3 py-2">{v.nombre}</td>
+                              <td className="px-3 py-2">{Number(v.recette).toLocaleString('fr-FR')} FCFA</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  ) : <span className="text-gray-400">Non renseigné</span>}
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div><span className="font-semibold text-wiky-blue">Heures de travail :</span> {offre.heures_travail || <span className="text-gray-400">Non renseigné</span>}</div>
+                  <div>
+                    <span className="font-semibold text-wiky-blue">Jours de travail :</span>{' '}
+                    {offre.jours_travail?.length > 0 ? offre.jours_travail.join(', ') : <span className="text-gray-400">Non renseigné</span>}
+                  </div>
+                  <div><span className="font-semibold text-wiky-blue">Garde du véhicule :</span> {offre.garde_vehicule || <span className="text-gray-400">Non renseigné</span>}</div>
+                  <div><span className="font-semibold text-wiky-blue">Type de contrat :</span> {offre.type_contrat || <span className="text-gray-400">Non renseigné</span>}</div>
                 </div>
               </div>
             ) : (
               /* Formulaire d'édition */
-              <div className="space-y-4">
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium mb-1">Nombre de véhicules</label>
-                    <input
-                      type="number" min="1"
-                      value={offre.nombre_vehicules}
-                      onChange={e => setOffre(o => ({ ...o, nombre_vehicules: e.target.value }))}
-                      className="w-full border rounded px-3 py-2"
-                      placeholder="Ex: 5"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-1">Recette journalière (FCFA)</label>
-                    <input
-                      type="number" min="0"
-                      value={offre.recette_journaliere}
-                      onChange={e => setOffre(o => ({ ...o, recette_journaliere: e.target.value }))}
-                      className="w-full border rounded px-3 py-2"
-                      placeholder="Ex: 25000"
-                    />
-                  </div>
-                </div>
+              <div className="space-y-6">
 
+                {/* Flotte de véhicules */}
                 <div>
-                  <label className="block text-sm font-medium mb-1">Heures de travail</label>
-                  <input
-                    type="text"
-                    value={offre.heures_travail}
-                    onChange={e => setOffre(o => ({ ...o, heures_travail: e.target.value }))}
-                    className="w-full border rounded px-3 py-2"
-                    placeholder="Ex: 06h00 - 22h00"
-                  />
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="text-sm font-medium">Flotte de véhicules</label>
+                    <button type="button" onClick={addVehicule} className="text-sm text-wiky-blue hover:underline">+ Ajouter un type</button>
+                  </div>
+                  {offre.vehicules.length === 0 && (
+                    <p className="text-gray-400 text-sm">Aucun véhicule ajouté.</p>
+                  )}
+                  <div className="space-y-2">
+                    {offre.vehicules.map((v, i) => (
+                      <div key={i} className="grid grid-cols-[1fr_80px_120px_32px] gap-2 items-center">
+                        <select
+                          value={v.type}
+                          onChange={e => updateVehicule(i, 'type', e.target.value)}
+                          className="border rounded px-2 py-2 text-sm"
+                        >
+                          <option value="">Type...</option>
+                          {TYPES_VEHICULES.map(t => <option key={t} value={t}>{t}</option>)}
+                        </select>
+                        <input
+                          type="number" min="1"
+                          value={v.nombre}
+                          onChange={e => updateVehicule(i, 'nombre', e.target.value)}
+                          placeholder="Nb"
+                          className="border rounded px-2 py-2 text-sm"
+                        />
+                        <input
+                          type="number" min="0"
+                          value={v.recette}
+                          onChange={e => updateVehicule(i, 'recette', e.target.value)}
+                          placeholder="Recette FCFA"
+                          className="border rounded px-2 py-2 text-sm"
+                        />
+                        <button type="button" onClick={() => removeVehicule(i)} className="text-red-400 hover:text-red-600 text-lg leading-none">×</button>
+                      </div>
+                    ))}
+                  </div>
                 </div>
 
+                {/* Heures de travail */}
+                <div>
+                  <label className="block text-sm font-medium mb-2">Heures de travail</label>
+                  <div className="flex flex-wrap gap-2 mb-2">
+                    {HEURES_PRESETS.map(p => (
+                      <button key={p} type="button" onClick={() => setHeuresPreset(p)}
+                        className={`px-3 py-1 rounded-full text-sm border transition-colors ${offre.heures_travail === p ? 'bg-wiky-blue text-white border-wiky-blue' : 'bg-white border-gray-300 hover:border-wiky-blue'}`}>
+                        {p}
+                      </button>
+                    ))}
+                    <button type="button" onClick={() => setOffre(o => ({ ...o, heures_travail: 'custom' }))}
+                      className={`px-3 py-1 rounded-full text-sm border transition-colors ${!HEURES_PRESETS.includes(offre.heures_travail) && offre.heures_travail ? 'bg-wiky-blue text-white border-wiky-blue' : 'bg-white border-gray-300 hover:border-wiky-blue'}`}>
+                      Personnalisé
+                    </button>
+                  </div>
+                  {(!HEURES_PRESETS.includes(offre.heures_travail) || offre.heures_travail === 'custom') && (
+                    <div className="flex items-center gap-2 mt-2">
+                      <input type="time" onChange={e => setHeuresCustom(e.target.value, offre.heures_custom_fin)} className="border rounded px-2 py-2 text-sm" />
+                      <span className="text-gray-500">à</span>
+                      <input type="time" onChange={e => setHeuresCustom(offre.heures_custom_debut, e.target.value)} className="border rounded px-2 py-2 text-sm" />
+                    </div>
+                  )}
+                </div>
+
+                {/* Jours de travail */}
                 <div>
                   <label className="block text-sm font-medium mb-2">Jours de travail</label>
                   <div className="flex flex-wrap gap-2">
                     {JOURS.map(jour => (
-                      <button
-                        key={jour} type="button"
-                        onClick={() => toggleJour(jour)}
-                        className={`px-3 py-1 rounded-full text-sm border transition-colors ${offre.jours_travail.includes(jour) ? 'bg-wiky-blue text-white border-wiky-blue' : 'bg-white border-gray-300 hover:border-wiky-blue'}`}
-                      >
+                      <button key={jour} type="button" onClick={() => toggleJour(jour)}
+                        className={`px-3 py-1 rounded-full text-sm border transition-colors ${offre.jours_travail.includes(jour) ? 'bg-wiky-blue text-white border-wiky-blue' : 'bg-white border-gray-300 hover:border-wiky-blue'}`}>
                         {jour}
                       </button>
                     ))}
                   </div>
                 </div>
 
+                {/* Garde du véhicule */}
                 <div>
                   <label className="block text-sm font-medium mb-2">Garde du véhicule</label>
                   <div className="flex gap-3">
                     {['Avec le conducteur', 'À garer au dépôt'].map(opt => (
-                      <button
-                        key={opt} type="button"
-                        onClick={() => setOffre(o => ({ ...o, garde_vehicule: opt }))}
-                        className={`flex-1 py-2 px-3 rounded border text-sm transition-colors ${offre.garde_vehicule === opt ? 'bg-wiky-blue text-white border-wiky-blue' : 'bg-white border-gray-300 hover:border-wiky-blue'}`}
-                      >
+                      <button key={opt} type="button" onClick={() => setOffre(o => ({ ...o, garde_vehicule: opt }))}
+                        className={`flex-1 py-2 px-3 rounded border text-sm transition-colors ${offre.garde_vehicule === opt ? 'bg-wiky-blue text-white border-wiky-blue' : 'bg-white border-gray-300 hover:border-wiky-blue'}`}>
                         {opt}
                       </button>
                     ))}
                   </div>
                 </div>
 
+                {/* Type de contrat */}
                 <div>
                   <label className="block text-sm font-medium mb-2">Type de contrat</label>
                   <div className="flex flex-col gap-2">
                     {['Location simple (VTC uniquement)', 'Achat progressif (véhicule au conducteur après X ans)', 'Les deux propositions'].map(opt => (
-                      <button
-                        key={opt} type="button"
-                        onClick={() => setOffre(o => ({ ...o, type_contrat: opt }))}
-                        className={`py-2 px-4 rounded border text-sm text-left transition-colors ${offre.type_contrat === opt ? 'bg-wiky-blue text-white border-wiky-blue' : 'bg-white border-gray-300 hover:border-wiky-blue'}`}
-                      >
+                      <button key={opt} type="button" onClick={() => setOffre(o => ({ ...o, type_contrat: opt }))}
+                        className={`py-2 px-4 rounded border text-sm text-left transition-colors ${offre.type_contrat === opt ? 'bg-wiky-blue text-white border-wiky-blue' : 'bg-white border-gray-300 hover:border-wiky-blue'}`}>
                         {opt}
                       </button>
                     ))}
