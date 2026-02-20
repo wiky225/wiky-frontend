@@ -56,7 +56,10 @@ export default function InscriptionConducteur() {
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: formData.email,
         password: formData.password,
-        options: { data: { role: 'conducteur' } }
+        options: {
+          data: { role: 'conducteur' },
+          emailRedirectTo: `${window.location.origin}/auth/confirm`,
+        },
       });
       if (authError) throw authError;
 

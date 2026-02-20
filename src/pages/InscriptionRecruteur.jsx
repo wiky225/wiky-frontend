@@ -44,7 +44,10 @@ function InscriptionRecruteur() {
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: formData.email,
         password: formData.password,
-        options: { data: { role: 'recruteur' } }
+        options: {
+          data: { role: 'recruteur' },
+          emailRedirectTo: `${window.location.origin}/auth/confirm`,
+        },
       });
       if (authError) throw authError;
 

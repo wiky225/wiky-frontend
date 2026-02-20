@@ -15,6 +15,7 @@ import Inscription from './pages/Inscription'
 import Finalisation from './pages/Finalisation'
 import DashboardAdmin from './pages/DashboardAdmin'
 import Offres from './pages/Offres'
+import AuthConfirm from './pages/AuthConfirm'
 import PrivateRoute from './components/PrivateRoute'
 
 function NotFound() {
@@ -48,6 +49,7 @@ function App() {
             <Route path="/offres" element={<Offres />} />
             <Route path="/finaliser/:token" element={<Finalisation />} />
             <Route path="/dashboard-admin" element={<PrivateRoute><DashboardAdmin /></PrivateRoute>} />
+            <Route path="/auth/confirm" element={<AuthConfirm />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>

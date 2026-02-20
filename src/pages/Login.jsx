@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 function Login() {
@@ -9,6 +9,8 @@ function Login() {
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const emailConfirme = searchParams.get('email_confirme') === '1';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -36,6 +38,12 @@ function Login() {
         <div className="card p-8">
           <h1 className="text-3xl font-bold text-wiky-blue mb-2 text-center">Connexion</h1>
           <p className="text-wiky-gray mb-8 text-center">Accédez à votre compte Wiky</p>
+
+          {emailConfirme && (
+            <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-6 text-sm">
+              ✅ Votre email a bien été confirmé. Vous pouvez maintenant vous connecter.
+            </div>
+          )}
 
           {error && (
             <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 text-sm">
