@@ -12,6 +12,8 @@ export default function Header() {
 
   const dashboardPath = user?.user_metadata?.role === 'conducteur'
     ? '/dashboard-conducteur'
+    : user?.user_metadata?.role === 'admin'
+    ? '/dashboard-admin'
     : '/dashboard-recruteur';
 
   return (

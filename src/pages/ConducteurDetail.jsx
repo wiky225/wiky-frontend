@@ -58,7 +58,7 @@ export default function ConducteurDetail() {
         if (!condRes.ok) throw new Error('Conducteur non trouvé');
         const [condData, avisData] = await Promise.all([condRes.json(), avisRes.json()]);
         setConducteur(condData);
-        setAvis(avisData);
+        setAvis(Array.isArray(avisData) ? avisData : []);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -234,7 +234,7 @@ export default function ConducteurDetail() {
                         <p>{conducteur.situation_matrimoniale}{conducteur.nombre_enfants != null ? ` — ${conducteur.nombre_enfants} enfant(s)` : ''}</p>
                       </div>
                     )}
-                    {conducteur.type_collaboration?.length > 0 && (
+                    {Array.isArray(conducteur.type_collaboration) && conducteur.type_collaboration.length > 0 && (
                       <div>
                         <h3 className="font-semibold text-wiky-blue">🤝 Type de collaboration</h3>
                         <div className="flex flex-wrap gap-2 mt-1">
@@ -244,7 +244,7 @@ export default function ConducteurDetail() {
                         </div>
                       </div>
                     )}
-                    {conducteur.preferences_yango?.length > 0 && (
+                    {Array.isArray(conducteur.preferences_yango) && conducteur.preferences_yango.length > 0 && (
                       <div>
                         <h3 className="font-semibold text-wiky-blue">🚗 Préférences Yango</h3>
                         <div className="flex flex-wrap gap-2 mt-1">
