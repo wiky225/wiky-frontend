@@ -215,6 +215,31 @@ export default function Finalisation() {
             </div>
           </div>
 
+          {/* Identité */}
+          <div className="bg-white rounded-lg shadow p-6 space-y-4">
+            <h2 className="text-xl font-bold text-wiky-blue border-b pb-2">🪪 Pièce d'identité</h2>
+            <div className="grid md:grid-cols-3 gap-4">
+              <div>
+                <label className="block text-sm font-medium mb-1">Nationalité *</label>
+                <input type="text" name="nationalite" value={form.nationalite || ''} onChange={handleChange} required placeholder="Ex: Ivoirien(ne)" className="w-full border rounded px-3 py-2" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Type de pièce *</label>
+                <select name="type_piece" value={form.type_piece || ''} onChange={handleChange} required className="w-full border rounded px-3 py-2">
+                  <option value="">Sélectionnez...</option>
+                  <option value="CNI">CNI</option>
+                  <option value="Passeport">Passeport</option>
+                  <option value="Titre de séjour">Titre de séjour</option>
+                  <option value="Carte consulaire">Carte consulaire</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Numéro de pièce *</label>
+                <input type="text" name="numero_piece" value={form.numero_piece || ''} onChange={handleChange} required placeholder="Ex: CI0123456789" className="w-full border rounded px-3 py-2" />
+              </div>
+            </div>
+          </div>
+
           {/* Contact */}
           <div className="bg-white rounded-lg shadow p-6 space-y-4">
             <h2 className="text-xl font-bold text-wiky-blue border-b pb-2">📞 Contact</h2>

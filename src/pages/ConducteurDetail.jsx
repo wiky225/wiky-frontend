@@ -278,6 +278,12 @@ export default function ConducteurDetail() {
                         <p>{conducteur.personne_urgence}</p>
                       </div>
                     )}
+                    {conducteur.nationalite && (
+                      <div>
+                        <h3 className="font-semibold text-wiky-blue">🪪 Identité</h3>
+                        <p>{conducteur.nationalite}{conducteur.type_piece ? ` — ${conducteur.type_piece}` : ''}{conducteur.numero_piece ? ` n°${conducteur.numero_piece}` : ''}</p>
+                      </div>
+                    )}
                   </>
                 )}
               </div>

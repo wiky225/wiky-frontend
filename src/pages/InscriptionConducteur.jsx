@@ -26,6 +26,7 @@ export default function InscriptionConducteur() {
   const [formData, setFormData] = useState({
     nom: '', prenom: '', sexe: '', date_naissance: '', email: '', telephone: '',
     password: '', password_confirm: '',
+    nationalite: '', type_piece: '', numero_piece: '',
     ville: '', commune: '', quartier: '', annees_experience: '',
     plateformes_vtc: '', situation_matrimoniale: '', nombre_enfants: 0,
     description: ''
@@ -63,6 +64,7 @@ export default function InscriptionConducteur() {
 
       // 2. Créer le profil conducteur
       const { nom, prenom, sexe, date_naissance, email, telephone,
+        nationalite, type_piece, numero_piece,
         ville, commune, quartier, annees_experience,
         plateformes_vtc, situation_matrimoniale, nombre_enfants, description } = formData;
 
@@ -74,6 +76,7 @@ export default function InscriptionConducteur() {
         },
         body: JSON.stringify({
           nom, prenom, sexe, date_naissance, email, telephone,
+          nationalite, type_piece, numero_piece,
           ville, commune, quartier, annees_experience,
           plateformes_vtc, situation_matrimoniale,
           nombre_enfants: parseInt(nombre_enfants) || 0,
@@ -150,6 +153,28 @@ export default function InscriptionConducteur() {
             <div>
               <label className="block text-sm font-medium mb-2">Date de naissance *</label>
               <input type="date" name="date_naissance" required onChange={handleChange} className="w-full border rounded px-3 py-2" />
+            </div>
+          </div>
+
+          {/* Identité */}
+          <div className="grid md:grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium mb-2">Nationalité *</label>
+              <input type="text" name="nationalite" required onChange={handleChange} placeholder="Ex: Ivoirien(ne)" className="w-full border rounded px-3 py-2" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-2">Type de pièce *</label>
+              <select name="type_piece" required onChange={handleChange} className="w-full border rounded px-3 py-2">
+                <option value="">Sélectionnez...</option>
+                <option value="CNI">CNI</option>
+                <option value="Passeport">Passeport</option>
+                <option value="Titre de séjour">Titre de séjour</option>
+                <option value="Carte consulaire">Carte consulaire</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-2">Numéro de pièce *</label>
+              <input type="text" name="numero_piece" required onChange={handleChange} placeholder="Ex: CI0123456789" className="w-full border rounded px-3 py-2" />
             </div>
           </div>
 
