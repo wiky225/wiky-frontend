@@ -23,7 +23,7 @@ export default function InscriptionConducteur() {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
   const [formData, setFormData] = useState({
-    nom: '', prenom: '', date_naissance: '', email: '', telephone: '',
+    nom: '', prenom: '', sexe: '', date_naissance: '', email: '', telephone: '',
     password: '', password_confirm: '',
     ville: '', commune: '', quartier: '', annees_experience: '',
     plateformes_vtc: '', situation_matrimoniale: '', nombre_enfants: 0,
@@ -61,7 +61,7 @@ export default function InscriptionConducteur() {
       const token = authData.session?.access_token;
 
       // 2. Créer le profil conducteur
-      const { nom, prenom, date_naissance, email, telephone,
+      const { nom, prenom, sexe, date_naissance, email, telephone,
         ville, commune, quartier, annees_experience,
         plateformes_vtc, situation_matrimoniale, nombre_enfants, description } = formData;
 
@@ -72,7 +72,7 @@ export default function InscriptionConducteur() {
           ...(token && { 'Authorization': `Bearer ${token}` })
         },
         body: JSON.stringify({
-          nom, prenom, date_naissance, email, telephone,
+          nom, prenom, sexe, date_naissance, email, telephone,
           ville, commune, quartier, annees_experience,
           plateformes_vtc, situation_matrimoniale,
           nombre_enfants: parseInt(nombre_enfants) || 0,
@@ -137,9 +137,19 @@ export default function InscriptionConducteur() {
             </div>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium mb-2">Date de naissance *</label>
-            <input type="date" name="date_naissance" required onChange={handleChange} className="w-full border rounded px-3 py-2" />
+          <div className="grid md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium mb-2">Sexe *</label>
+              <select name="sexe" required onChange={handleChange} className="w-full border rounded px-3 py-2">
+                <option value="">Sélectionnez...</option>
+                <option value="Homme">Homme</option>
+                <option value="Femme">Femme</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-2">Date de naissance *</label>
+              <input type="date" name="date_naissance" required onChange={handleChange} className="w-full border rounded px-3 py-2" />
+            </div>
           </div>
 
           <div className="grid md:grid-cols-2 gap-4">
