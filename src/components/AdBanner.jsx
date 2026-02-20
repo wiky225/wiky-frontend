@@ -11,20 +11,29 @@ const FORMAT_SIZES = {
 
 export default function AdBanner({ position, className = '' }) {
   const [annonce, setAnnonce] = useState(null);
+  const [debug, setDebug] = useState('chargement...');
 
   useEffect(() => {
     fetch(`${API_URL}/api/annonces?position=${encodeURIComponent(position)}`)
-      .then(r => r.ok ? r.json() : [])
+      .then(r => r.ok ? r.json() : Promise.reject(`HTTP ${r.status}`))
       .then(data => {
         if (Array.isArray(data) && data.length > 0) {
-          // Si plusieurs annonces pour la même position, on en choisit une au hasard
           setAnnonce(data[Math.floor(Math.random() * data.length)]);
+          setDebug(`OK — ${data.length} annonce(s)`);
+        } else {
+          setDebug(`Aucune annonce pour "${position}"`);
         }
       })
-      .catch(() => {});
+      .catch(err => setDebug(`Erreur: ${err}`));
   }, [position]);
 
-  if (!annonce) return null;
+  if (!annonce) return (
+    <div className={`flex justify-center py-3 ${className}`}>
+      <div className="border-2 border-dashed border-gray-300 rounded px-6 py-4 text-xs text-gray-400 text-center">
+        [AdBanner — {debug}]
+      </div>
+    </div>
+  );
 
   const size = FORMAT_SIZES[annonce.format] || FORMAT_SIZES.medium_rectangle;
 
