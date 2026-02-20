@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import AdBanner from '../components/AdBanner'
 
 function Home() {
   const stats = [
@@ -73,6 +74,9 @@ function Home() {
           </div>
         </div>
       </section>
+
+      {/* Bannière publicitaire */}
+      <AdBanner position="home-leaderboard" className="py-4 bg-white" />
 
       {/* Features Section */}
       <section className="py-20 bg-wiky-gray-light">

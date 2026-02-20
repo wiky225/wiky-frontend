@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import AdBanner from '../components/AdBanner';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
@@ -186,6 +187,7 @@ export default function ConducteurDetail() {
                   </span>
                 </div>
               )}
+              <AdBanner position="conducteur-sidebar" className="mt-4" />
             </div>
 
             <div className="md:col-span-2">
