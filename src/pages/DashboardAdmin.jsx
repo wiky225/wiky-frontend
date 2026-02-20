@@ -10,7 +10,22 @@ const TABS = [
   { id: 'recruteurs', label: '🏢 Recruteurs' },
   { id: 'avis', label: '⭐ Avis' },
   { id: 'whatsapp', label: '📱 WhatsApp' },
-  { id: 'import', label: '📥 Import CSV' }
+  { id: 'import', label: '📥 Import CSV' },
+  { id: 'annonces', label: '📢 Publicités' }
+];
+
+const FORMATS = [
+  { value: 'medium_rectangle', label: 'Medium Rectangle (300×250)' },
+  { value: 'leaderboard', label: 'Leaderboard (728×90)' },
+  { value: 'mobile_banner', label: 'Mobile Banner (320×50)' },
+  { value: 'half_page', label: 'Half Page (300×600)' },
+];
+
+const POSITIONS = [
+  { value: 'repertoire-inline', label: 'Répertoire (entre les conducteurs)' },
+  { value: 'offres-inline', label: 'Page Offres (entre les offres)' },
+  { value: 'home-leaderboard', label: 'Accueil (leaderboard)' },
+  { value: 'conducteur-sidebar', label: 'Profil conducteur (sidebar)' },
 ];
 
 function StatCard({ label, value, sub, color = 'blue' }) {
@@ -453,6 +468,155 @@ function TabImport({ token }) {
   );
 }
 
+// ── PUBLICITÉS ───────────────────────────────────────────────
+function TabAnnonces({ token }) {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [showForm, setShowForm] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [form, setForm] = useState({
+    annonceur: '', image_url: '', lien_url: '',
+    format: 'medium_rectangle', position: 'repertoire-inline',
+    actif: true, date_debut: '', date_fin: ''
+  });
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    const res = await fetch(`${API_URL}/api/admin/annonces`, { headers: { Authorization: `Bearer ${token}` } });
+    const json = await res.json();
+    setData(Array.isArray(json) ? json : []);
+    setLoading(false);
+  }, [token]);
+
+  useEffect(() => { load(); }, [load]);
+
+  const toggleActif = async (annonce) => {
+    await fetch(`${API_URL}/api/admin/annonces/${annonce.id}`, {
+      method: 'PATCH',
+      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ actif: !annonce.actif })
+    });
+    load();
+  };
+
+  const deleteAnnonce = async (id) => {
+    if (!confirm('Supprimer cette annonce ?')) return;
+    await fetch(`${API_URL}/api/admin/annonces/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } });
+    load();
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSaving(true);
+    await fetch(`${API_URL}/api/admin/annonces`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...form, date_debut: form.date_debut || null, date_fin: form.date_fin || null })
+    });
+    setSaving(false);
+    setShowForm(false);
+    setForm({ annonceur: '', image_url: '', lien_url: '', format: 'medium_rectangle', position: 'repertoire-inline', actif: true, date_debut: '', date_fin: '' });
+    load();
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <p className="text-sm text-gray-500">{data.length} annonce(s) configurée(s)</p>
+        <button onClick={() => setShowForm(!showForm)} className="btn btn-primary text-sm">
+          {showForm ? 'Annuler' : '+ Nouvelle annonce'}
+        </button>
+      </div>
+
+      {showForm && (
+        <form onSubmit={handleSubmit} className="bg-gray-50 border rounded-lg p-6 space-y-4">
+          <h3 className="font-bold text-wiky-blue">Nouvelle annonce</h3>
+          <div className="grid md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium mb-1">Annonceur *</label>
+              <input required value={form.annonceur} onChange={e => setForm({ ...form, annonceur: e.target.value })} className="w-full border rounded px-3 py-2 text-sm" placeholder="Ex: Assurance NSIA" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">URL de l'image *</label>
+              <input required value={form.image_url} onChange={e => setForm({ ...form, image_url: e.target.value })} className="w-full border rounded px-3 py-2 text-sm" placeholder="https://..." />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">URL de destination</label>
+              <input value={form.lien_url} onChange={e => setForm({ ...form, lien_url: e.target.value })} className="w-full border rounded px-3 py-2 text-sm" placeholder="https://..." />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Format *</label>
+              <select required value={form.format} onChange={e => setForm({ ...form, format: e.target.value })} className="w-full border rounded px-3 py-2 text-sm">
+                {FORMATS.map(f => <option key={f.value} value={f.value}>{f.label}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Position *</label>
+              <select required value={form.position} onChange={e => setForm({ ...form, position: e.target.value })} className="w-full border rounded px-3 py-2 text-sm">
+                {POSITIONS.map(p => <option key={p.value} value={p.value}>{p.label}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Date de début</label>
+              <input type="date" value={form.date_debut} onChange={e => setForm({ ...form, date_debut: e.target.value })} className="w-full border rounded px-3 py-2 text-sm" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Date de fin</label>
+              <input type="date" value={form.date_fin} onChange={e => setForm({ ...form, date_fin: e.target.value })} className="w-full border rounded px-3 py-2 text-sm" />
+            </div>
+            <div className="flex items-center gap-2 pt-2">
+              <input type="checkbox" id="actif-form" checked={form.actif} onChange={e => setForm({ ...form, actif: e.target.checked })} className="w-4 h-4" />
+              <label htmlFor="actif-form" className="text-sm font-medium">Activer immédiatement</label>
+            </div>
+          </div>
+          <button type="submit" disabled={saving} className="btn btn-primary disabled:opacity-60">
+            {saving ? 'Enregistrement...' : 'Créer l\'annonce'}
+          </button>
+        </form>
+      )}
+
+      {loading ? <p className="text-gray-400">Chargement...</p> : (
+        <div className="space-y-3">
+          {data.map(a => (
+            <div key={a.id} className="bg-white border rounded-lg p-4 flex items-center gap-4 flex-wrap">
+              <img
+                src={a.image_url} alt={a.annonceur}
+                className="w-24 h-16 object-cover rounded border shrink-0"
+                onError={e => { e.target.style.display = 'none'; }}
+              />
+              <div className="flex-1 min-w-0">
+                <p className="font-semibold">{a.annonceur}</p>
+                <p className="text-xs text-gray-500">
+                  {POSITIONS.find(p => p.value === a.position)?.label} · {FORMATS.find(f => f.value === a.format)?.label}
+                </p>
+                {(a.date_debut || a.date_fin) && (
+                  <p className="text-xs text-gray-400 mt-0.5">
+                    {a.date_debut ? `Du ${new Date(a.date_debut).toLocaleDateString('fr-FR')}` : ''}
+                    {a.date_fin ? ` au ${new Date(a.date_fin).toLocaleDateString('fr-FR')}` : ''}
+                  </p>
+                )}
+                {a.lien_url && <p className="text-xs text-wiky-blue truncate mt-0.5">{a.lien_url}</p>}
+              </div>
+              <div className="flex gap-2 items-center shrink-0">
+                <button
+                  onClick={() => toggleActif(a)}
+                  className={`text-xs px-3 py-1 rounded-full font-medium ${a.actif ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}
+                >
+                  {a.actif ? '✅ Actif' : '⏸ Inactif'}
+                </button>
+                <button onClick={() => deleteAnnonce(a.id)} className="text-xs px-2 py-1 bg-red-50 text-red-600 rounded hover:bg-red-100">
+                  Supprimer
+                </button>
+              </div>
+            </div>
+          ))}
+          {data.length === 0 && <p className="text-gray-400 text-center py-10">Aucune annonce configurée.</p>}
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ── DASHBOARD PRINCIPAL ──────────────────────────────────────
 export default function DashboardAdmin() {
   const { user, session } = useAuth();
@@ -502,6 +666,7 @@ export default function DashboardAdmin() {
           {activeTab === 'avis' && <TabAvis token={token} />}
           {activeTab === 'whatsapp' && <TabWhatsapp token={token} />}
           {activeTab === 'import' && <TabImport token={token} />}
+          {activeTab === 'annonces' && <TabAnnonces token={token} />}
         </div>
       </div>
     </div>

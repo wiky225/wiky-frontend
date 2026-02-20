@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import AdBanner from '../components/AdBanner';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
@@ -223,6 +224,9 @@ export default function Offres() {
             {offresFiltrees.length} offre{offresFiltrees.length > 1 ? 's' : ''}
           </div>
         </div>
+
+        {/* Bannière publicitaire */}
+        <AdBanner position="offres-inline" className="mb-4" />
 
         {/* CTA conducteur non connecté */}
         {!user && (
