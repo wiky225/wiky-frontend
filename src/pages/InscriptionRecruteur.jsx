@@ -10,6 +10,7 @@ function InscriptionRecruteur() {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
   const [formData, setFormData] = useState({
+    type_recruteur: 'entreprise',
     nom_entreprise: '',
     nom_responsable: '',
     prenom_responsable: '',
@@ -50,7 +51,7 @@ function InscriptionRecruteur() {
       const token = authData.session?.access_token;
 
       // 2. Créer le profil recruteur
-      const { nom_entreprise, nom_responsable, prenom_responsable,
+      const { type_recruteur, nom_entreprise, nom_responsable, prenom_responsable,
         email, telephone } = formData;
 
       const response = await fetch(`${API_URL}/api/recruteurs`, {
@@ -60,7 +61,9 @@ function InscriptionRecruteur() {
           ...(token && { 'Authorization': `Bearer ${token}` })
         },
         body: JSON.stringify({
-          nom_entreprise, nom_responsable, prenom_responsable,
+          type_recruteur,
+          nom_entreprise: type_recruteur === 'entreprise' ? nom_entreprise : '',
+          nom_responsable, prenom_responsable,
           email, telephone
         })
       });
@@ -128,10 +131,33 @@ function InscriptionRecruteur() {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
+
+            {/* Type de recruteur */}
             <div>
-              <label className="block text-sm font-semibold text-wiky-gray mb-2">Nom de l'entreprise *</label>
-              <input type="text" name="nom_entreprise" className="input" required onChange={handleChange} />
+              <label className="block text-sm font-semibold text-wiky-gray mb-2">Vous êtes *</label>
+              <div className="grid grid-cols-2 gap-3">
+                {[
+                  { value: 'entreprise', label: '🏢 Entreprise', desc: 'Société, agence VTC' },
+                  { value: 'particulier', label: '👤 Particulier', desc: 'Propriétaire indépendant' }
+                ].map(({ value, label, desc }) => (
+                  <button
+                    key={value} type="button"
+                    onClick={() => setFormData(f => ({ ...f, type_recruteur: value }))}
+                    className={`p-4 rounded-lg border-2 text-left transition-colors ${formData.type_recruteur === value ? 'border-wiky-blue bg-blue-50' : 'border-gray-200 hover:border-wiky-blue'}`}
+                  >
+                    <div className="font-semibold text-wiky-blue">{label}</div>
+                    <div className="text-xs text-gray-500 mt-1">{desc}</div>
+                  </button>
+                ))}
+              </div>
             </div>
+
+            {formData.type_recruteur === 'entreprise' && (
+              <div>
+                <label className="block text-sm font-semibold text-wiky-gray mb-2">Nom de l'entreprise *</label>
+                <input type="text" name="nom_entreprise" className="input" required onChange={handleChange} />
+              </div>
+            )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
