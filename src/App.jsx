@@ -16,6 +16,8 @@ import Finalisation from './pages/Finalisation'
 import DashboardAdmin from './pages/DashboardAdmin'
 import Offres from './pages/Offres'
 import AuthConfirm from './pages/AuthConfirm'
+import MotDePasseOublie from './pages/MotDePasseOublie'
+import ResetPassword from './pages/ResetPassword'
 import PrivateRoute from './components/PrivateRoute'
 
 function NotFound() {
@@ -50,6 +52,8 @@ function App() {
             <Route path="/finaliser/:token" element={<Finalisation />} />
             <Route path="/dashboard-admin" element={<PrivateRoute><DashboardAdmin /></PrivateRoute>} />
             <Route path="/auth/confirm" element={<AuthConfirm />} />
+            <Route path="/mot-de-passe-oublie" element={<MotDePasseOublie />} />
+            <Route path="/auth/reset-password" element={<ResetPassword />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>

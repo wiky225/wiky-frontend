@@ -11,6 +11,7 @@ function Login() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const emailConfirme = searchParams.get('email_confirme') === '1';
+  const mdpModifie = searchParams.get('mdp_modifie') === '1';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -42,6 +43,12 @@ function Login() {
           {emailConfirme && (
             <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-6 text-sm">
               ✅ Votre email a bien été confirmé. Vous pouvez maintenant vous connecter.
+            </div>
+          )}
+
+          {mdpModifie && (
+            <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-6 text-sm">
+              ✅ Mot de passe mis à jour. Connectez-vous avec votre nouveau mot de passe.
             </div>
           )}
 
@@ -79,7 +86,7 @@ function Login() {
                 <input type="checkbox" />
                 <span className="text-sm text-wiky-gray">Se souvenir de moi</span>
               </label>
-              <a href="#" className="text-sm text-wiky-blue hover:text-wiky-orange">Mot de passe oublié ?</a>
+              <Link to="/mot-de-passe-oublie" className="text-sm text-wiky-blue hover:text-wiky-orange">Mot de passe oublié ?</Link>
             </div>
 
             <button
