@@ -30,7 +30,7 @@
   }
   
   .input {
-    @apply w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-wikya-blue focus:outline-none transition-colors;
+    @apply w-full px-4 py-3 bg-gray-50 border-2 border-gray-400 rounded-lg focus:border-wikya-blue focus:bg-white focus:outline-none transition-colors;
   }
 
   .section-title {
