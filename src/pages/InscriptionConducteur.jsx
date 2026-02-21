@@ -102,14 +102,14 @@ export default function InscriptionConducteur() {
 
   if (success) {
     return (
-      <div className="min-h-screen bg-wiky-gray-light flex items-center justify-center py-12">
+      <div className="min-h-screen bg-wikya-gray-light flex items-center justify-center py-12">
         <div className="card p-8 max-w-md text-center">
           <div className="text-6xl mb-4">✅</div>
-          <h2 className="text-2xl font-bold text-wiky-blue mb-3">Compte créé avec succès !</h2>
-          <p className="text-wiky-gray mb-2">
+          <h2 className="text-2xl font-bold text-wikya-blue mb-3">Compte créé avec succès !</h2>
+          <p className="text-wikya-gray mb-2">
             Un email de confirmation a été envoyé à <strong>{formData.email}</strong>.
           </p>
-          <p className="text-wiky-gray mb-6">
+          <p className="text-wikya-gray mb-6">
             Cliquez sur le lien dans l'email pour activer votre compte, puis connectez-vous.
           </p>
           <Link to="/connexion" className="btn btn-primary w-full">
@@ -123,7 +123,7 @@ export default function InscriptionConducteur() {
   return (
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="container-custom max-w-2xl">
-        <h1 className="text-3xl font-bold text-wiky-blue mb-8">Inscription Conducteur VTC</h1>
+        <h1 className="text-3xl font-bold text-wikya-blue mb-8">Inscription Conducteur VTC</h1>
 
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 text-sm">

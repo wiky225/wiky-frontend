@@ -62,13 +62,13 @@ export default function AuthConfirm() {
       {erreur ? (
         <div className="bg-white rounded-2xl shadow-sm p-10 max-w-md w-full text-center">
           <div className="text-5xl mb-4">⚠️</div>
-          <h1 className="text-xl font-bold text-wiky-blue mb-2">Lien invalide</h1>
+          <h1 className="text-xl font-bold text-wikya-blue mb-2">Lien invalide</h1>
           <p className="text-gray-500 mb-6">{erreur}</p>
           <a href="/connexion" className="btn btn-primary">Aller à la connexion</a>
         </div>
       ) : (
         <div className="text-center text-gray-500">
-          <div className="w-10 h-10 border-4 border-wiky-blue border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <div className="w-10 h-10 border-4 border-wikya-blue border-t-transparent rounded-full animate-spin mx-auto mb-4" />
           Vérification en cours…
         </div>
       )}

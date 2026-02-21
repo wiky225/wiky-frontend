@@ -6,8 +6,8 @@ export default function PrivateRoute({ children }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-wiky-gray-light">
-        <div className="text-wiky-blue font-semibold">Chargement...</div>
+      <div className="min-h-screen flex items-center justify-center bg-wikya-gray-light">
+        <div className="text-wikya-blue font-semibold">Chargement...</div>
       </div>
     );
   }

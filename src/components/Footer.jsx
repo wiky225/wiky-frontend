@@ -2,21 +2,21 @@ import { Link } from 'react-router-dom';
 
 const ANNEE = new Date().getFullYear();
 
-const lienClass = "opacity-70 hover:opacity-100 hover:text-wiky-orange transition-all text-sm";
+const lienClass = "opacity-70 hover:opacity-100 hover:text-wikya-orange transition-all text-sm";
 
 function Footer() {
   return (
     <>
-      <footer className="bg-wiky-blue text-white">
+      <footer className="bg-wikya-blue text-white">
         {/* Bandeau orange fin en haut */}
-        <div className="h-1 bg-wiky-orange w-full" />
+        <div className="h-1 bg-wikya-orange w-full" />
 
         <div className="container-custom py-14">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
 
             {/* Bloc marque */}
             <div className="md:col-span-1">
-              <h3 className="text-lg font-bold text-white mb-3">Wiky by ATL Cars</h3>
+              <h3 className="text-lg font-bold text-white mb-3">Wikya by ATL Cars</h3>
               <p className="text-sm opacity-70 leading-relaxed mb-5">
                 La plateforme de référence pour la mise en relation entre conducteurs VTC et recruteurs en Côte d'Ivoire.
               </p>
@@ -28,7 +28,7 @@ function Footer() {
 
             {/* Conducteurs */}
             <div>
-              <h4 className="text-sm font-semibold uppercase tracking-widest text-wiky-orange mb-4">
+              <h4 className="text-sm font-semibold uppercase tracking-widest text-wikya-orange mb-4">
                 Conducteurs
               </h4>
               <ul className="space-y-2.5">
@@ -52,7 +52,7 @@ function Footer() {
 
             {/* Recruteurs */}
             <div>
-              <h4 className="text-sm font-semibold uppercase tracking-widest text-wiky-orange mb-4">
+              <h4 className="text-sm font-semibold uppercase tracking-widest text-wikya-orange mb-4">
                 Recruteurs
               </h4>
               <ul className="space-y-2.5">
@@ -76,7 +76,7 @@ function Footer() {
 
             {/* Contact */}
             <div>
-              <h4 className="text-sm font-semibold uppercase tracking-widest text-wiky-orange mb-4">
+              <h4 className="text-sm font-semibold uppercase tracking-widest text-wikya-orange mb-4">
                 Contact
               </h4>
               <ul className="space-y-3">
@@ -96,8 +96,8 @@ function Footer() {
                   </a>
                 </li>
                 <li>
-                  <a href="mailto:contact@wiky.ci" className={lienClass + " flex items-center gap-2"}>
-                    <span>📧</span> contact@wiky.ci
+                  <a href="mailto:contact@wikya.ci" className={lienClass + " flex items-center gap-2"}>
+                    <span>📧</span> contact@wikya.ci
                   </a>
                 </li>
               </ul>
@@ -108,7 +108,7 @@ function Footer() {
         {/* Bas de page */}
         <div className="border-t border-white/10">
           <div className="container-custom py-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs opacity-50">
-            <p>&copy; {ANNEE} Wiky by ATL Cars — Tous droits réservés</p>
+            <p>&copy; {ANNEE} Wikya by ATL Cars — Tous droits réservés</p>
             <p>Fait avec ❤️ à Abidjan</p>
           </div>
         </div>

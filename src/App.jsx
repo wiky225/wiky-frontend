@@ -22,9 +22,9 @@ import PrivateRoute from './components/PrivateRoute'
 
 function NotFound() {
   return (
-    <div className="py-20 text-center min-h-screen bg-wiky-gray-light flex flex-col items-center justify-center">
-      <div className="text-8xl font-bold text-wiky-blue mb-4">404</div>
-      <h1 className="text-2xl font-semibold text-wiky-gray mb-6">Page introuvable</h1>
+    <div className="py-20 text-center min-h-screen bg-wikya-gray-light flex flex-col items-center justify-center">
+      <div className="text-8xl font-bold text-wikya-blue mb-4">404</div>
+      <h1 className="text-2xl font-semibold text-wikya-gray mb-6">Page introuvable</h1>
       <a href="/" className="btn btn-primary">Retour à l'accueil</a>
     </div>
   )

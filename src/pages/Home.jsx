@@ -28,9 +28,9 @@ function StatsSection() {
       <div className="container-custom">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           {items.map((item, i) => (
-            <div key={i} className="text-center p-6 bg-wiky-gray-light rounded-xl hover:-translate-y-1 transition-transform">
-              <div className="text-4xl font-bold text-wiky-blue mb-2">{item.number}</div>
-              <div className="text-sm text-wiky-gray">{item.label}</div>
+            <div key={i} className="text-center p-6 bg-wikya-gray-light rounded-xl hover:-translate-y-1 transition-transform">
+              <div className="text-4xl font-bold text-wikya-blue mb-2">{item.number}</div>
+              <div className="text-sm text-wikya-gray">{item.label}</div>
             </div>
           ))}
         </div>
@@ -55,7 +55,7 @@ function CommentCaMarche() {
   ];
 
   return (
-    <section className="py-16 bg-wiky-gray-light">
+    <section className="py-16 bg-wikya-gray-light">
       <div className="container-custom">
         <h2 className="section-title">Comment ça marche ?</h2>
         <div className="grid md:grid-cols-2 gap-8">
@@ -63,12 +63,12 @@ function CommentCaMarche() {
           <div className="bg-white rounded-2xl p-8 shadow-sm">
             <div className="flex items-center gap-3 mb-6">
               <span className="text-3xl">🏢</span>
-              <h3 className="text-xl font-bold text-wiky-blue">Je suis recruteur</h3>
+              <h3 className="text-xl font-bold text-wikya-blue">Je suis recruteur</h3>
             </div>
             <div className="space-y-4">
               {stepsRecruteur.map((step, i) => (
                 <div key={i} className="flex items-start gap-3">
-                  <div className="w-7 h-7 rounded-full bg-wiky-blue text-white text-xs flex items-center justify-center font-bold shrink-0 mt-0.5">
+                  <div className="w-7 h-7 rounded-full bg-wikya-blue text-white text-xs flex items-center justify-center font-bold shrink-0 mt-0.5">
                     {i + 1}
                   </div>
                   <p className="text-sm text-gray-600 pt-1">{step}</p>
@@ -84,12 +84,12 @@ function CommentCaMarche() {
           <div className="bg-white rounded-2xl p-8 shadow-sm">
             <div className="flex items-center gap-3 mb-6">
               <span className="text-3xl">🚗</span>
-              <h3 className="text-xl font-bold text-wiky-blue">Je suis conducteur</h3>
+              <h3 className="text-xl font-bold text-wikya-blue">Je suis conducteur</h3>
             </div>
             <div className="space-y-4">
               {stepsConducteur.map((step, i) => (
                 <div key={i} className="flex items-start gap-3">
-                  <div className="w-7 h-7 rounded-full bg-wiky-orange text-white text-xs flex items-center justify-center font-bold shrink-0 mt-0.5">
+                  <div className="w-7 h-7 rounded-full bg-wikya-orange text-white text-xs flex items-center justify-center font-bold shrink-0 mt-0.5">
                     {i + 1}
                   </div>
                   <p className="text-sm text-gray-600 pt-1">{step}</p>
@@ -133,8 +133,8 @@ function SliderConducteurs() {
     <section className="py-16 bg-white">
       <div className="container-custom">
         <div className="flex items-center justify-between mb-8">
-          <h2 className="text-2xl md:text-3xl font-bold text-wiky-blue">Conducteurs disponibles</h2>
-          <Link to="/repertoire" className="text-wiky-orange hover:underline text-sm font-medium">
+          <h2 className="text-2xl md:text-3xl font-bold text-wikya-blue">Conducteurs disponibles</h2>
+          <Link to="/repertoire" className="text-wikya-orange hover:underline text-sm font-medium">
             Voir tous →
           </Link>
         </div>
@@ -163,7 +163,7 @@ function SliderConducteurs() {
                       </span>
                     </div>
                     <div className="p-4">
-                      <p className="font-bold text-wiky-blue">{c.prenom} {c.nom}</p>
+                      <p className="font-bold text-wikya-blue">{c.prenom} {c.nom}</p>
                       {(c.ville || c.commune) && (
                         <p className="text-xs text-gray-500 mt-1">
                           📍 {[c.ville, c.commune].filter(Boolean).join(' — ')}
@@ -172,7 +172,7 @@ function SliderConducteurs() {
                       {plateformes.length > 0 && (
                         <div className="flex flex-wrap gap-1 mt-2">
                           {plateformes.slice(0, 2).map(p => (
-                            <span key={p} className="text-xs bg-blue-50 text-wiky-blue border border-blue-100 rounded-full px-2 py-0.5">
+                            <span key={p} className="text-xs bg-blue-50 text-wikya-blue border border-blue-100 rounded-full px-2 py-0.5">
                               {p}
                             </span>
                           ))}
@@ -205,7 +205,7 @@ function SliderConducteurs() {
             <button
               key={i}
               onClick={() => emblaApi?.scrollTo(i)}
-              className={`w-2 h-2 rounded-full transition-colors ${i === selectedIndex ? 'bg-wiky-blue' : 'bg-gray-300'}`}
+              className={`w-2 h-2 rounded-full transition-colors ${i === selectedIndex ? 'bg-wikya-blue' : 'bg-gray-300'}`}
             />
           ))}
         </div>
@@ -228,11 +228,11 @@ function ApercuOffres() {
   if (offres.length === 0) return null;
 
   return (
-    <section className="py-16 bg-wiky-gray-light">
+    <section className="py-16 bg-wikya-gray-light">
       <div className="container-custom">
         <div className="flex items-center justify-between mb-8">
-          <h2 className="text-2xl md:text-3xl font-bold text-wiky-blue">Offres de recrutement</h2>
-          <Link to="/offres" className="text-wiky-orange hover:underline text-sm font-medium">
+          <h2 className="text-2xl md:text-3xl font-bold text-wikya-blue">Offres de recrutement</h2>
+          <Link to="/offres" className="text-wikya-orange hover:underline text-sm font-medium">
             Voir toutes →
           </Link>
         </div>
@@ -246,14 +246,14 @@ function ApercuOffres() {
               <div key={o.id} className="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow">
                 <div className="flex items-start justify-between gap-2 mb-4">
                   <div>
-                    <h3 className="font-bold text-wiky-blue">{nom}</h3>
-                    <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${o.type_recruteur === 'entreprise' ? 'bg-blue-100 text-blue-700' : 'bg-orange-100 text-wiky-orange'}`}>
+                    <h3 className="font-bold text-wikya-blue">{nom}</h3>
+                    <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${o.type_recruteur === 'entreprise' ? 'bg-blue-100 text-blue-700' : 'bg-orange-100 text-wikya-orange'}`}>
                       {o.type_recruteur === 'entreprise' ? '🏢 Entreprise' : '👤 Particulier'}
                     </span>
                   </div>
                   {totalVehicules > 0 && (
                     <div className="text-right shrink-0">
-                      <div className="text-xl font-bold text-wiky-blue">{totalVehicules}</div>
+                      <div className="text-xl font-bold text-wikya-blue">{totalVehicules}</div>
                       <div className="text-xs text-gray-500">véhicule{totalVehicules > 1 ? 's' : ''}</div>
                     </div>
                   )}
@@ -261,12 +261,12 @@ function ApercuOffres() {
                 {o.vehicules.slice(0, 2).map((v, i) => (
                   <div key={i} className="flex justify-between text-sm py-1.5 border-t">
                     <span className="text-gray-600">{v.type}</span>
-                    <span className="font-semibold text-wiky-blue">
+                    <span className="font-semibold text-wikya-blue">
                       {Number(v.recette).toLocaleString('fr-FR')} FCFA/j
                     </span>
                   </div>
                 ))}
-                <Link to="/offres" className="mt-4 text-xs text-wiky-orange font-semibold hover:underline block">
+                <Link to="/offres" className="mt-4 text-xs text-wikya-orange font-semibold hover:underline block">
                   Voir le détail →
                 </Link>
               </div>
@@ -305,7 +305,7 @@ const FEATURES = [
 // ── CTA FINAL ─────────────────────────────────────────────────
 function CTASection() {
   return (
-    <section className="py-20 bg-wiky-blue text-white">
+    <section className="py-20 bg-wikya-blue text-white">
       <div className="container-custom">
         <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">Rejoignez la plateforme</h2>
         <div className="grid md:grid-cols-2 gap-8 max-w-3xl mx-auto">
@@ -315,7 +315,7 @@ function CTASection() {
             <p className="text-blue-200 text-sm mb-6">
               Accédez à des centaines de profils vérifiés. 10 000 FCFA/mois.
             </p>
-            <Link to="/inscription-recruteur" className="btn bg-wiky-orange text-white hover:bg-wiky-orange-dark w-full block text-center">
+            <Link to="/inscription-recruteur" className="btn bg-wikya-orange text-white hover:bg-wikya-orange-dark w-full block text-center">
               Créer mon compte recruteur
             </Link>
           </div>
@@ -325,7 +325,7 @@ function CTASection() {
             <p className="text-blue-200 text-sm mb-6">
               Inscription gratuite. Soyez visible et trouvez un recruteur.
             </p>
-            <Link to="/inscription-conducteur" className="btn bg-white text-wiky-blue hover:bg-gray-100 w-full block text-center">
+            <Link to="/inscription-conducteur" className="btn bg-white text-wikya-blue hover:bg-gray-100 w-full block text-center">
               M'inscrire gratuitement
             </Link>
           </div>
@@ -340,10 +340,10 @@ export default function Home() {
   return (
     <div>
       {/* Hero */}
-      <section className="gradient-wiky text-white py-20">
+      <section className="gradient-wikya text-white py-20">
         <div className="container-custom text-center">
           <h1 className="text-4xl md:text-6xl font-bold mb-6">
-            Trouvez votre <span className="text-wiky-orange">Conducteur VTC</span> idéal
+            Trouvez votre <span className="text-wikya-orange">Conducteur VTC</span> idéal
           </h1>
           <p className="text-lg md:text-xl mb-8 opacity-90 max-w-3xl mx-auto">
             La première plateforme de mise en relation entre conducteurs professionnels et recruteurs en Côte d'Ivoire
@@ -352,7 +352,7 @@ export default function Home() {
             <Link to="/repertoire" className="btn btn-secondary text-lg px-8 py-4">
               Voir les Conducteurs
             </Link>
-            <Link to="/inscription-recruteur" className="btn bg-white text-wiky-blue hover:bg-gray-100 text-lg px-8 py-4">
+            <Link to="/inscription-recruteur" className="btn bg-white text-wikya-blue hover:bg-gray-100 text-lg px-8 py-4">
               Je Recrute
             </Link>
           </div>
@@ -373,8 +373,8 @@ export default function Home() {
             {FEATURES.map((f, i) => (
               <div key={i} className="card p-6 hover:-translate-y-2 transition-transform">
                 <div className="text-5xl mb-4">{f.icon}</div>
-                <h3 className="text-xl font-bold text-wiky-blue mb-3">{f.title}</h3>
-                <p className="text-wiky-gray text-sm leading-relaxed">{f.description}</p>
+                <h3 className="text-xl font-bold text-wikya-blue mb-3">{f.title}</h3>
+                <p className="text-wikya-gray text-sm leading-relaxed">{f.description}</p>
               </div>
             ))}
           </div>

@@ -125,7 +125,7 @@ export default function Finalisation() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="bg-white rounded-lg shadow-lg p-8 max-w-md text-center">
         <div className="text-5xl mb-4">✅</div>
-        <h2 className="text-2xl font-bold text-wiky-blue mb-3">Profil déjà finalisé</h2>
+        <h2 className="text-2xl font-bold text-wikya-blue mb-3">Profil déjà finalisé</h2>
         <p className="text-gray-600 mb-6">Votre compte est déjà activé. Connectez-vous pour accéder à votre espace.</p>
         <Link to="/connexion" className="btn btn-primary w-full">Se connecter</Link>
       </div>
@@ -146,7 +146,7 @@ export default function Finalisation() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="bg-white rounded-lg shadow-lg p-8 max-w-md text-center">
         <div className="text-5xl mb-4">🎉</div>
-        <h2 className="text-2xl font-bold text-wiky-blue mb-3">Profil finalisé !</h2>
+        <h2 className="text-2xl font-bold text-wikya-blue mb-3">Profil finalisé !</h2>
         <p className="text-gray-600 mb-2">Votre compte est maintenant actif.</p>
         <p className="text-gray-600 mb-6">Connectez-vous pour accéder à votre espace conducteur.</p>
         <Link to="/connexion" className="btn btn-primary w-full">Se connecter</Link>
@@ -158,7 +158,7 @@ export default function Finalisation() {
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="container-custom max-w-2xl">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-wiky-blue">Finalisez votre profil</h1>
+          <h1 className="text-3xl font-bold text-wikya-blue">Finalisez votre profil</h1>
           <p className="text-gray-600 mt-2">Vérifiez vos informations, complétez votre profil et créez votre mot de passe.</p>
         </div>
 
@@ -172,7 +172,7 @@ export default function Finalisation() {
 
           {/* Informations personnelles */}
           <div className="bg-white rounded-lg shadow p-6 space-y-4">
-            <h2 className="text-xl font-bold text-wiky-blue border-b pb-2">👤 Informations personnelles</h2>
+            <h2 className="text-xl font-bold text-wikya-blue border-b pb-2">👤 Informations personnelles</h2>
 
             <div className="grid md:grid-cols-2 gap-4">
               <div>
@@ -217,7 +217,7 @@ export default function Finalisation() {
 
           {/* Identité */}
           <div className="bg-white rounded-lg shadow p-6 space-y-4">
-            <h2 className="text-xl font-bold text-wiky-blue border-b pb-2">🪪 Pièce d'identité</h2>
+            <h2 className="text-xl font-bold text-wikya-blue border-b pb-2">🪪 Pièce d'identité</h2>
             <div className="grid md:grid-cols-3 gap-4">
               <div>
                 <label className="block text-sm font-medium mb-1">Nationalité *</label>
@@ -242,7 +242,7 @@ export default function Finalisation() {
 
           {/* Contact */}
           <div className="bg-white rounded-lg shadow p-6 space-y-4">
-            <h2 className="text-xl font-bold text-wiky-blue border-b pb-2">📞 Contact</h2>
+            <h2 className="text-xl font-bold text-wikya-blue border-b pb-2">📞 Contact</h2>
             <div className="grid md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium mb-1">Téléphone principal *</label>
@@ -257,7 +257,7 @@ export default function Finalisation() {
 
           {/* Localisation */}
           <div className="bg-white rounded-lg shadow p-6 space-y-4">
-            <h2 className="text-xl font-bold text-wiky-blue border-b pb-2">📍 Localisation</h2>
+            <h2 className="text-xl font-bold text-wikya-blue border-b pb-2">📍 Localisation</h2>
             <div className="grid md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium mb-1">Ville *</label>
@@ -282,7 +282,7 @@ export default function Finalisation() {
 
           {/* Expérience professionnelle */}
           <div className="bg-white rounded-lg shadow p-6 space-y-4">
-            <h2 className="text-xl font-bold text-wiky-blue border-b pb-2">🚗 Expérience professionnelle</h2>
+            <h2 className="text-xl font-bold text-wikya-blue border-b pb-2">🚗 Expérience professionnelle</h2>
 
             <div className="flex items-center gap-3">
               <input type="checkbox" name="experience_vtc" id="experience_vtc" checked={form.experience_vtc} onChange={handleChange} className="w-4 h-4" />
@@ -312,7 +312,7 @@ export default function Finalisation() {
               <div className="flex flex-wrap gap-2">
                 {YANGO_OPTIONS.map(opt => (
                   <button key={opt} type="button" onClick={() => toggleArray('preferences_yango', opt)}
-                    className={`px-3 py-1 rounded-full text-sm border transition-colors ${form.preferences_yango.includes(opt) ? 'bg-wiky-blue text-white border-wiky-blue' : 'bg-white border-gray-300 hover:border-wiky-blue'}`}>
+                    className={`px-3 py-1 rounded-full text-sm border transition-colors ${form.preferences_yango.includes(opt) ? 'bg-wikya-blue text-white border-wikya-blue' : 'bg-white border-gray-300 hover:border-wikya-blue'}`}>
                     {opt}
                   </button>
                 ))}
@@ -324,7 +324,7 @@ export default function Finalisation() {
               <div className="flex flex-wrap gap-2">
                 {COLLAB_OPTIONS.map(opt => (
                   <button key={opt} type="button" onClick={() => toggleArray('type_collaboration', opt)}
-                    className={`px-3 py-1 rounded-full text-sm border transition-colors ${form.type_collaboration.includes(opt) ? 'bg-wiky-blue text-white border-wiky-blue' : 'bg-white border-gray-300 hover:border-wiky-blue'}`}>
+                    className={`px-3 py-1 rounded-full text-sm border transition-colors ${form.type_collaboration.includes(opt) ? 'bg-wikya-blue text-white border-wikya-blue' : 'bg-white border-gray-300 hover:border-wikya-blue'}`}>
                     {opt}
                   </button>
                 ))}
@@ -344,7 +344,7 @@ export default function Finalisation() {
 
           {/* Créer mon compte */}
           <div className="bg-white rounded-lg shadow p-6 space-y-4">
-            <h2 className="text-xl font-bold text-wiky-blue border-b pb-2">🔐 Créer mon compte</h2>
+            <h2 className="text-xl font-bold text-wikya-blue border-b pb-2">🔐 Créer mon compte</h2>
             <p className="text-sm text-gray-500">Choisissez un mot de passe pour accéder à votre espace conducteur.</p>
             <div className="grid md:grid-cols-2 gap-4">
               <div>

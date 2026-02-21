@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    @apply bg-gray-50 text-wiky-gray;
+    @apply bg-gray-50 text-wikya-gray;
   }
 }
 
@@ -14,15 +14,15 @@
   }
   
   .btn-primary {
-    @apply bg-wiky-blue text-white hover:bg-wiky-blue-dark hover:shadow-lg hover:-translate-y-0.5;
+    @apply bg-wikya-blue text-white hover:bg-wikya-blue-dark hover:shadow-lg hover:-translate-y-0.5;
   }
   
   .btn-secondary {
-    @apply bg-wiky-orange text-white hover:bg-wiky-orange-dark hover:shadow-lg hover:-translate-y-0.5;
+    @apply bg-wikya-orange text-white hover:bg-wikya-orange-dark hover:shadow-lg hover:-translate-y-0.5;
   }
 
   .btn-outline {
-    @apply border-2 border-wiky-blue text-wiky-blue hover:bg-wiky-blue hover:text-white;
+    @apply border-2 border-wikya-blue text-wikya-blue hover:bg-wikya-blue hover:text-white;
   }
   
   .card {
@@ -30,11 +30,11 @@
   }
   
   .input {
-    @apply w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-wiky-blue focus:outline-none transition-colors;
+    @apply w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-wikya-blue focus:outline-none transition-colors;
   }
 
   .section-title {
-    @apply text-3xl md:text-4xl font-bold text-wiky-blue mb-8 text-center;
+    @apply text-3xl md:text-4xl font-bold text-wikya-blue mb-8 text-center;
   }
 
   .container-custom {
@@ -43,7 +43,7 @@
 }
 
 @layer utilities {
-  .gradient-wiky {
+  .gradient-wikya {
     background: linear-gradient(135deg, #253b56 0%, #1a2d43 100%);
   }
 

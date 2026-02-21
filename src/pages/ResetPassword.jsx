@@ -64,7 +64,7 @@ export default function ResetPassword() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
         <div className="bg-white rounded-2xl shadow-sm p-10 max-w-md w-full text-center">
           <div className="text-5xl mb-4">⚠️</div>
-          <h1 className="text-xl font-bold text-wiky-blue mb-2">Lien invalide</h1>
+          <h1 className="text-xl font-bold text-wikya-blue mb-2">Lien invalide</h1>
           <p className="text-gray-500 mb-6">{erreur}</p>
           <a href="/mot-de-passe-oublie" className="btn btn-primary">
             Recommencer
@@ -79,7 +79,7 @@ export default function ResetPassword() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
         <div className="text-center text-gray-500">
-          <div className="w-10 h-10 border-4 border-wiky-blue border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <div className="w-10 h-10 border-4 border-wikya-blue border-t-transparent rounded-full animate-spin mx-auto mb-4" />
           Vérification du lien…
         </div>
       </div>
@@ -89,7 +89,7 @@ export default function ResetPassword() {
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4">
       <div className="bg-white rounded-2xl shadow-sm p-8 max-w-md w-full">
-        <h1 className="text-2xl font-bold text-wiky-blue mb-1">Nouveau mot de passe</h1>
+        <h1 className="text-2xl font-bold text-wikya-blue mb-1">Nouveau mot de passe</h1>
         <p className="text-gray-400 text-sm mb-6">
           Choisissez un mot de passe d'au moins 6 caractères.
         </p>
@@ -102,7 +102,7 @@ export default function ResetPassword() {
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block text-sm font-semibold text-wiky-gray mb-2">
+            <label className="block text-sm font-semibold text-wikya-gray mb-2">
               Nouveau mot de passe
             </label>
             <input
@@ -116,7 +116,7 @@ export default function ResetPassword() {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-wiky-gray mb-2">
+            <label className="block text-sm font-semibold text-wikya-gray mb-2">
               Confirmer le mot de passe
             </label>
             <input

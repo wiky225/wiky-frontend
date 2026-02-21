@@ -19,14 +19,14 @@ function CarteOffre({ offre, hasContact }) {
       {/* En-tête */}
       <div className="flex items-start justify-between gap-2">
         <div>
-          <h2 className="text-lg font-bold text-wiky-blue">{nom}</h2>
-          <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${offre.type_recruteur === 'entreprise' ? 'bg-blue-100 text-blue-700' : 'bg-orange-100 text-wiky-orange'}`}>
+          <h2 className="text-lg font-bold text-wikya-blue">{nom}</h2>
+          <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${offre.type_recruteur === 'entreprise' ? 'bg-blue-100 text-blue-700' : 'bg-orange-100 text-wikya-orange'}`}>
             {offre.type_recruteur === 'entreprise' ? '🏢 Entreprise' : '👤 Particulier'}
           </span>
         </div>
         {totalVehicules > 0 && (
           <div className="text-right">
-            <div className="text-2xl font-bold text-wiky-blue">{totalVehicules}</div>
+            <div className="text-2xl font-bold text-wikya-blue">{totalVehicules}</div>
             <div className="text-xs text-gray-500">véhicule{totalVehicules > 1 ? 's' : ''}</div>
           </div>
         )}
@@ -48,7 +48,7 @@ function CarteOffre({ offre, hasContact }) {
                 <tr key={i} className="border-t">
                   <td className="px-3 py-1.5">{v.type}</td>
                   <td className="px-3 py-1.5">{v.nombre}</td>
-                  <td className="px-3 py-1.5 font-semibold text-wiky-blue">
+                  <td className="px-3 py-1.5 font-semibold text-wikya-blue">
                     {Number(v.recette).toLocaleString('fr-FR')} FCFA
                   </td>
                 </tr>
@@ -101,7 +101,7 @@ function CarteOffre({ offre, hasContact }) {
         </div>
       ) : !hasContact ? (
         <div className="pt-2 border-t">
-          <a href="/connexion" className="text-sm text-wiky-blue hover:underline">
+          <a href="/connexion" className="text-sm text-wikya-blue hover:underline">
             Connectez-vous pour contacter ce recruteur →
           </a>
         </div>
@@ -165,7 +165,7 @@ export default function Offres() {
         <div className="container-custom max-w-3xl">
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h1 className="text-3xl font-bold text-wiky-blue mb-1">Mes offres</h1>
+              <h1 className="text-3xl font-bold text-wikya-blue mb-1">Mes offres</h1>
               <p className="text-gray-600">Aperçu de vos offres telles que les conducteurs les voient.</p>
             </div>
             <a href="/dashboard-recruteur" className="btn btn-primary text-sm">+ Gérer mes offres</a>
@@ -194,7 +194,7 @@ export default function Offres() {
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="container-custom">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-wiky-blue mb-2">Offres des recruteurs</h1>
+          <h1 className="text-3xl font-bold text-wikya-blue mb-2">Offres des recruteurs</h1>
           <p className="text-gray-600">Trouvez un recruteur qui correspond à votre profil.</p>
         </div>
 
@@ -223,7 +223,7 @@ export default function Offres() {
             </select>
           </div>
           {(filtreVehicule || filtreContrat) && (
-            <button onClick={() => { setFiltreVehicule(''); setFiltreContrat(''); }} className="text-sm text-wiky-orange hover:underline">
+            <button onClick={() => { setFiltreVehicule(''); setFiltreContrat(''); }} className="text-sm text-wikya-orange hover:underline">
               Réinitialiser
             </button>
           )}
@@ -237,9 +237,9 @@ export default function Offres() {
 
         {/* CTA conducteur non connecté */}
         {!user && (
-          <div className="bg-wiky-blue text-white rounded-xl p-5 mb-8 flex items-center justify-between flex-wrap gap-4">
+          <div className="bg-wikya-blue text-white rounded-xl p-5 mb-8 flex items-center justify-between flex-wrap gap-4">
             <p className="font-medium">Connectez-vous pour voir les coordonnées des recruteurs et les contacter directement.</p>
-            <a href="/connexion" className="btn bg-white text-wiky-blue hover:bg-gray-100 text-sm">Se connecter</a>
+            <a href="/connexion" className="btn bg-white text-wikya-blue hover:bg-gray-100 text-sm">Se connecter</a>
           </div>
         )}
 

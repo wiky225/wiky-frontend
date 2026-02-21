@@ -72,7 +72,7 @@ export default function Paiement() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4">
         <div className="bg-white rounded-2xl shadow-sm p-10 max-w-md w-full text-center">
           <div className="text-6xl mb-4">🎉</div>
-          <h1 className="text-2xl font-bold text-wiky-blue mb-2">Paiement confirmé !</h1>
+          <h1 className="text-2xl font-bold text-wikya-blue mb-2">Paiement confirmé !</h1>
           <p className="text-gray-500 mb-8">
             Votre abonnement est maintenant actif. Profitez pleinement de la plateforme.
           </p>
@@ -90,7 +90,7 @@ export default function Paiement() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4">
         <div className="bg-white rounded-2xl shadow-sm p-10 max-w-md w-full text-center">
           <div className="text-6xl mb-4">❌</div>
-          <h1 className="text-2xl font-bold text-wiky-blue mb-2">Paiement non abouti</h1>
+          <h1 className="text-2xl font-bold text-wikya-blue mb-2">Paiement non abouti</h1>
           <p className="text-gray-500 mb-8">
             Votre paiement n'a pas été complété. Vous pouvez réessayer ou nous contacter.
           </p>
@@ -103,7 +103,7 @@ export default function Paiement() {
           <a
             href="https://wa.me/2250575421717"
             target="_blank" rel="noopener noreferrer"
-            className="text-sm text-wiky-orange hover:underline"
+            className="text-sm text-wikya-orange hover:underline"
           >
             Besoin d'aide ? Contactez-nous sur WhatsApp
           </a>
@@ -118,7 +118,7 @@ export default function Paiement() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
         <div className="text-center">
           <p className="text-gray-500 mb-4">Page non disponible.</p>
-          <Link to="/" className="text-wiky-blue hover:underline">Retour à l'accueil</Link>
+          <Link to="/" className="text-wikya-blue hover:underline">Retour à l'accueil</Link>
         </div>
       </div>
     );
@@ -129,7 +129,7 @@ export default function Paiement() {
     <div className="min-h-screen bg-gray-50 py-12 px-4">
       <div className="max-w-lg mx-auto">
         <div className="bg-white rounded-2xl shadow-sm p-8">
-          <h1 className="text-2xl font-bold text-wiky-blue mb-1">
+          <h1 className="text-2xl font-bold text-wikya-blue mb-1">
             Abonnement {config.label}
           </h1>
           <p className="text-gray-400 text-sm mb-6">Paiement sécurisé via Wave</p>
@@ -138,7 +138,7 @@ export default function Paiement() {
           <div className="bg-gray-50 rounded-xl p-5 mb-6">
             <div className="flex justify-between items-center mb-2 text-sm">
               <span className="text-gray-500">Abonnement {config.label}</span>
-              <span className="font-semibold text-wiky-blue">{config.montant} FCFA</span>
+              <span className="font-semibold text-wikya-blue">{config.montant} FCFA</span>
             </div>
             <div className="flex justify-between items-center text-xs text-gray-400 mb-3">
               <span>Durée</span>
@@ -146,7 +146,7 @@ export default function Paiement() {
             </div>
             <div className="border-t pt-3 flex justify-between items-center">
               <span className="font-semibold">Total</span>
-              <span className="text-xl font-bold text-wiky-orange">{config.montant} FCFA</span>
+              <span className="text-xl font-bold text-wikya-orange">{config.montant} FCFA</span>
             </div>
           </div>
 
@@ -171,7 +171,7 @@ export default function Paiement() {
               W
             </div>
             <div>
-              <p className="font-semibold text-sm text-wiky-blue">Paiement Wave</p>
+              <p className="font-semibold text-sm text-wikya-blue">Paiement Wave</p>
               <p className="text-xs text-gray-500">
                 Vous serez redirigé vers Wave. L'activation est immédiate après confirmation.
               </p>
@@ -206,7 +206,7 @@ export default function Paiement() {
             <a
               href="https://wa.me/2250575421717"
               target="_blank" rel="noopener noreferrer"
-              className="text-wiky-orange hover:underline"
+              className="text-wikya-orange hover:underline"
             >
               WhatsApp 24/7
             </a>

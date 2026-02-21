@@ -28,23 +28,23 @@ export default function Header() {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link to="/" onClick={close} className="flex items-center">
-            <img src="/assets/wiky-logo.png" alt="Wiky by ATL Cars" className="h-12" />
+            <img src="/assets/wiky-logo.png" alt="Wikya by ATL Cars" className="h-12" />
           </Link>
 
           {/* Navigation desktop */}
           <div className="hidden md:flex items-center space-x-6">
-            <Link to="/" className="text-wiky-gray hover:text-wiky-orange transition-colors text-sm">
+            <Link to="/" className="text-wikya-gray hover:text-wikya-orange transition-colors text-sm">
               Accueil
             </Link>
-            <Link to="/repertoire" className="text-wiky-gray hover:text-wiky-orange transition-colors text-sm">
+            <Link to="/repertoire" className="text-wikya-gray hover:text-wikya-orange transition-colors text-sm">
               Conducteurs
             </Link>
-            <Link to="/offres" className="text-wiky-gray hover:text-wiky-orange transition-colors text-sm">
+            <Link to="/offres" className="text-wikya-gray hover:text-wikya-orange transition-colors text-sm">
               {isRecruteur ? 'Mes Offres' : 'Offres Recruteurs'}
             </Link>
             {user ? (
               <>
-                <Link to={dashboardPath} className="text-wiky-gray hover:text-wiky-orange transition-colors text-sm">
+                <Link to={dashboardPath} className="text-wikya-gray hover:text-wikya-orange transition-colors text-sm">
                   Mon Espace
                 </Link>
                 <button onClick={handleLogout} className="btn btn-outline text-sm py-2">
@@ -70,9 +70,9 @@ export default function Header() {
             aria-label={menuOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
           >
             <div className="w-6 flex flex-col gap-1.5">
-              <span className={`block h-0.5 bg-wiky-blue rounded transition-all duration-200 ${menuOpen ? 'rotate-45 translate-y-2' : ''}`} />
-              <span className={`block h-0.5 bg-wiky-blue rounded transition-all duration-200 ${menuOpen ? 'opacity-0 scale-x-0' : ''}`} />
-              <span className={`block h-0.5 bg-wiky-blue rounded transition-all duration-200 ${menuOpen ? '-rotate-45 -translate-y-2' : ''}`} />
+              <span className={`block h-0.5 bg-wikya-blue rounded transition-all duration-200 ${menuOpen ? 'rotate-45 translate-y-2' : ''}`} />
+              <span className={`block h-0.5 bg-wikya-blue rounded transition-all duration-200 ${menuOpen ? 'opacity-0 scale-x-0' : ''}`} />
+              <span className={`block h-0.5 bg-wikya-blue rounded transition-all duration-200 ${menuOpen ? '-rotate-45 -translate-y-2' : ''}`} />
             </div>
           </button>
         </div>
@@ -80,18 +80,18 @@ export default function Header() {
         {/* Menu mobile déroulant */}
         {menuOpen && (
           <div className="md:hidden border-t mt-3 pt-4 pb-2 flex flex-col gap-1">
-            <Link to="/" onClick={close} className="px-3 py-2.5 rounded-lg text-wiky-gray hover:bg-gray-50 hover:text-wiky-orange transition-colors">
+            <Link to="/" onClick={close} className="px-3 py-2.5 rounded-lg text-wikya-gray hover:bg-gray-50 hover:text-wikya-orange transition-colors">
               Accueil
             </Link>
-            <Link to="/repertoire" onClick={close} className="px-3 py-2.5 rounded-lg text-wiky-gray hover:bg-gray-50 hover:text-wiky-orange transition-colors">
+            <Link to="/repertoire" onClick={close} className="px-3 py-2.5 rounded-lg text-wikya-gray hover:bg-gray-50 hover:text-wikya-orange transition-colors">
               Conducteurs
             </Link>
-            <Link to="/offres" onClick={close} className="px-3 py-2.5 rounded-lg text-wiky-gray hover:bg-gray-50 hover:text-wiky-orange transition-colors">
+            <Link to="/offres" onClick={close} className="px-3 py-2.5 rounded-lg text-wikya-gray hover:bg-gray-50 hover:text-wikya-orange transition-colors">
               {isRecruteur ? 'Mes Offres' : 'Offres Recruteurs'}
             </Link>
             {user ? (
               <>
-                <Link to={dashboardPath} onClick={close} className="px-3 py-2.5 rounded-lg text-wiky-gray hover:bg-gray-50 hover:text-wiky-orange transition-colors">
+                <Link to={dashboardPath} onClick={close} className="px-3 py-2.5 rounded-lg text-wikya-gray hover:bg-gray-50 hover:text-wikya-orange transition-colors">
                   Mon Espace
                 </Link>
                 <div className="pt-2 mt-1 border-t">

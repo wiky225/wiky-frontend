@@ -1,7 +1,7 @@
 {
-  "name": "wiky-frontend",
+  "name": "wikya-frontend",
   "version": "1.0.0",
-  "description": "Wiky by ATL Cars - Plateforme VTC Côte d'Ivoire",
+  "description": "Wikya by ATL Cars - Plateforme VTC Côte d'Ivoire",
   "type": "module",
   "scripts": {
     "dev": "vite",

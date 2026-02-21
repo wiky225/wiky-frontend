@@ -7,7 +7,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        wiky: {
+        wikya: {
           blue: '#253b56',
           'blue-dark': '#1a2d43',
           orange: '#ed6d1d',

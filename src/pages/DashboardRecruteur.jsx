@@ -50,13 +50,13 @@ function FormulaireOffre({ form, setForm, onSave, onCancel, saving, error }) {
         <input type="text" value={form.titre}
           onChange={e => setForm(prev => ({ ...prev, titre: e.target.value }))}
           placeholder="Ex: Flotte moto, Véhicule standard..."
-          className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-wiky-blue" />
+          className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-wikya-blue" />
       </div>
 
       <div>
         <div className="flex items-center justify-between mb-2">
           <label className="text-sm font-medium">Flotte de véhicules</label>
-          <button type="button" onClick={addVehicule} className="text-sm text-wiky-blue hover:underline">+ Ajouter</button>
+          <button type="button" onClick={addVehicule} className="text-sm text-wikya-blue hover:underline">+ Ajouter</button>
         </div>
         {form.vehicules.length === 0 && <p className="text-gray-400 text-sm">Aucun véhicule ajouté.</p>}
         <div className="space-y-2">
@@ -80,12 +80,12 @@ function FormulaireOffre({ form, setForm, onSave, onCancel, saving, error }) {
         <div className="flex flex-wrap gap-2 mb-2">
           {HEURES_PRESETS.map(p => (
             <button key={p} type="button" onClick={() => setForm(prev => ({ ...prev, heures_travail: p }))}
-              className={`px-3 py-1 rounded-full text-sm border transition-colors ${form.heures_travail === p ? 'bg-wiky-blue text-white border-wiky-blue' : 'bg-white border-gray-300 hover:border-wiky-blue'}`}>
+              className={`px-3 py-1 rounded-full text-sm border transition-colors ${form.heures_travail === p ? 'bg-wikya-blue text-white border-wikya-blue' : 'bg-white border-gray-300 hover:border-wikya-blue'}`}>
               {p}
             </button>
           ))}
           <button type="button" onClick={() => setForm(prev => ({ ...prev, heures_travail: 'custom' }))}
-            className={`px-3 py-1 rounded-full text-sm border transition-colors ${isCustomHeures ? 'bg-wiky-blue text-white border-wiky-blue' : 'bg-white border-gray-300 hover:border-wiky-blue'}`}>
+            className={`px-3 py-1 rounded-full text-sm border transition-colors ${isCustomHeures ? 'bg-wikya-blue text-white border-wikya-blue' : 'bg-white border-gray-300 hover:border-wikya-blue'}`}>
             Personnalisé
           </button>
         </div>
@@ -111,7 +111,7 @@ function FormulaireOffre({ form, setForm, onSave, onCancel, saving, error }) {
         <div className="flex flex-wrap gap-2">
           {JOURS.map(jour => (
             <button key={jour} type="button" onClick={() => toggleJour(jour)}
-              className={`px-3 py-1 rounded-full text-sm border transition-colors ${form.jours_travail.includes(jour) ? 'bg-wiky-blue text-white border-wiky-blue' : 'bg-white border-gray-300 hover:border-wiky-blue'}`}>
+              className={`px-3 py-1 rounded-full text-sm border transition-colors ${form.jours_travail.includes(jour) ? 'bg-wikya-blue text-white border-wikya-blue' : 'bg-white border-gray-300 hover:border-wikya-blue'}`}>
               {jour}
             </button>
           ))}
@@ -123,7 +123,7 @@ function FormulaireOffre({ form, setForm, onSave, onCancel, saving, error }) {
         <div className="flex gap-3">
           {GARDE_OPTIONS.map(opt => (
             <button key={opt} type="button" onClick={() => setForm(prev => ({ ...prev, garde_vehicule: opt }))}
-              className={`flex-1 py-2 px-3 rounded border text-sm transition-colors ${form.garde_vehicule === opt ? 'bg-wiky-blue text-white border-wiky-blue' : 'bg-white border-gray-300 hover:border-wiky-blue'}`}>
+              className={`flex-1 py-2 px-3 rounded border text-sm transition-colors ${form.garde_vehicule === opt ? 'bg-wikya-blue text-white border-wikya-blue' : 'bg-white border-gray-300 hover:border-wikya-blue'}`}>
               {opt}
             </button>
           ))}
@@ -135,7 +135,7 @@ function FormulaireOffre({ form, setForm, onSave, onCancel, saving, error }) {
         <div className="flex flex-col gap-2">
           {TYPES_CONTRAT.map(opt => (
             <button key={opt} type="button" onClick={() => setForm(prev => ({ ...prev, type_contrat: opt }))}
-              className={`py-2 px-4 rounded border text-sm text-left transition-colors ${form.type_contrat === opt ? 'bg-wiky-blue text-white border-wiky-blue' : 'bg-white border-gray-300 hover:border-wiky-blue'}`}>
+              className={`py-2 px-4 rounded border text-sm text-left transition-colors ${form.type_contrat === opt ? 'bg-wikya-blue text-white border-wikya-blue' : 'bg-white border-gray-300 hover:border-wikya-blue'}`}>
               {opt}
             </button>
           ))}
@@ -166,11 +166,11 @@ function CarteOffreRecruteur({ offre, index, onEdit, onDelete }) {
     <div className="bg-white border rounded-xl p-5">
       <div className="flex items-start justify-between gap-4 mb-3">
         <div>
-          <h3 className="font-bold text-wiky-blue">{titre}</h3>
+          <h3 className="font-bold text-wikya-blue">{titre}</h3>
           {totalVehicules > 0 && <p className="text-xs text-gray-500">{totalVehicules} véhicule{totalVehicules > 1 ? 's' : ''}</p>}
         </div>
         <div className="flex gap-2 shrink-0">
-          <button onClick={() => onEdit(offre)} className="text-xs px-3 py-1.5 border border-wiky-blue text-wiky-blue rounded-lg hover:bg-blue-50">✏️ Modifier</button>
+          <button onClick={() => onEdit(offre)} className="text-xs px-3 py-1.5 border border-wikya-blue text-wikya-blue rounded-lg hover:bg-blue-50">✏️ Modifier</button>
           <button onClick={() => onDelete(offre.id)} className="text-xs px-3 py-1.5 bg-red-50 text-red-600 rounded-lg hover:bg-red-100">Supprimer</button>
         </div>
       </div>
@@ -190,7 +190,7 @@ function CarteOffreRecruteur({ offre, index, onEdit, onDelete }) {
                   <tr key={i} className="border-t">
                     <td className="px-3 py-1.5">{v.type}</td>
                     <td className="px-3 py-1.5">{v.nombre}</td>
-                    <td className="px-3 py-1.5 font-semibold text-wiky-blue">{Number(v.recette).toLocaleString('fr-FR')} FCFA</td>
+                    <td className="px-3 py-1.5 font-semibold text-wikya-blue">{Number(v.recette).toLocaleString('fr-FR')} FCFA</td>
                   </tr>
                 ))}
               </tbody>
@@ -251,7 +251,7 @@ function TabOffres({ session, offres, fetchOffres }) {
 
       {showForm && (
         <div>
-          <h3 className="font-semibold text-wiky-blue mb-3">{editingId ? "Modifier l'offre" : 'Nouvelle offre'}</h3>
+          <h3 className="font-semibold text-wikya-blue mb-3">{editingId ? "Modifier l'offre" : 'Nouvelle offre'}</h3>
           <FormulaireOffre form={formOffre} setForm={setFormOffre} onSave={saveOffre}
             onCancel={() => { setShowForm(false); setEditingId(null); setError(null); }} saving={saving} error={error} />
         </div>
@@ -289,12 +289,12 @@ function TabFavoris({ favoris }) {
         const c = favori.conducteurs;
         return (
           <Link key={favori.id} to={`/conducteur/${c?.id}`}
-            className="flex items-center gap-4 p-4 border rounded-xl hover:bg-wiky-gray-light transition-colors">
+            className="flex items-center gap-4 p-4 border rounded-xl hover:bg-wikya-gray-light transition-colors">
             <img src={c?.photo_url || `https://ui-avatars.com/api/?name=${c?.prenom}+${c?.nom}&size=80&background=253b56&color=fff`}
               alt={`${c?.prenom} ${c?.nom}`} className="w-14 h-14 rounded-full object-cover shrink-0" />
             <div>
-              <p className="font-bold text-wiky-blue">{c?.prenom} {c?.nom}</p>
-              <p className="text-sm text-wiky-gray">{c?.commune}{c?.annees_experience ? ` — ${c.annees_experience}` : ''}</p>
+              <p className="font-bold text-wikya-blue">{c?.prenom} {c?.nom}</p>
+              <p className="text-sm text-wikya-gray">{c?.commune}{c?.annees_experience ? ` — ${c.annees_experience}` : ''}</p>
             </div>
           </Link>
         );
@@ -340,7 +340,7 @@ function TabProfil({ profil, session, onUpdate }) {
         <div className="flex gap-3">
           {['particulier', 'entreprise'].map(t => (
             <button key={t} type="button" onClick={() => setForm(prev => ({ ...prev, type_recruteur: t }))}
-              className={`flex-1 py-2 px-3 rounded border text-sm capitalize transition-colors ${form.type_recruteur === t ? 'bg-wiky-blue text-white border-wiky-blue' : 'bg-white border-gray-300 hover:border-wiky-blue'}`}>
+              className={`flex-1 py-2 px-3 rounded border text-sm capitalize transition-colors ${form.type_recruteur === t ? 'bg-wikya-blue text-white border-wikya-blue' : 'bg-white border-gray-300 hover:border-wikya-blue'}`}>
               {t === 'entreprise' ? '🏢 Entreprise' : '👤 Particulier'}
             </button>
           ))}
@@ -351,7 +351,7 @@ function TabProfil({ profil, session, onUpdate }) {
         <div>
           <label className="block text-sm font-medium mb-1">Nom de l'entreprise</label>
           <input value={form.nom_entreprise} onChange={e => setForm(p => ({ ...p, nom_entreprise: e.target.value }))}
-            className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-wiky-blue" />
+            className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-wikya-blue" />
         </div>
       )}
 
@@ -359,19 +359,19 @@ function TabProfil({ profil, session, onUpdate }) {
         <div>
           <label className="block text-sm font-medium mb-1">Prénom</label>
           <input value={form.prenom_responsable} onChange={e => setForm(p => ({ ...p, prenom_responsable: e.target.value }))}
-            className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-wiky-blue" />
+            className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-wikya-blue" />
         </div>
         <div>
           <label className="block text-sm font-medium mb-1">Nom</label>
           <input value={form.nom_responsable} onChange={e => setForm(p => ({ ...p, nom_responsable: e.target.value }))}
-            className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-wiky-blue" />
+            className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-wikya-blue" />
         </div>
       </div>
 
       <div>
         <label className="block text-sm font-medium mb-1">Téléphone</label>
         <input value={form.telephone} onChange={e => setForm(p => ({ ...p, telephone: e.target.value }))}
-          className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-wiky-blue" />
+          className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-wikya-blue" />
       </div>
 
       <div>
@@ -426,7 +426,7 @@ function Sidebar({ abonnement, offres, favoris, profil }) {
             <p className="text-xs text-gray-500 mb-3">Abonnez-vous pour accéder aux contacts.</p>
           </>
         )}
-        <Link to="/paiement?role=recruteur" className={`text-xs font-semibold px-3 py-1.5 rounded-lg block text-center transition-colors ${abonnement?.active ? 'bg-gray-100 text-gray-600 hover:bg-gray-200' : 'bg-wiky-orange text-white hover:bg-wiky-orange-dark'}`}>
+        <Link to="/paiement?role=recruteur" className={`text-xs font-semibold px-3 py-1.5 rounded-lg block text-center transition-colors ${abonnement?.active ? 'bg-gray-100 text-gray-600 hover:bg-gray-200' : 'bg-wikya-orange text-white hover:bg-wikya-orange-dark'}`}>
           {abonnement?.active ? 'Renouveler' : "S'abonner — 10 000 FCFA"}
         </Link>
       </div>
@@ -437,18 +437,18 @@ function Sidebar({ abonnement, offres, favoris, profil }) {
         <div className="space-y-2">
           <div className="flex items-center justify-between text-sm">
             <span className="text-gray-500">💼 Offres publiées</span>
-            <span className="font-bold text-wiky-blue">{offres.length}</span>
+            <span className="font-bold text-wikya-blue">{offres.length}</span>
           </div>
           <div className="flex items-center justify-between text-sm">
             <span className="text-gray-500">❤️ Favoris</span>
-            <span className="font-bold text-wiky-blue">{favoris.length}</span>
+            <span className="font-bold text-wikya-blue">{favoris.length}</span>
           </div>
         </div>
       </div>
 
       {/* Lien répertoire */}
       <Link to="/repertoire"
-        className="flex items-center gap-3 bg-wiky-blue text-white rounded-xl p-4 hover:bg-wiky-blue-dark transition-colors">
+        className="flex items-center gap-3 bg-wikya-blue text-white rounded-xl p-4 hover:bg-wikya-blue-dark transition-colors">
         <span className="text-2xl">🔍</span>
         <div>
           <p className="font-semibold text-sm">Trouver un conducteur</p>
@@ -511,13 +511,13 @@ export default function DashboardRecruteur() {
   }, [session, fetchOffres]);
 
   if (loading) return (
-    <div className="min-h-screen flex items-center justify-center bg-wiky-gray-light">
-      <div className="text-wiky-blue font-semibold">Chargement...</div>
+    <div className="min-h-screen flex items-center justify-center bg-wikya-gray-light">
+      <div className="text-wikya-blue font-semibold">Chargement...</div>
     </div>
   );
 
   if (error) return (
-    <div className="min-h-screen flex items-center justify-center bg-wiky-gray-light">
+    <div className="min-h-screen flex items-center justify-center bg-wikya-gray-light">
       <div className="text-center">
         <p className="text-red-600 mb-4">Erreur : {error}</p>
         <button onClick={() => window.location.reload()} className="btn btn-primary">Réessayer</button>
@@ -528,9 +528,9 @@ export default function DashboardRecruteur() {
   const prenom = profil?.prenom_responsable || '';
 
   return (
-    <div className="min-h-screen bg-wiky-gray-light">
+    <div className="min-h-screen bg-wikya-gray-light">
       {/* Header */}
-      <div className="bg-wiky-blue text-white py-6 px-8">
+      <div className="bg-wikya-blue text-white py-6 px-8">
         <h1 className="text-2xl font-bold">
           {prenom ? `Bonjour, ${prenom} 👋` : 'Mon Dashboard Recruteur'}
         </h1>
@@ -553,7 +553,7 @@ export default function DashboardRecruteur() {
             <div className="flex gap-1 mb-6 bg-white rounded-xl p-1 shadow-sm border overflow-x-auto">
               {TABS.map(tab => (
                 <button key={tab.id} onClick={() => setActiveTab(tab.id)}
-                  className={`shrink-0 sm:flex-1 py-2 px-3 text-sm font-medium rounded-lg transition-colors whitespace-nowrap ${activeTab === tab.id ? 'bg-wiky-blue text-white shadow-sm' : 'text-gray-500 hover:text-wiky-blue'}`}>
+                  className={`shrink-0 sm:flex-1 py-2 px-3 text-sm font-medium rounded-lg transition-colors whitespace-nowrap ${activeTab === tab.id ? 'bg-wikya-blue text-white shadow-sm' : 'text-gray-500 hover:text-wikya-blue'}`}>
                   {tab.label}
                 </button>
               ))}

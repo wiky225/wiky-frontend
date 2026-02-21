@@ -17,7 +17,7 @@ const TYPES_COLLABORATION = ['Location simple', 'Achat progressif', 'CDI', 'CDD'
 const PREFERENCES_YANGO = ['Yango Food', 'Yango Moto', 'Yango Light', 'Yango Business'];
 const STATUTS = [
   { value: 'disponible', label: 'Disponible', color: 'bg-green-100 text-green-700' },
-  { value: 'en poste', label: 'En poste', color: 'bg-orange-100 text-wiky-orange' },
+  { value: 'en poste', label: 'En poste', color: 'bg-orange-100 text-wikya-orange' },
   { value: 'indisponible', label: 'Indisponible', color: 'bg-gray-100 text-gray-500' },
 ];
 
@@ -57,7 +57,7 @@ function Sidebar({ profil, activeTab, setActiveTab, onStatutChange }) {
           className="w-14 h-14 md:w-24 md:h-24 rounded-full object-cover ring-4 ring-blue-100 shrink-0"
         />
         <div className="flex-1 min-w-0">
-          <p className="font-bold text-wiky-blue leading-tight truncate">{profil.prenom} {profil.nom}</p>
+          <p className="font-bold text-wikya-blue leading-tight truncate">{profil.prenom} {profil.nom}</p>
           <p className="text-xs text-gray-400 mt-0.5 truncate">{profil.email}</p>
           <select
             value={profil.statut || 'disponible'}
@@ -74,7 +74,7 @@ function Sidebar({ profil, activeTab, setActiveTab, onStatutChange }) {
           <Link
             to={`/conducteur/${profil.id}`}
             title="Voir mon profil public"
-            className="md:hidden shrink-0 text-wiky-blue border border-wiky-blue rounded-lg p-2 hover:bg-blue-50 transition-colors"
+            className="md:hidden shrink-0 text-wikya-blue border border-wikya-blue rounded-lg p-2 hover:bg-blue-50 transition-colors"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -87,14 +87,14 @@ function Sidebar({ profil, activeTab, setActiveTab, onStatutChange }) {
       {/* Score de complétude */}
       <div className="bg-white rounded-xl shadow-sm p-4">
         <div className="flex justify-between items-center mb-2">
-          <span className="text-sm font-semibold text-wiky-blue">Profil complété</span>
-          <span className={`text-sm font-bold ${score >= 80 ? 'text-green-600' : score >= 50 ? 'text-wiky-orange' : 'text-red-500'}`}>
+          <span className="text-sm font-semibold text-wikya-blue">Profil complété</span>
+          <span className={`text-sm font-bold ${score >= 80 ? 'text-green-600' : score >= 50 ? 'text-wikya-orange' : 'text-red-500'}`}>
             {score}%
           </span>
         </div>
         <div className="w-full bg-gray-100 rounded-full h-2">
           <div
-            className={`h-2 rounded-full transition-all ${score >= 80 ? 'bg-green-500' : score >= 50 ? 'bg-wiky-orange' : 'bg-red-400'}`}
+            className={`h-2 rounded-full transition-all ${score >= 80 ? 'bg-green-500' : score >= 50 ? 'bg-wikya-orange' : 'bg-red-400'}`}
             style={{ width: `${score}%` }}
           />
         </div>
@@ -110,7 +110,7 @@ function Sidebar({ profil, activeTab, setActiveTab, onStatutChange }) {
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
             className={`text-center md:text-left px-3 py-2.5 md:px-4 rounded-lg text-sm font-medium transition-colors ${
-              activeTab === tab.id ? 'bg-wiky-blue text-white' : 'text-gray-600 hover:bg-gray-50'
+              activeTab === tab.id ? 'bg-wikya-blue text-white' : 'text-gray-600 hover:bg-gray-50'
             }`}
           >
             {tab.label}
@@ -191,7 +191,7 @@ function TabProfil({ profil, session, onUpdate }) {
     <form onSubmit={handleSubmit} className="space-y-5">
       {/* Identité */}
       <section className="bg-white rounded-xl shadow-sm p-6">
-        <h3 className="font-bold text-wiky-blue mb-4">Identité</h3>
+        <h3 className="font-bold text-wikya-blue mb-4">Identité</h3>
         <div className="grid md:grid-cols-2 gap-4">
           <div>
             <label className="block text-xs font-medium text-gray-500 mb-1">Prénom</label>
@@ -218,7 +218,7 @@ function TabProfil({ profil, session, onUpdate }) {
 
       {/* Localisation */}
       <section className="bg-white rounded-xl shadow-sm p-6">
-        <h3 className="font-bold text-wiky-blue mb-4">Localisation</h3>
+        <h3 className="font-bold text-wikya-blue mb-4">Localisation</h3>
         <div className="grid md:grid-cols-3 gap-4">
           <div>
             <label className="block text-xs font-medium text-gray-500 mb-1">Ville</label>
@@ -237,7 +237,7 @@ function TabProfil({ profil, session, onUpdate }) {
 
       {/* Activité */}
       <section className="bg-white rounded-xl shadow-sm p-6">
-        <h3 className="font-bold text-wiky-blue mb-4">Activité VTC</h3>
+        <h3 className="font-bold text-wikya-blue mb-4">Activité VTC</h3>
         <div className="grid md:grid-cols-2 gap-4 mb-4">
           <div>
             <label className="block text-xs font-medium text-gray-500 mb-1">Années d'expérience</label>
@@ -264,8 +264,8 @@ function TabProfil({ profil, session, onUpdate }) {
                 onClick={() => toggleList('type_collaboration', t)}
                 className={`text-sm px-3 py-1 rounded-full border transition-colors ${
                   form.type_collaboration.includes(t)
-                    ? 'bg-wiky-blue text-white border-wiky-blue'
-                    : 'bg-white text-gray-600 border-gray-300 hover:border-wiky-blue'
+                    ? 'bg-wikya-blue text-white border-wikya-blue'
+                    : 'bg-white text-gray-600 border-gray-300 hover:border-wikya-blue'
                 }`}
               >{t}</button>
             ))}
@@ -280,8 +280,8 @@ function TabProfil({ profil, session, onUpdate }) {
                 onClick={() => toggleList('preferences_yango', p)}
                 className={`text-sm px-3 py-1 rounded-full border transition-colors ${
                   form.preferences_yango.includes(p)
-                    ? 'bg-wiky-orange text-white border-wiky-orange'
-                    : 'bg-white text-gray-600 border-gray-300 hover:border-wiky-orange'
+                    ? 'bg-wikya-orange text-white border-wikya-orange'
+                    : 'bg-white text-gray-600 border-gray-300 hover:border-wikya-orange'
                 }`}
               >{p}</button>
             ))}
@@ -291,7 +291,7 @@ function TabProfil({ profil, session, onUpdate }) {
 
       {/* Description */}
       <section className="bg-white rounded-xl shadow-sm p-6">
-        <h3 className="font-bold text-wiky-blue mb-4">Description</h3>
+        <h3 className="font-bold text-wikya-blue mb-4">Description</h3>
         <textarea
           value={form.description}
           onChange={e => set('description', e.target.value)}
@@ -325,17 +325,17 @@ function TabStats({ profil }) {
       <div className="grid sm:grid-cols-3 gap-4">
         <div className="bg-white rounded-xl shadow-sm p-6 text-center">
           <div className="text-4xl mb-2">👁️</div>
-          <div className="text-3xl font-bold text-wiky-blue">{profil.nb_vues ?? 0}</div>
+          <div className="text-3xl font-bold text-wikya-blue">{profil.nb_vues ?? 0}</div>
           <div className="text-sm text-gray-500 mt-1">Vues du profil</div>
         </div>
         <div className="bg-white rounded-xl shadow-sm p-6 text-center">
           <div className="text-4xl mb-2">⭐</div>
-          <div className="text-3xl font-bold text-wiky-blue">{profil.nb_favoris ?? 0}</div>
+          <div className="text-3xl font-bold text-wikya-blue">{profil.nb_favoris ?? 0}</div>
           <div className="text-sm text-gray-500 mt-1">Mis en favoris</div>
         </div>
         <div className="bg-white rounded-xl shadow-sm p-6 text-center">
           <div className="text-4xl mb-2">💬</div>
-          <div className="text-3xl font-bold text-wiky-blue">{profil.nb_avis ?? 0}</div>
+          <div className="text-3xl font-bold text-wikya-blue">{profil.nb_avis ?? 0}</div>
           <div className="text-sm text-gray-500 mt-1">Avis reçus</div>
         </div>
       </div>
@@ -343,7 +343,7 @@ function TabStats({ profil }) {
       <div className="bg-white rounded-xl shadow-sm p-6 flex flex-wrap gap-8 items-center">
         <div className="text-center">
           <p className="text-sm text-gray-500 mb-1">Note moyenne</p>
-          <p className="text-4xl font-bold text-wiky-blue">
+          <p className="text-4xl font-bold text-wikya-blue">
             {profil.note_moyenne > 0 ? Number(profil.note_moyenne).toFixed(1) : '—'}
           </p>
           {profil.note_moyenne > 0 && (
@@ -357,11 +357,11 @@ function TabStats({ profil }) {
           <div className="flex items-center gap-3">
             <div className="flex-1 bg-gray-100 rounded-full h-3">
               <div
-                className={`h-3 rounded-full transition-all ${score >= 80 ? 'bg-green-500' : score >= 50 ? 'bg-wiky-orange' : 'bg-red-400'}`}
+                className={`h-3 rounded-full transition-all ${score >= 80 ? 'bg-green-500' : score >= 50 ? 'bg-wikya-orange' : 'bg-red-400'}`}
                 style={{ width: `${score}%` }}
               />
             </div>
-            <span className="font-bold text-wiky-blue text-sm">{score}%</span>
+            <span className="font-bold text-wikya-blue text-sm">{score}%</span>
           </div>
           <p className="text-xs text-gray-400 mt-1">Un profil complet est 3× plus consulté</p>
         </div>
@@ -400,7 +400,7 @@ function TabAvis({ profilId }) {
   return (
     <div className="space-y-4">
       <div className="bg-white rounded-xl shadow-sm p-5 flex items-center gap-5">
-        <span className="text-4xl font-bold text-wiky-blue">{noteMoyenne.toFixed(1)}</span>
+        <span className="text-4xl font-bold text-wikya-blue">{noteMoyenne.toFixed(1)}</span>
         <div>
           <Etoiles note={Math.round(noteMoyenne)} />
           <p className="text-sm text-gray-500 mt-0.5">{avis.length} avis</p>
@@ -469,7 +469,7 @@ function TabDocuments({ profil, session, onUpdate }) {
   const DocCard = ({ label, field, url, icon }) => (
     <div className="bg-white rounded-xl shadow-sm p-5">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="font-semibold text-wiky-blue text-sm">{icon} {label}</h3>
+        <h3 className="font-semibold text-wikya-blue text-sm">{icon} {label}</h3>
         {url && <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium">✓ Uploadé</span>}
       </div>
       {url ? (
@@ -572,7 +572,7 @@ function DashboardConducteur() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-wiky-blue font-semibold">Chargement...</div>
+        <div className="text-wikya-blue font-semibold">Chargement...</div>
       </div>
     );
   }
@@ -593,7 +593,7 @@ function DashboardConducteur() {
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="bg-white rounded-xl shadow-sm p-8 max-w-md text-center">
           <div className="text-5xl mb-4">⚠️</div>
-          <h2 className="text-xl font-bold text-wiky-blue mb-3">Profil non trouvé</h2>
+          <h2 className="text-xl font-bold text-wikya-blue mb-3">Profil non trouvé</h2>
           <p className="text-gray-500 mb-6">
             Votre profil conducteur n'a pas encore été créé. Cela peut arriver si vous venez de confirmer votre email.
           </p>
@@ -609,13 +609,13 @@ function DashboardConducteur() {
     <div className="min-h-screen bg-gray-50 py-10">
       <div className="container-custom">
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-wiky-blue">Bonjour, {profil.prenom} 👋</h1>
+          <h1 className="text-2xl font-bold text-wikya-blue">Bonjour, {profil.prenom} 👋</h1>
           <p className="text-gray-500 text-sm">Gérez votre profil et suivez vos statistiques.</p>
         </div>
 
         {/* Bannière abonnement */}
         {!profil.abonnement_actif ? (
-          <div className="bg-wiky-blue text-white rounded-xl p-4 mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="bg-wikya-blue text-white rounded-xl p-4 mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
               <p className="font-semibold">🔒 Votre profil n'est pas encore contactable</p>
               <p className="text-blue-200 text-sm mt-0.5">
@@ -624,7 +624,7 @@ function DashboardConducteur() {
             </div>
             <Link
               to="/paiement?role=conducteur"
-              className="btn bg-wiky-orange text-white hover:bg-wiky-orange-dark text-sm shrink-0"
+              className="btn bg-wikya-orange text-white hover:bg-wikya-orange-dark text-sm shrink-0"
             >
               S'abonner — 1 000 FCFA / 2 mois
             </Link>
@@ -641,7 +641,7 @@ function DashboardConducteur() {
             </div>
             <Link
               to="/paiement?role=conducteur"
-              className="btn bg-wiky-orange text-white hover:bg-wiky-orange-dark text-sm shrink-0"
+              className="btn bg-wikya-orange text-white hover:bg-wikya-orange-dark text-sm shrink-0"
             >
               Renouveler — 1 000 FCFA
             </Link>

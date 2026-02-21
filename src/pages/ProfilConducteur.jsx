@@ -21,10 +21,10 @@ function ProfilConducteur() {
   }
 
   return (
-    <div className="py-12 bg-wiky-gray-light min-h-screen">
+    <div className="py-12 bg-wikya-gray-light min-h-screen">
       <div className="container-custom max-w-4xl">
         {/* Retour */}
-        <Link to="/repertoire" className="inline-flex items-center text-wiky-blue hover:text-wiky-orange mb-6">
+        <Link to="/repertoire" className="inline-flex items-center text-wikya-blue hover:text-wikya-orange mb-6">
           ← Retour au répertoire
         </Link>
 
@@ -33,7 +33,7 @@ function ProfilConducteur() {
           <div className="flex flex-col md:flex-row gap-8">
             {/* Photo */}
             <div className="flex-shrink-0">
-              <div className="w-32 h-32 md:w-40 md:h-40 bg-wiky-gray-light rounded-xl flex items-center justify-center text-8xl">
+              <div className="w-32 h-32 md:w-40 md:h-40 bg-wikya-gray-light rounded-xl flex items-center justify-center text-8xl">
                 {conducteur.photo}
               </div>
               <div className="mt-4">
@@ -45,32 +45,32 @@ function ProfilConducteur() {
 
             {/* Informations */}
             <div className="flex-grow">
-              <h1 className="text-3xl font-bold text-wiky-blue mb-2">{conducteur.nom}</h1>
-              <p className="text-wiky-gray mb-6">{conducteur.description}</p>
+              <h1 className="text-3xl font-bold text-wikya-blue mb-2">{conducteur.nom}</h1>
+              <p className="text-wikya-gray mb-6">{conducteur.description}</p>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                 <div>
-                  <span className="text-sm font-semibold text-wiky-gray">Âge:</span>
+                  <span className="text-sm font-semibold text-wikya-gray">Âge:</span>
                   <p className="text-lg">{conducteur.age} ans</p>
                 </div>
                 <div>
-                  <span className="text-sm font-semibold text-wiky-gray">Expérience:</span>
+                  <span className="text-sm font-semibold text-wikya-gray">Expérience:</span>
                   <p className="text-lg">{conducteur.experience}</p>
                 </div>
                 <div>
-                  <span className="text-sm font-semibold text-wiky-gray">Localisation:</span>
+                  <span className="text-sm font-semibold text-wikya-gray">Localisation:</span>
                   <p className="text-lg">{conducteur.quartier}, {conducteur.commune}</p>
                 </div>
                 <div>
-                  <span className="text-sm font-semibold text-wiky-gray">Plateformes VTC:</span>
+                  <span className="text-sm font-semibold text-wikya-gray">Plateformes VTC:</span>
                   <p className="text-lg">{conducteur.typeVTC}</p>
                 </div>
               </div>
 
-              <div className="bg-wiky-gray-light p-4 rounded-lg mb-6">
-                <h3 className="font-bold text-wiky-blue mb-2">Informations de contact</h3>
-                <p className="text-sm text-wiky-gray mb-2">📞 {conducteur.telephone}</p>
-                <p className="text-sm text-wiky-gray">📧 {conducteur.email}</p>
+              <div className="bg-wikya-gray-light p-4 rounded-lg mb-6">
+                <h3 className="font-bold text-wikya-blue mb-2">Informations de contact</h3>
+                <p className="text-sm text-wikya-gray mb-2">📞 {conducteur.telephone}</p>
+                <p className="text-sm text-wikya-gray">📧 {conducteur.email}</p>
               </div>
 
               <div className="flex gap-4">
@@ -86,10 +86,10 @@ function ProfilConducteur() {
         </div>
 
         {/* CTA Abonnement si non connecté */}
-        <div className="mt-8 bg-wiky-orange text-white rounded-xl p-6 text-center">
+        <div className="mt-8 bg-wikya-orange text-white rounded-xl p-6 text-center">
           <h3 className="text-xl font-bold mb-2">Accédez aux informations complètes</h3>
           <p className="mb-4">Abonnez-vous pour voir tous les détails et contacter les conducteurs</p>
-          <Link to="/inscription-recruteur" className="btn bg-white text-wiky-orange hover:bg-gray-100">
+          <Link to="/inscription-recruteur" className="btn bg-white text-wikya-orange hover:bg-gray-100">
             S'abonner Maintenant - 10.000 FCFA/mois
           </Link>
         </div>

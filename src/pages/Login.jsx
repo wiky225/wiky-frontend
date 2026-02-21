@@ -34,11 +34,11 @@ function Login() {
   };
 
   return (
-    <div className="py-12 bg-wiky-gray-light min-h-screen flex items-center">
+    <div className="py-12 bg-wikya-gray-light min-h-screen flex items-center">
       <div className="container-custom max-w-md">
         <div className="card p-8">
-          <h1 className="text-3xl font-bold text-wiky-blue mb-2 text-center">Connexion</h1>
-          <p className="text-wiky-gray mb-8 text-center">Accédez à votre compte Wiky</p>
+          <h1 className="text-3xl font-bold text-wikya-blue mb-2 text-center">Connexion</h1>
+          <p className="text-wikya-gray mb-8 text-center">Accédez à votre compte Wikya</p>
 
           {emailConfirme && (
             <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-6 text-sm">
@@ -60,7 +60,7 @@ function Login() {
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label className="block text-sm font-semibold text-wiky-gray mb-2">Email</label>
+              <label className="block text-sm font-semibold text-wikya-gray mb-2">Email</label>
               <input
                 type="email"
                 className="input"
@@ -71,7 +71,7 @@ function Login() {
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-wiky-gray mb-2">Mot de passe</label>
+              <label className="block text-sm font-semibold text-wikya-gray mb-2">Mot de passe</label>
               <input
                 type="password"
                 className="input"
@@ -84,9 +84,9 @@ function Login() {
             <div className="flex flex-col gap-3">
               <label className="flex items-center gap-2">
                 <input type="checkbox" />
-                <span className="text-sm text-wiky-gray">Se souvenir de moi</span>
+                <span className="text-sm text-wikya-gray">Se souvenir de moi</span>
               </label>
-              <Link to="/mot-de-passe-oublie" className="text-sm text-wiky-blue hover:text-wiky-orange">Mot de passe oublié ?</Link>
+              <Link to="/mot-de-passe-oublie" className="text-sm text-wikya-blue hover:text-wikya-orange">Mot de passe oublié ?</Link>
             </div>
 
             <button
@@ -97,13 +97,13 @@ function Login() {
               {loading ? 'Connexion...' : 'Se Connecter'}
             </button>
 
-            <div className="text-center text-sm text-wiky-gray">
+            <div className="text-center text-sm text-wikya-gray">
               Pas encore de compte ?
               <div className="mt-2 space-y-2">
-                <Link to="/inscription-conducteur" className="block text-wiky-blue hover:text-wiky-orange font-semibold">
+                <Link to="/inscription-conducteur" className="block text-wikya-blue hover:text-wikya-orange font-semibold">
                   S'inscrire comme Conducteur
                 </Link>
-                <Link to="/inscription-recruteur" className="block text-wiky-blue hover:text-wiky-orange font-semibold">
+                <Link to="/inscription-recruteur" className="block text-wikya-blue hover:text-wikya-orange font-semibold">
                   S'inscrire comme Recruteur
                 </Link>
               </div>

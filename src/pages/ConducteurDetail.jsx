@@ -152,7 +152,7 @@ export default function ConducteurDetail() {
   return (
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="container-custom">
-        <Link to="/repertoire" className="text-wiky-orange hover:underline mb-6 inline-block">← Retour au répertoire</Link>
+        <Link to="/repertoire" className="text-wikya-orange hover:underline mb-6 inline-block">← Retour au répertoire</Link>
 
         <div className="bg-white rounded-lg shadow-lg p-8 mb-6">
           <div className="grid md:grid-cols-3 gap-8">
@@ -169,7 +169,7 @@ export default function ConducteurDetail() {
                     <div className="flex justify-center mb-1">
                       <Etoiles note={Math.round(noteMoyenne)} />
                     </div>
-                    <p className="text-wiky-blue font-bold text-xl">{noteMoyenne > 0 ? noteMoyenne.toFixed(1) : '—'}/5</p>
+                    <p className="text-wikya-blue font-bold text-xl">{noteMoyenne > 0 ? noteMoyenne.toFixed(1) : '—'}/5</p>
                     <p className="text-sm text-gray-500">{nbAvis} avis</p>
                   </div>
                   {topBadges.length > 0 && (
@@ -181,7 +181,7 @@ export default function ConducteurDetail() {
                   )}
                 </>
               ) : (
-                <div className="w-full aspect-square rounded-lg bg-wiky-blue flex items-center justify-center">
+                <div className="w-full aspect-square rounded-lg bg-wikya-blue flex items-center justify-center">
                   <span className="text-6xl text-white font-bold">
                     {conducteur.prenom?.[0]}{conducteur.nom?.[0]}
                   </span>
@@ -191,32 +191,32 @@ export default function ConducteurDetail() {
             </div>
 
             <div className="md:col-span-2">
-              <h1 className="text-3xl font-bold text-wiky-blue mb-2">{conducteur.prenom} {conducteur.nom}</h1>
+              <h1 className="text-3xl font-bold text-wikya-blue mb-2">{conducteur.prenom} {conducteur.nom}</h1>
               <p className="text-xl text-gray-600 mb-6">{conducteur.ville || conducteur.commune}{conducteur.commune && conducteur.ville ? ` — ${conducteur.commune}` : conducteur.commune || ''}</p>
 
               {/* Infos publiques */}
               <div className="space-y-4">
                 {(conducteur.ville || conducteur.commune || conducteur.quartier) && (
                   <div>
-                    <h3 className="font-semibold text-wiky-blue">📍 Localisation</h3>
+                    <h3 className="font-semibold text-wikya-blue">📍 Localisation</h3>
                     <p>{[conducteur.ville, conducteur.commune, conducteur.quartier].filter(Boolean).join(' — ')}</p>
                   </div>
                 )}
                 {conducteur.annees_experience && (
                   <div>
-                    <h3 className="font-semibold text-wiky-blue">⏱️ Expérience</h3>
+                    <h3 className="font-semibold text-wikya-blue">⏱️ Expérience</h3>
                     <p>{conducteur.annees_experience}</p>
                   </div>
                 )}
                 {conducteur.plateformes_vtc && (
                   <div>
-                    <h3 className="font-semibold text-wiky-blue">🚕 Plateformes VTC</h3>
+                    <h3 className="font-semibold text-wikya-blue">🚕 Plateformes VTC</h3>
                     <p>{conducteur.plateformes_vtc}</p>
                   </div>
                 )}
                 {conducteur.disponibilite && (
                   <div>
-                    <h3 className="font-semibold text-wiky-blue">📅 Disponibilité</h3>
+                    <h3 className="font-semibold text-wikya-blue">📅 Disponibilité</h3>
                     <p>{conducteur.disponibilite}</p>
                   </div>
                 )}
@@ -226,39 +226,39 @@ export default function ConducteurDetail() {
                   <>
                     {conducteur.date_naissance && (
                       <div>
-                        <h3 className="font-semibold text-wiky-blue">🎂 Date de naissance</h3>
+                        <h3 className="font-semibold text-wikya-blue">🎂 Date de naissance</h3>
                         <p>{new Date(conducteur.date_naissance).toLocaleDateString('fr-FR')}</p>
                       </div>
                     )}
                     {conducteur.situation_matrimoniale && (
                       <div>
-                        <h3 className="font-semibold text-wiky-blue">💍 Situation matrimoniale</h3>
+                        <h3 className="font-semibold text-wikya-blue">💍 Situation matrimoniale</h3>
                         <p>{conducteur.situation_matrimoniale}{conducteur.nombre_enfants != null ? ` — ${conducteur.nombre_enfants} enfant(s)` : ''}</p>
                       </div>
                     )}
                     {Array.isArray(conducteur.type_collaboration) && conducteur.type_collaboration.length > 0 && (
                       <div>
-                        <h3 className="font-semibold text-wiky-blue">🤝 Type de collaboration</h3>
+                        <h3 className="font-semibold text-wikya-blue">🤝 Type de collaboration</h3>
                         <div className="flex flex-wrap gap-2 mt-1">
                           {conducteur.type_collaboration.map(t => (
-                            <span key={t} className="text-xs bg-blue-50 text-wiky-blue border border-wiky-blue rounded-full px-3 py-1">{t}</span>
+                            <span key={t} className="text-xs bg-blue-50 text-wikya-blue border border-wikya-blue rounded-full px-3 py-1">{t}</span>
                           ))}
                         </div>
                       </div>
                     )}
                     {Array.isArray(conducteur.preferences_yango) && conducteur.preferences_yango.length > 0 && (
                       <div>
-                        <h3 className="font-semibold text-wiky-blue">🚗 Préférences Yango</h3>
+                        <h3 className="font-semibold text-wikya-blue">🚗 Préférences Yango</h3>
                         <div className="flex flex-wrap gap-2 mt-1">
                           {conducteur.preferences_yango.map(p => (
-                            <span key={p} className="text-xs bg-orange-50 text-wiky-orange border border-wiky-orange rounded-full px-3 py-1">{p}</span>
+                            <span key={p} className="text-xs bg-orange-50 text-wikya-orange border border-wikya-orange rounded-full px-3 py-1">{p}</span>
                           ))}
                         </div>
                       </div>
                     )}
                     {(conducteur.permis_recto_url || conducteur.permis_verso_url) && (
                       <div>
-                        <h3 className="font-semibold text-wiky-blue">🪪 Permis de conduire</h3>
+                        <h3 className="font-semibold text-wikya-blue">🪪 Permis de conduire</h3>
                         <div className="flex gap-3 mt-2">
                           {conducteur.permis_recto_url && (
                             <a href={conducteur.permis_recto_url} target="_blank" rel="noopener noreferrer" className="btn btn-outline text-sm">Voir recto</a>
@@ -270,19 +270,19 @@ export default function ConducteurDetail() {
                       </div>
                     )}
                     <div>
-                      <h3 className="font-semibold text-wiky-blue">📧 Contact</h3>
+                      <h3 className="font-semibold text-wikya-blue">📧 Contact</h3>
                       <p className="text-gray-700">{conducteur.email}</p>
                       {conducteur.contact_secondaire && <p className="text-gray-500 text-sm">Contact secondaire : {conducteur.contact_secondaire}</p>}
                     </div>
                     {conducteur.personne_urgence && (
                       <div>
-                        <h3 className="font-semibold text-wiky-blue">🆘 Personne à contacter en cas d'urgence</h3>
+                        <h3 className="font-semibold text-wikya-blue">🆘 Personne à contacter en cas d'urgence</h3>
                         <p>{conducteur.personne_urgence}</p>
                       </div>
                     )}
                     {conducteur.nationalite && (
                       <div>
-                        <h3 className="font-semibold text-wiky-blue">🪪 Identité</h3>
+                        <h3 className="font-semibold text-wikya-blue">🪪 Identité</h3>
                         <p>{conducteur.nationalite}{conducteur.type_piece ? ` — ${conducteur.type_piece}` : ''}{conducteur.numero_piece ? ` n°${conducteur.numero_piece}` : ''}</p>
                       </div>
                     )}
@@ -292,8 +292,8 @@ export default function ConducteurDetail() {
 
               {/* CTA connexion pour les visiteurs */}
               {!user && (
-                <div className="mt-6 p-4 bg-blue-50 border border-wiky-blue rounded-lg">
-                  <p className="text-wiky-blue font-semibold mb-2">Accédez aux coordonnées complètes</p>
+                <div className="mt-6 p-4 bg-blue-50 border border-wikya-blue rounded-lg">
+                  <p className="text-wikya-blue font-semibold mb-2">Accédez aux coordonnées complètes</p>
                   <p className="text-sm text-gray-600 mb-3">Connectez-vous en tant que recruteur pour voir le contact, le permis, les avis et recruter ce conducteur.</p>
                   <a href="/connexion" className="btn btn-primary text-sm">Se connecter</a>
                 </div>
@@ -316,7 +316,7 @@ export default function ConducteurDetail() {
                   >
                     📞 Appeler
                   </a>
-                  <span className="text-lg font-bold text-wiky-blue tracking-widest select-all">
+                  <span className="text-lg font-bold text-wikya-blue tracking-widest select-all">
                     {conducteur.telephone}
                   </span>
                 </div>
@@ -344,7 +344,7 @@ export default function ConducteurDetail() {
               {/* Formulaire avis */}
               {showAvisForm && (
                 <form onSubmit={submitAvis} className="mt-6 p-6 bg-gray-50 rounded-lg border space-y-4">
-                  <h3 className="font-bold text-wiky-blue text-lg">Votre avis</h3>
+                  <h3 className="font-bold text-wikya-blue text-lg">Votre avis</h3>
 
                   <div>
                     <p className="text-sm font-semibold mb-2">Note *</p>
@@ -358,7 +358,7 @@ export default function ConducteurDetail() {
                         <button
                           key={b} type="button"
                           onClick={() => toggleBadge(b)}
-                          className={`text-sm px-3 py-1 rounded-full border transition-colors ${badgesForm.includes(b) ? 'bg-wiky-blue text-white border-wiky-blue' : 'bg-white border-gray-300 hover:border-wiky-blue'}`}
+                          className={`text-sm px-3 py-1 rounded-full border transition-colors ${badgesForm.includes(b) ? 'bg-wikya-blue text-white border-wikya-blue' : 'bg-white border-gray-300 hover:border-wikya-blue'}`}
                         >
                           {b}
                         </button>
@@ -399,7 +399,7 @@ export default function ConducteurDetail() {
         {/* Section avis — recruteurs et admins uniquement */}
         {hasFullAccess && avis.length > 0 && (
           <div className="bg-white rounded-lg shadow-lg p-8">
-            <h2 className="text-2xl font-bold text-wiky-blue mb-6">Avis des recruteurs ({avis.length})</h2>
+            <h2 className="text-2xl font-bold text-wikya-blue mb-6">Avis des recruteurs ({avis.length})</h2>
             <div className="space-y-4">
               {avis.slice(0, 3).map(a => (
                 <div key={a.id} className="border-b pb-4 last:border-0">

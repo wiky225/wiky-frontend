@@ -29,7 +29,7 @@ const POSITIONS = [
 ];
 
 function StatCard({ label, value, sub, color = 'blue' }) {
-  const colors = { blue: 'border-wiky-blue text-wiky-blue', orange: 'border-wiky-orange text-wiky-orange', green: 'border-green-500 text-green-600', gray: 'border-gray-400 text-gray-500' };
+  const colors = { blue: 'border-wikya-blue text-wikya-blue', orange: 'border-wikya-orange text-wikya-orange', green: 'border-green-500 text-green-600', gray: 'border-gray-400 text-gray-500' };
   return (
     <div className={`bg-white rounded-lg shadow p-5 border-l-4 ${colors[color]}`}>
       <p className="text-sm text-gray-500">{label}</p>
@@ -51,14 +51,14 @@ function TabStats({ token }) {
   if (!stats) return <p className="text-gray-400">Chargement...</p>;
   return (
     <div className="space-y-6">
-      <h2 className="text-xl font-bold text-wiky-blue">Conducteurs</h2>
+      <h2 className="text-xl font-bold text-wikya-blue">Conducteurs</h2>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <StatCard label="Total" value={stats.conducteurs.total} color="blue" />
         <StatCard label="Finalisés" value={stats.conducteurs.finalises} color="green" />
         <StatCard label="Non finalisés" value={stats.conducteurs.non_finalises} color="orange" />
         <StatCard label="Archivés" value={stats.conducteurs.archives} color="gray" />
       </div>
-      <h2 className="text-xl font-bold text-wiky-blue">Recruteurs</h2>
+      <h2 className="text-xl font-bold text-wikya-blue">Recruteurs</h2>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
         <StatCard label="Total" value={stats.recruteurs.total} color="blue" />
         <StatCard label="Abonnés actifs" value={stats.recruteurs.abonnes} color="green" />
@@ -351,7 +351,7 @@ function TabWhatsapp({ token }) {
                   <td className="p-3 font-medium">{d.nom} {d.prenom}</td>
                   <td className="p-3">{d.telephone || '—'}</td>
                   <td className="p-3">
-                    <a href={d.lien} target="_blank" rel="noopener noreferrer" className="text-wiky-blue hover:underline text-xs break-all">{d.lien}</a>
+                    <a href={d.lien} target="_blank" rel="noopener noreferrer" className="text-wikya-blue hover:underline text-xs break-all">{d.lien}</a>
                   </td>
                   <td className="p-3">
                     <button onClick={() => navigator.clipboard.writeText(d.message)} className="text-xs px-2 py-1 bg-gray-100 rounded hover:bg-gray-200">
@@ -432,7 +432,7 @@ function TabImport({ token }) {
       </div>
       <div>
         <label className="block text-sm font-medium mb-2">Sélectionner le fichier CSV</label>
-        <input type="file" accept=".csv" onChange={handleFile} className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-wiky-blue file:text-white hover:file:bg-blue-800" />
+        <input type="file" accept=".csv" onChange={handleFile} className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-wikya-blue file:text-white hover:file:bg-blue-800" />
       </div>
       {preview.length > 0 && (
         <div>
@@ -548,7 +548,7 @@ function TabAnnonces({ token }) {
 
       {showForm && (
         <form onSubmit={handleSubmit} className="bg-gray-50 border rounded-lg p-6 space-y-4">
-          <h3 className="font-bold text-wiky-blue">Nouvelle annonce</h3>
+          <h3 className="font-bold text-wikya-blue">Nouvelle annonce</h3>
           <div className="grid md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium mb-1">Annonceur *</label>
@@ -618,14 +618,14 @@ function TabAnnonces({ token }) {
                     {a.date_fin ? ` au ${new Date(a.date_fin).toLocaleDateString('fr-FR')}` : ''}
                   </p>
                 )}
-                {a.lien_url && <p className="text-xs text-wiky-blue truncate mt-0.5">{a.lien_url}</p>}
+                {a.lien_url && <p className="text-xs text-wikya-blue truncate mt-0.5">{a.lien_url}</p>}
               </div>
               <div className="flex flex-col items-end gap-1 shrink-0 text-right">
                 <div className="flex gap-1 text-xs text-gray-500">
                   <span className="bg-gray-100 rounded px-2 py-0.5">👁 {(a.nb_impressions || 0).toLocaleString('fr-FR')}</span>
                   <span className="bg-gray-100 rounded px-2 py-0.5">🖱 {(a.nb_clics || 0).toLocaleString('fr-FR')}</span>
                   {a.nb_impressions > 0 && (
-                    <span className="bg-blue-50 text-wiky-blue rounded px-2 py-0.5 font-medium">
+                    <span className="bg-blue-50 text-wikya-blue rounded px-2 py-0.5 font-medium">
                       CTR {((a.nb_clics || 0) / a.nb_impressions * 100).toFixed(1)}%
                     </span>
                   )}
@@ -672,9 +672,9 @@ export default function DashboardAdmin() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="bg-wiky-blue text-white py-6 px-8">
+      <div className="bg-wikya-blue text-white py-6 px-8">
         <h1 className="text-2xl font-bold">Dashboard Administrateur</h1>
-        <p className="text-blue-200 text-sm mt-1">Wiky VTC — ATL Cars</p>
+        <p className="text-blue-200 text-sm mt-1">Wikya VTC — ATL Cars</p>
       </div>
 
       <div className="container-custom py-8">
@@ -686,8 +686,8 @@ export default function DashboardAdmin() {
               onClick={() => setActiveTab(tab.id)}
               className={`px-4 py-2 text-sm font-medium rounded-t-lg border-b-2 transition-colors ${
                 activeTab === tab.id
-                  ? 'border-wiky-orange text-wiky-orange bg-white'
-                  : 'border-transparent text-gray-500 hover:text-wiky-blue'
+                  ? 'border-wikya-orange text-wikya-orange bg-white'
+                  : 'border-transparent text-gray-500 hover:text-wikya-blue'
               }`}
             >
               {tab.label}

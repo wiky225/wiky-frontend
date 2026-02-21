@@ -44,7 +44,7 @@ function ConducteurCardGrid({ conducteur }) {
         </span>
       </div>
       <div className="p-4 flex flex-col flex-1">
-        <h3 className="text-lg font-bold text-wiky-blue">{conducteur.prenom} {conducteur.nom}</h3>
+        <h3 className="text-lg font-bold text-wikya-blue">{conducteur.prenom} {conducteur.nom}</h3>
         <div className="mt-1 space-y-1">
           {(conducteur.ville || conducteur.commune) && (
             <p className="text-sm text-gray-500 flex items-center gap-1">
@@ -60,7 +60,7 @@ function ConducteurCardGrid({ conducteur }) {
         {plateformes.length > 0 && (
           <div className="flex flex-wrap gap-1 mt-3">
             {plateformes.slice(0, 3).map(p => (
-              <span key={p} className="text-xs bg-blue-50 text-wiky-blue border border-blue-100 rounded-full px-2 py-0.5">
+              <span key={p} className="text-xs bg-blue-50 text-wikya-blue border border-blue-100 rounded-full px-2 py-0.5">
                 {p}
               </span>
             ))}
@@ -73,7 +73,7 @@ function ConducteurCardGrid({ conducteur }) {
           <p className="text-sm text-gray-600 mt-2 line-clamp-2 flex-1">{conducteur.description}</p>
         )}
         <div className="mt-4 flex justify-end">
-          <span className="text-wiky-orange font-semibold text-sm">Voir profil →</span>
+          <span className="text-wikya-orange font-semibold text-sm">Voir profil →</span>
         </div>
       </div>
     </Link>
@@ -98,7 +98,7 @@ function ConducteurCardList({ conducteur }) {
       />
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 flex-wrap">
-          <h3 className="text-base font-bold text-wiky-blue">{conducteur.prenom} {conducteur.nom}</h3>
+          <h3 className="text-base font-bold text-wikya-blue">{conducteur.prenom} {conducteur.nom}</h3>
           <span className="bg-green-100 text-green-700 text-xs px-2 py-0.5 rounded-full font-medium">
             Disponible
           </span>
@@ -114,7 +114,7 @@ function ConducteurCardList({ conducteur }) {
         {plateformes.length > 0 && (
           <div className="flex flex-wrap gap-1 mt-2">
             {plateformes.slice(0, 4).map(p => (
-              <span key={p} className="text-xs bg-blue-50 text-wiky-blue border border-blue-100 rounded-full px-2 py-0.5">
+              <span key={p} className="text-xs bg-blue-50 text-wikya-blue border border-blue-100 rounded-full px-2 py-0.5">
                 {p}
               </span>
             ))}
@@ -124,7 +124,7 @@ function ConducteurCardList({ conducteur }) {
           </div>
         )}
       </div>
-      <span className="text-wiky-orange font-semibold text-sm shrink-0">→</span>
+      <span className="text-wikya-orange font-semibold text-sm shrink-0">→</span>
     </Link>
   );
 }
@@ -225,7 +225,7 @@ export default function Repertoire() {
 
         {/* En-tête */}
         <div className="mb-6">
-          <h1 className="text-4xl font-bold text-wiky-blue mb-1">Répertoire des Conducteurs VTC</h1>
+          <h1 className="text-4xl font-bold text-wikya-blue mb-1">Répertoire des Conducteurs VTC</h1>
           <p className="text-gray-500">Trouvez le conducteur qui correspond à vos besoins.</p>
         </div>
 
@@ -239,7 +239,7 @@ export default function Repertoire() {
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="🔍 Rechercher par nom ou prénom..."
-            className="w-full border rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-wiky-blue"
+            className="w-full border rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-wikya-blue"
           />
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
             <select value={filtreVille} onChange={e => setFiltreVille(e.target.value)} className="border rounded-lg px-3 py-2 text-sm">
@@ -257,7 +257,7 @@ export default function Repertoire() {
           </div>
           <div className="flex items-center justify-between">
             {hasFilters ? (
-              <button onClick={resetFiltres} className="text-sm text-wiky-orange hover:underline">
+              <button onClick={resetFiltres} className="text-sm text-wikya-orange hover:underline">
                 Réinitialiser les filtres
               </button>
             ) : <span />}
@@ -269,12 +269,12 @@ export default function Repertoire() {
                 <button
                   onClick={() => setViewMode('grid')}
                   title="Vue grille"
-                  className={`px-3 py-1.5 text-sm transition-colors ${viewMode === 'grid' ? 'bg-wiky-blue text-white' : 'text-gray-500 hover:bg-gray-50'}`}
+                  className={`px-3 py-1.5 text-sm transition-colors ${viewMode === 'grid' ? 'bg-wikya-blue text-white' : 'text-gray-500 hover:bg-gray-50'}`}
                 >⊞</button>
                 <button
                   onClick={() => setViewMode('list')}
                   title="Vue liste"
-                  className={`px-3 py-1.5 text-sm border-l transition-colors ${viewMode === 'list' ? 'bg-wiky-blue text-white' : 'text-gray-500 hover:bg-gray-50'}`}
+                  className={`px-3 py-1.5 text-sm border-l transition-colors ${viewMode === 'list' ? 'bg-wikya-blue text-white' : 'text-gray-500 hover:bg-gray-50'}`}
                 >☰</button>
               </div>
             </div>
