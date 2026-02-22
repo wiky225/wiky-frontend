@@ -18,6 +18,9 @@ import Offres from './pages/Offres'
 import AuthConfirm from './pages/AuthConfirm'
 import MotDePasseOublie from './pages/MotDePasseOublie'
 import ResetPassword from './pages/ResetPassword'
+import MentionsLegales from './pages/MentionsLegales'
+import PolitiqueConfidentialite from './pages/PolitiqueConfidentialite'
+import ConditionsGenerales from './pages/ConditionsGenerales'
 import PrivateRoute from './components/PrivateRoute'
 
 function NotFound() {
@@ -54,6 +57,9 @@ function App() {
             <Route path="/auth/confirm" element={<AuthConfirm />} />
             <Route path="/mot-de-passe-oublie" element={<MotDePasseOublie />} />
             <Route path="/auth/reset-password" element={<ResetPassword />} />
+            <Route path="/mentions-legales" element={<MentionsLegales />} />
+            <Route path="/politique-confidentialite" element={<PolitiqueConfidentialite />} />
+            <Route path="/conditions-generales" element={<ConditionsGenerales />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>

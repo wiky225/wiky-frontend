@@ -12,7 +12,7 @@ function Footer() {
         <div className="h-1 bg-wikya-orange w-full" />
 
         <div className="container-custom py-14">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-10">
 
             {/* Bloc marque */}
             <div className="md:col-span-1">
@@ -69,6 +69,30 @@ function Footer() {
                 <li>
                   <Link to="/connexion" className={lienClass}>
                     Se connecter
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            {/* Légal */}
+            <div>
+              <h4 className="text-sm font-semibold uppercase tracking-widest text-wikya-orange mb-4">
+                Légal
+              </h4>
+              <ul className="space-y-2.5">
+                <li>
+                  <Link to="/mentions-legales" className={lienClass}>
+                    Mentions légales
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/politique-confidentialite" className={lienClass}>
+                    Confidentialité
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/conditions-generales" className={lienClass}>
+                    CGU
                   </Link>
                 </li>
               </ul>
