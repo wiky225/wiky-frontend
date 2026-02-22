@@ -10,9 +10,10 @@ export default function MentionsLegales() {
           <section className="mb-10">
             <h2 className="text-lg font-bold text-wikya-blue mb-4 pb-2 border-b">1. Éditeur du site</h2>
             <div className="space-y-2 text-gray-600 text-sm leading-relaxed">
-              <p><span className="font-semibold text-gray-700">Raison sociale :</span> ATL Cars</p>
+              <p><span className="font-semibold text-gray-700">Raison sociale :</span> ABDEONA TRANSPORT LOGISTIQUE</p>
               <p><span className="font-semibold text-gray-700">Nom commercial :</span> Wikya by ATL Cars</p>
-              <p><span className="font-semibold text-gray-700">Forme juridique :</span> SARL</p>
+              <p><span className="font-semibold text-gray-700">Forme juridique :</span> SARLU</p>
+              <p><span className="font-semibold text-gray-700">Capital social :</span> 1 000 000 FCFA</p>
               <p><span className="font-semibold text-gray-700">RCCM :</span> CI-ABJ-03-2022-B13-10957</p>
               <p><span className="font-semibold text-gray-700">Siège social :</span> Abidjan, Côte d'Ivoire</p>
               <p><span className="font-semibold text-gray-700">Email :</span>{' '}
