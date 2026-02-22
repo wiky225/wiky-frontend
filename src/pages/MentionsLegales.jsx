@@ -12,14 +12,14 @@ export default function MentionsLegales() {
             <div className="space-y-2 text-gray-600 text-sm leading-relaxed">
               <p><span className="font-semibold text-gray-700">Raison sociale :</span> ATL Cars</p>
               <p><span className="font-semibold text-gray-700">Nom commercial :</span> Wikya by ATL Cars</p>
-              <p><span className="font-semibold text-gray-700">Forme juridique :</span> [À compléter — SARL, SAS…]</p>
-              <p><span className="font-semibold text-gray-700">RCCM :</span> [À compléter]</p>
+              <p><span className="font-semibold text-gray-700">Forme juridique :</span> SARL</p>
+              <p><span className="font-semibold text-gray-700">RCCM :</span> CI-ABJ-03-2022-B13-10957</p>
               <p><span className="font-semibold text-gray-700">Siège social :</span> Abidjan, Côte d'Ivoire</p>
               <p><span className="font-semibold text-gray-700">Email :</span>{' '}
                 <a href="mailto:contact@wikya.ci" className="text-wikya-blue hover:underline">contact@wikya.ci</a>
               </p>
               <p><span className="font-semibold text-gray-700">Téléphone :</span> +225 05 75 42 17 17</p>
-              <p><span className="font-semibold text-gray-700">Directeur de la publication :</span> [À compléter — Nom du responsable]</p>
+              <p><span className="font-semibold text-gray-700">Directeur de la publication :</span> Kouassi Guy Williams, Gérant</p>
             </div>
           </section>
 
