@@ -254,6 +254,32 @@ export default function InscriptionConducteur() {
             <textarea name="description" rows="4" onChange={handleChange} className="w-full border rounded px-3 py-2" placeholder="Parlez de vous, vos compétences..."></textarea>
           </div>
 
+          <div className="space-y-3">
+            <div className="flex items-start gap-3 p-4 bg-gray-50 rounded-xl border border-gray-200">
+              <input type="checkbox" id="terms" required className="mt-0.5 shrink-0 w-4 h-4 accent-wikya-blue" />
+              <label htmlFor="terms" className="text-sm text-gray-600 leading-relaxed">
+                J'ai lu et j'accepte les{' '}
+                <Link to="/conditions-generales" target="_blank" className="text-wikya-blue hover:underline font-semibold">
+                  Conditions Générales d'Utilisation
+                </Link>{' '}
+                et la{' '}
+                <Link to="/politique-confidentialite" target="_blank" className="text-wikya-blue hover:underline font-semibold">
+                  Politique de confidentialité
+                </Link>{' '}
+                de Wikya.
+              </label>
+            </div>
+
+            <div className="flex items-start gap-3 p-4 bg-gray-50 rounded-xl border border-gray-200">
+              <input type="checkbox" id="autorisation_donnees" required className="mt-0.5 shrink-0 w-4 h-4 accent-wikya-blue" />
+              <label htmlFor="autorisation_donnees" className="text-sm text-gray-600 leading-relaxed">
+                J'autorise Wikya (ABDEONA TRANSPORT LOGISTIQUE) à collecter et traiter mes données personnelles,
+                y compris mes documents d'identité et mon permis de conduire, à des fins de mise en relation
+                professionnelle avec des recruteurs VTC abonnés à la plateforme.
+              </label>
+            </div>
+          </div>
+
           <button
             type="submit"
             disabled={loading}

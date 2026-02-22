@@ -194,10 +194,18 @@ function InscriptionRecruteur() {
               </div>
             </div>
 
-            <div className="flex items-start gap-3">
-              <input type="checkbox" id="terms" required className="mt-1" />
-              <label htmlFor="terms" className="text-sm text-wikya-gray">
-                J'accepte les conditions d'utilisation et la politique de confidentialité de Wikya
+            <div className="flex items-start gap-3 p-4 bg-gray-50 rounded-xl border border-gray-200">
+              <input type="checkbox" id="terms" required className="mt-0.5 shrink-0 w-4 h-4 accent-wikya-blue" />
+              <label htmlFor="terms" className="text-sm text-wikya-gray leading-relaxed">
+                J'ai lu et j'accepte les{' '}
+                <Link to="/conditions-generales" target="_blank" className="text-wikya-blue hover:underline font-semibold">
+                  Conditions Générales d'Utilisation
+                </Link>{' '}
+                et la{' '}
+                <Link to="/politique-confidentialite" target="_blank" className="text-wikya-blue hover:underline font-semibold">
+                  Politique de confidentialité
+                </Link>{' '}
+                de Wikya. J'autorise le traitement de mes données personnelles à des fins de recrutement VTC.
               </label>
             </div>
 
