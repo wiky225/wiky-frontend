@@ -136,18 +136,18 @@ export default function InscriptionConducteur() {
           <div className="grid md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium mb-2">Nom *</label>
-              <input type="text" name="nom" required onChange={handleChange} className="w-full border rounded px-3 py-2" />
+              <input type="text" name="nom" required onChange={handleChange} className="input" />
             </div>
             <div>
               <label className="block text-sm font-medium mb-2">Prénom *</label>
-              <input type="text" name="prenom" required onChange={handleChange} className="w-full border rounded px-3 py-2" />
+              <input type="text" name="prenom" required onChange={handleChange} className="input" />
             </div>
           </div>
 
           <div className="grid md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium mb-2">Sexe *</label>
-              <select name="sexe" required onChange={handleChange} className="w-full border rounded px-3 py-2">
+              <select name="sexe" required onChange={handleChange} className="input">
                 <option value="">Sélectionnez...</option>
                 <option value="Homme">Homme</option>
                 <option value="Femme">Femme</option>
@@ -155,7 +155,7 @@ export default function InscriptionConducteur() {
             </div>
             <div>
               <label className="block text-sm font-medium mb-2">Date de naissance *</label>
-              <input type="date" name="date_naissance" required onChange={handleChange} className="w-full border rounded px-3 py-2" />
+              <input type="date" name="date_naissance" required onChange={handleChange} className="input" />
             </div>
           </div>
 
@@ -163,11 +163,11 @@ export default function InscriptionConducteur() {
           <div className="grid md:grid-cols-3 gap-4">
             <div>
               <label className="block text-sm font-medium mb-2">Nationalité *</label>
-              <input type="text" name="nationalite" required onChange={handleChange} placeholder="Ex: Ivoirien(ne)" className="w-full border rounded px-3 py-2" />
+              <input type="text" name="nationalite" required onChange={handleChange} placeholder="Ex: Ivoirien(ne)" className="input" />
             </div>
             <div>
               <label className="block text-sm font-medium mb-2">Type de pièce *</label>
-              <select name="type_piece" required onChange={handleChange} className="w-full border rounded px-3 py-2">
+              <select name="type_piece" required onChange={handleChange} className="input">
                 <option value="">Sélectionnez...</option>
                 <option value="CNI">CNI</option>
                 <option value="Passeport">Passeport</option>
@@ -177,14 +177,14 @@ export default function InscriptionConducteur() {
             </div>
             <div>
               <label className="block text-sm font-medium mb-2">Numéro de pièce *</label>
-              <input type="text" name="numero_piece" required onChange={handleChange} placeholder="Ex: CI0123456789" className="w-full border rounded px-3 py-2" />
+              <input type="text" name="numero_piece" required onChange={handleChange} placeholder="Ex: CI0123456789" className="input" />
             </div>
           </div>
 
           <div className="grid md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium mb-2">Email *</label>
-              <input type="email" name="email" required onChange={handleChange} className="w-full border rounded px-3 py-2" />
+              <input type="email" name="email" required onChange={handleChange} className="input" />
             </div>
             <div>
               <label className="block text-sm font-medium mb-2">Téléphone *</label>
@@ -195,25 +195,25 @@ export default function InscriptionConducteur() {
           <div className="grid md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium mb-2">Mot de passe *</label>
-              <input type="password" name="password" required onChange={handleChange} className="w-full border rounded px-3 py-2" />
+              <input type="password" name="password" required onChange={handleChange} className="input" />
             </div>
             <div>
               <label className="block text-sm font-medium mb-2">Confirmer le mot de passe *</label>
-              <input type="password" name="password_confirm" required onChange={handleChange} className="w-full border rounded px-3 py-2" />
+              <input type="password" name="password_confirm" required onChange={handleChange} className="input" />
             </div>
           </div>
 
           <div className="grid md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium mb-2">Ville *</label>
-              <select name="ville" required onChange={handleChange} className="w-full border rounded px-3 py-2">
+              <select name="ville" required onChange={handleChange} className="input">
                 <option value="">Sélectionnez...</option>
                 {VILLES_CI.map(v => <option key={v} value={v}>{v}</option>)}
               </select>
             </div>
             <div>
               <label className="block text-sm font-medium mb-2">Commune (si Abidjan)</label>
-              <select name="commune" onChange={handleChange} className="w-full border rounded px-3 py-2">
+              <select name="commune" onChange={handleChange} className="input">
                 <option value="">Sélectionnez...</option>
                 {COMMUNES_ABIDJAN.map(c => <option key={c} value={c}>{c}</option>)}
               </select>
@@ -222,36 +222,36 @@ export default function InscriptionConducteur() {
 
           <div>
             <label className="block text-sm font-medium mb-2">Quartier</label>
-            <input type="text" name="quartier" onChange={handleChange} className="w-full border rounded px-3 py-2" />
+            <input type="text" name="quartier" onChange={handleChange} className="input" />
           </div>
 
           <div className="grid md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium mb-2">Situation matrimoniale *</label>
-              <select name="situation_matrimoniale" required onChange={handleChange} className="w-full border rounded px-3 py-2">
+              <select name="situation_matrimoniale" required onChange={handleChange} className="input">
                 <option value="">Sélectionnez...</option>
                 {SITUATIONS.map(s => <option key={s} value={s}>{s}</option>)}
               </select>
             </div>
             <div>
               <label className="block text-sm font-medium mb-2">Nombre d'enfants *</label>
-              <input type="number" name="nombre_enfants" min="0" required onChange={handleChange} className="w-full border rounded px-3 py-2" />
+              <input type="number" name="nombre_enfants" min="0" required onChange={handleChange} className="input" />
             </div>
           </div>
 
           <div>
             <label className="block text-sm font-medium mb-2">Années d'expérience *</label>
-            <input type="text" name="annees_experience" required onChange={handleChange} placeholder="Ex: 3 ans" className="w-full border rounded px-3 py-2" />
+            <input type="text" name="annees_experience" required onChange={handleChange} placeholder="Ex: 3 ans" className="input" />
           </div>
 
           <div>
             <label className="block text-sm font-medium mb-2">Plateformes VTC utilisées *</label>
-            <input type="text" name="plateformes_vtc" required onChange={handleChange} placeholder="Ex: Uber, Yango, Bolt" className="w-full border rounded px-3 py-2" />
+            <input type="text" name="plateformes_vtc" required onChange={handleChange} placeholder="Ex: Uber, Yango, Bolt" className="input" />
           </div>
 
           <div>
             <label className="block text-sm font-medium mb-2">Description (Optionnel)</label>
-            <textarea name="description" rows="4" onChange={handleChange} className="w-full border rounded px-3 py-2" placeholder="Parlez de vous, vos compétences..."></textarea>
+            <textarea name="description" rows="4" onChange={handleChange} className="input" placeholder="Parlez de vous, vos compétences..."></textarea>
           </div>
 
           <div className="space-y-3">
