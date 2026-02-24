@@ -313,7 +313,7 @@ function CTASection() {
             <div className="text-4xl mb-4">🏢</div>
             <h3 className="text-xl font-bold mb-2">Je recrute</h3>
             <p className="text-blue-200 text-sm mb-6">
-              Accédez à des centaines de profils vérifiés. 10 000 FCFA/mois.
+              Accédez à des centaines de profils vérifiés.<br />10 000 FCFA/mois.
             </p>
             <Link to="/inscription-recruteur" className="btn bg-wikya-orange text-white hover:bg-wikya-orange-dark w-full block text-center">
               Créer mon compte recruteur
@@ -323,7 +323,7 @@ function CTASection() {
             <div className="text-4xl mb-4">🚗</div>
             <h3 className="text-xl font-bold mb-2">Je suis conducteur</h3>
             <p className="text-blue-200 text-sm mb-6">
-              Inscription gratuite. Soyez visible et trouvez un recruteur.
+              Inscription gratuite.<br />Soyez visible et trouvez un recruteur.
             </p>
             <Link to="/inscription-conducteur" className="btn bg-white text-wikya-blue hover:bg-gray-100 w-full block text-center">
               M'inscrire gratuitement
