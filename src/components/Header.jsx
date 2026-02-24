@@ -28,7 +28,7 @@ export default function Header() {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link to="/" onClick={close} className="flex items-center">
-            <img src="/assets/wiky-logo.png" alt="Wikya by ATL Cars" className="h-12" />
+            <img src="/assets/LOGO - WiKya.png" alt="Wikya by ATL Cars" className="h-12" />
           </Link>
 
           {/* Navigation desktop */}
