@@ -468,186 +468,287 @@ function TabImport({ token }) {
   );
 }
 
-// ── PUBLICITÉS ───────────────────────────────────────────────
+// ── PUBLICITÉS / CAMPAGNES ────────────────────────────────────
 function TabAnnonces({ token }) {
-  const [data, setData] = useState([]);
+  const [campagnes, setCampagnes] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [showForm, setShowForm] = useState(false);
-  const [saving, setSaving] = useState(false);
-  const [saveError, setSaveError] = useState(null);
-  const [form, setForm] = useState({
-    annonceur: '', image_url: '', lien_url: '',
-    format: 'medium_rectangle', position: 'repertoire-inline',
-    actif: true, date_debut: '', date_fin: ''
-  });
+  const [expanded, setExpanded] = useState({});
+
+  // Formulaire nouvelle campagne
+  const [showNewCampagne, setShowNewCampagne] = useState(false);
+  const [campagneForm, setCampagneForm] = useState({ nom: '', annonceur: '', actif: true, date_debut: '', date_fin: '' });
+  const [savingCampagne, setSavingCampagne] = useState(false);
+
+  // Formulaire nouveau visuel
+  const [showNewVisuel, setShowNewVisuel] = useState(null); // campagne_id ou null
+  const [visuelForm, setVisuelForm] = useState({ image_url: '', lien_url: '', format: 'medium_rectangle', position: 'repertoire-inline' });
+  const [uploading, setUploading] = useState(false);
+  const [savingVisuel, setSavingVisuel] = useState(false);
+
+  const headers = { Authorization: `Bearer ${token}` };
 
   const load = useCallback(async () => {
     setLoading(true);
-    const res = await fetch(`${API_URL}/api/admin/annonces`, { headers: { Authorization: `Bearer ${token}` } });
+    const res = await fetch(`${API_URL}/api/admin/campagnes`, { headers });
     const json = await res.json();
-    setData(Array.isArray(json) ? json : []);
+    setCampagnes(Array.isArray(json) ? json : []);
     setLoading(false);
   }, [token]);
 
   useEffect(() => { load(); }, [load]);
 
-  const toggleActif = async (annonce) => {
-    await fetch(`${API_URL}/api/admin/annonces/${annonce.id}`, {
-      method: 'PATCH',
-      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ actif: !annonce.actif })
-    });
-    load();
-  };
-
-  const deleteAnnonce = async (id) => {
-    if (!confirm('Supprimer cette annonce ?')) return;
-    await fetch(`${API_URL}/api/admin/annonces/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } });
-    load();
-  };
-
-  const resetStats = async (id) => {
-    if (!confirm('Réinitialiser les stats (impressions et clics) de cette annonce ?')) return;
-    await fetch(`${API_URL}/api/admin/annonces/${id}/reset-stats`, {
-      method: 'PATCH',
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    load();
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setSaving(true);
-    setSaveError(null);
+  // ── Upload image depuis l'ordi ──
+  const uploadImage = async (file) => {
+    setUploading(true);
     try {
-      const res = await fetch(`${API_URL}/api/admin/annonces`, {
+      const formData = new FormData();
+      formData.append('file', file);
+      const res = await fetch(`${API_URL}/api/upload/image`, { method: 'POST', headers, body: formData });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || 'Erreur upload');
+      setVisuelForm(f => ({ ...f, image_url: json.url }));
+    } catch (err) {
+      alert('Erreur upload : ' + err.message);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  // ── Créer une campagne ──
+  const handleCreateCampagne = async (e) => {
+    e.preventDefault();
+    setSavingCampagne(true);
+    try {
+      const res = await fetch(`${API_URL}/api/admin/campagnes`, {
         method: 'POST',
-        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...form, date_debut: form.date_debut || null, date_fin: form.date_fin || null })
+        headers: { ...headers, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...campagneForm, date_debut: campagneForm.date_debut || null, date_fin: campagneForm.date_fin || null }),
       });
       const json = await res.json();
-      if (!res.ok) throw new Error(json.error || `Erreur ${res.status}`);
-      setShowForm(false);
-      setForm({ annonceur: '', image_url: '', lien_url: '', format: 'medium_rectangle', position: 'repertoire-inline', actif: true, date_debut: '', date_fin: '' });
+      if (!res.ok) throw new Error(json.error);
+      setShowNewCampagne(false);
+      setCampagneForm({ nom: '', annonceur: '', actif: true, date_debut: '', date_fin: '' });
+      setExpanded(ex => ({ ...ex, [json.id]: true }));
       load();
     } catch (err) {
-      setSaveError(err.message);
+      alert('Erreur : ' + err.message);
     } finally {
-      setSaving(false);
+      setSavingCampagne(false);
     }
+  };
+
+  // ── Toggle actif campagne ──
+  const toggleCampagne = async (c) => {
+    await fetch(`${API_URL}/api/admin/campagnes/${c.id}`, {
+      method: 'PATCH',
+      headers: { ...headers, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ actif: !c.actif }),
+    });
+    load();
+  };
+
+  // ── Supprimer campagne ──
+  const deleteCampagne = async (id) => {
+    if (!confirm('Supprimer cette campagne et tous ses visuels ?')) return;
+    await fetch(`${API_URL}/api/admin/campagnes/${id}`, { method: 'DELETE', headers });
+    load();
+  };
+
+  // ── Ajouter un visuel ──
+  const handleAddVisuel = async (e) => {
+    e.preventDefault();
+    setSavingVisuel(true);
+    try {
+      const res = await fetch(`${API_URL}/api/admin/campagnes/${showNewVisuel}/annonces`, {
+        method: 'POST',
+        headers: { ...headers, 'Content-Type': 'application/json' },
+        body: JSON.stringify(visuelForm),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error);
+      setShowNewVisuel(null);
+      setVisuelForm({ image_url: '', lien_url: '', format: 'medium_rectangle', position: 'repertoire-inline' });
+      load();
+    } catch (err) {
+      alert('Erreur : ' + err.message);
+    } finally {
+      setSavingVisuel(false);
+    }
+  };
+
+  // ── Supprimer un visuel ──
+  const deleteVisuel = async (campagneId, annonceId) => {
+    if (!confirm('Supprimer ce visuel ?')) return;
+    await fetch(`${API_URL}/api/admin/campagnes/${campagneId}/annonces/${annonceId}`, { method: 'DELETE', headers });
+    load();
+  };
+
+  // ── Réinitialiser stats d'un visuel ──
+  const resetStats = async (id) => {
+    if (!confirm('Réinitialiser les stats de ce visuel ?')) return;
+    await fetch(`${API_URL}/api/admin/annonces/${id}/reset-stats`, { method: 'PATCH', headers });
+    load();
   };
 
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <p className="text-sm text-gray-500">{data.length} annonce(s) configurée(s)</p>
-        <button onClick={() => setShowForm(!showForm)} className="btn btn-primary text-sm">
-          {showForm ? 'Annuler' : '+ Nouvelle annonce'}
+        <p className="text-sm text-gray-500">{campagnes.length} campagne(s)</p>
+        <button onClick={() => setShowNewCampagne(!showNewCampagne)} className="btn btn-primary text-sm">
+          {showNewCampagne ? 'Annuler' : '+ Nouvelle campagne'}
         </button>
       </div>
 
-      {showForm && (
-        <form onSubmit={handleSubmit} className="bg-gray-50 border rounded-lg p-6 space-y-4">
-          <h3 className="font-bold text-wikya-blue">Nouvelle annonce</h3>
+      {/* ── Formulaire nouvelle campagne ── */}
+      {showNewCampagne && (
+        <form onSubmit={handleCreateCampagne} className="bg-gray-50 border rounded-lg p-6 space-y-4">
+          <h3 className="font-bold text-wikya-blue">Nouvelle campagne</h3>
           <div className="grid md:grid-cols-2 gap-4">
             <div>
+              <label className="block text-sm font-medium mb-1">Nom de la campagne *</label>
+              <input required value={campagneForm.nom} onChange={e => setCampagneForm({ ...campagneForm, nom: e.target.value })}
+                className="w-full border rounded px-3 py-2 text-sm" placeholder="Ex: ATL Cars Janvier 2026" />
+            </div>
+            <div>
               <label className="block text-sm font-medium mb-1">Annonceur *</label>
-              <input required value={form.annonceur} onChange={e => setForm({ ...form, annonceur: e.target.value })} className="w-full border rounded px-3 py-2 text-sm" placeholder="Ex: Assurance NSIA" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">URL de l'image *</label>
-              <input required value={form.image_url} onChange={e => setForm({ ...form, image_url: e.target.value })} className="w-full border rounded px-3 py-2 text-sm" placeholder="https://..." />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">URL de destination</label>
-              <input value={form.lien_url} onChange={e => setForm({ ...form, lien_url: e.target.value })} className="w-full border rounded px-3 py-2 text-sm" placeholder="https://..." />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Format *</label>
-              <select required value={form.format} onChange={e => setForm({ ...form, format: e.target.value })} className="w-full border rounded px-3 py-2 text-sm">
-                {FORMATS.map(f => <option key={f.value} value={f.value}>{f.label}</option>)}
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Position *</label>
-              <select required value={form.position} onChange={e => setForm({ ...form, position: e.target.value })} className="w-full border rounded px-3 py-2 text-sm">
-                {POSITIONS.map(p => <option key={p.value} value={p.value}>{p.label}</option>)}
-              </select>
+              <input required value={campagneForm.annonceur} onChange={e => setCampagneForm({ ...campagneForm, annonceur: e.target.value })}
+                className="w-full border rounded px-3 py-2 text-sm" placeholder="Ex: ATL Cars" />
             </div>
             <div>
               <label className="block text-sm font-medium mb-1">Date de début</label>
-              <input type="date" value={form.date_debut} onChange={e => setForm({ ...form, date_debut: e.target.value })} className="w-full border rounded px-3 py-2 text-sm" />
+              <input type="date" value={campagneForm.date_debut} onChange={e => setCampagneForm({ ...campagneForm, date_debut: e.target.value })}
+                className="w-full border rounded px-3 py-2 text-sm" />
             </div>
             <div>
               <label className="block text-sm font-medium mb-1">Date de fin</label>
-              <input type="date" value={form.date_fin} onChange={e => setForm({ ...form, date_fin: e.target.value })} className="w-full border rounded px-3 py-2 text-sm" />
+              <input type="date" value={campagneForm.date_fin} onChange={e => setCampagneForm({ ...campagneForm, date_fin: e.target.value })}
+                className="w-full border rounded px-3 py-2 text-sm" />
             </div>
             <div className="flex items-center gap-2 pt-2">
-              <input type="checkbox" id="actif-form" checked={form.actif} onChange={e => setForm({ ...form, actif: e.target.checked })} className="w-4 h-4" />
-              <label htmlFor="actif-form" className="text-sm font-medium">Activer immédiatement</label>
+              <input type="checkbox" id="campagne-actif" checked={campagneForm.actif} onChange={e => setCampagneForm({ ...campagneForm, actif: e.target.checked })} className="w-4 h-4" />
+              <label htmlFor="campagne-actif" className="text-sm font-medium">Activer immédiatement</label>
             </div>
           </div>
-          {saveError && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded text-sm">
-              Erreur : {saveError}
-            </div>
-          )}
-          <button type="submit" disabled={saving} className="btn btn-primary disabled:opacity-60">
-            {saving ? 'Enregistrement...' : 'Créer l\'annonce'}
+          <button type="submit" disabled={savingCampagne} className="btn btn-primary disabled:opacity-60">
+            {savingCampagne ? 'Création...' : 'Créer la campagne'}
           </button>
         </form>
       )}
 
+      {/* ── Liste des campagnes ── */}
       {loading ? <p className="text-gray-400">Chargement...</p> : (
-        <div className="space-y-3">
-          {data.map(a => (
-            <div key={a.id} className="bg-white border rounded-lg p-4 flex items-center gap-4 flex-wrap">
-              <img
-                src={a.image_url} alt={a.annonceur}
-                className="w-24 h-16 object-cover rounded border shrink-0"
-                onError={e => { e.target.style.display = 'none'; }}
-              />
-              <div className="flex-1 min-w-0">
-                <p className="font-semibold">{a.annonceur}</p>
-                <p className="text-xs text-gray-500">
-                  {POSITIONS.find(p => p.value === a.position)?.label} · {FORMATS.find(f => f.value === a.format)?.label}
-                </p>
-                {(a.date_debut || a.date_fin) && (
-                  <p className="text-xs text-gray-400 mt-0.5">
-                    {a.date_debut ? `Du ${new Date(a.date_debut).toLocaleDateString('fr-FR')}` : ''}
-                    {a.date_fin ? ` au ${new Date(a.date_fin).toLocaleDateString('fr-FR')}` : ''}
+        <div className="space-y-4">
+          {campagnes.map(c => (
+            <div key={c.id} className="bg-white border rounded-lg overflow-hidden">
+              {/* En-tête campagne */}
+              <div className="flex items-center gap-3 p-4 cursor-pointer hover:bg-gray-50"
+                onClick={() => setExpanded(ex => ({ ...ex, [c.id]: !ex[c.id] }))}>
+                <span className="text-gray-400 text-sm">{expanded[c.id] ? '▼' : '▶'}</span>
+                <div className="flex-1 min-w-0">
+                  <p className="font-semibold">{c.nom}</p>
+                  <p className="text-xs text-gray-500">
+                    {c.annonceur} · {(c.annonces || []).length} visuel(s)
+                    {(c.date_debut || c.date_fin) && ` · ${c.date_debut ? `du ${new Date(c.date_debut).toLocaleDateString('fr-FR')}` : ''} ${c.date_fin ? `au ${new Date(c.date_fin).toLocaleDateString('fr-FR')}` : ''}`}
                   </p>
-                )}
-                {a.lien_url && <p className="text-xs text-wikya-blue truncate mt-0.5">{a.lien_url}</p>}
-              </div>
-              <div className="flex flex-col items-end gap-1 shrink-0 text-right">
-                <div className="flex gap-1 text-xs text-gray-500">
-                  <span className="bg-gray-100 rounded px-2 py-0.5">👁 {(a.nb_impressions || 0).toLocaleString('fr-FR')}</span>
-                  <span className="bg-gray-100 rounded px-2 py-0.5">🖱 {(a.nb_clics || 0).toLocaleString('fr-FR')}</span>
-                  {a.nb_impressions > 0 && (
-                    <span className="bg-blue-50 text-wikya-blue rounded px-2 py-0.5 font-medium">
-                      CTR {((a.nb_clics || 0) / a.nb_impressions * 100).toFixed(1)}%
-                    </span>
-                  )}
                 </div>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => toggleActif(a)}
-                    className={`text-xs px-3 py-1 rounded-full font-medium ${a.actif ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}
-                  >
-                    {a.actif ? '✅ Actif' : '⏸ Inactif'}
+                <div className="flex items-center gap-2" onClick={e => e.stopPropagation()}>
+                  <button onClick={() => toggleCampagne(c)}
+                    className={`text-xs px-3 py-1 rounded-full font-medium ${c.actif ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
+                    {c.actif ? '✅ Actif' : '⏸ Inactif'}
                   </button>
-                  <button onClick={() => resetStats(a.id)} className="text-xs px-2 py-1 bg-gray-50 text-gray-500 rounded hover:bg-gray-100">
-                    Réinitialiser
-                  </button>
-                  <button onClick={() => deleteAnnonce(a.id)} className="text-xs px-2 py-1 bg-red-50 text-red-600 rounded hover:bg-red-100">
+                  <button onClick={() => deleteCampagne(c.id)} className="text-xs px-2 py-1 bg-red-50 text-red-600 rounded hover:bg-red-100">
                     Supprimer
                   </button>
                 </div>
               </div>
+
+              {/* Visuels de la campagne */}
+              {expanded[c.id] && (
+                <div className="border-t bg-gray-50 p-4 space-y-3">
+                  {(c.annonces || []).map(a => (
+                    <div key={a.id} className="bg-white border rounded-lg p-3 flex items-center gap-3 flex-wrap">
+                      <img src={a.image_url} alt="" className="w-20 h-12 object-cover rounded border shrink-0"
+                        onError={e => { e.target.style.display = 'none'; }} />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs font-medium">
+                          {FORMATS.find(f => f.value === a.format)?.label} · {POSITIONS.find(p => p.value === a.position)?.label}
+                        </p>
+                        {a.lien_url && <p className="text-xs text-wikya-blue truncate">{a.lien_url}</p>}
+                      </div>
+                      <div className="flex items-center gap-2 shrink-0">
+                        <span className="bg-gray-100 rounded px-2 py-0.5 text-xs">👁 {(a.nb_impressions || 0).toLocaleString('fr-FR')}</span>
+                        <span className="bg-gray-100 rounded px-2 py-0.5 text-xs">🖱 {(a.nb_clics || 0).toLocaleString('fr-FR')}</span>
+                        {a.nb_impressions > 0 && (
+                          <span className="bg-blue-50 text-wikya-blue rounded px-2 py-0.5 text-xs font-medium">
+                            CTR {((a.nb_clics || 0) / a.nb_impressions * 100).toFixed(1)}%
+                          </span>
+                        )}
+                        <button onClick={() => resetStats(a.id)} className="text-xs px-2 py-1 bg-gray-50 text-gray-500 rounded hover:bg-gray-100">Réinit.</button>
+                        <button onClick={() => deleteVisuel(c.id, a.id)} className="text-xs px-2 py-1 bg-red-50 text-red-600 rounded hover:bg-red-100">Supprimer</button>
+                      </div>
+                    </div>
+                  ))}
+
+                  {/* Bouton ajouter visuel */}
+                  {showNewVisuel === c.id ? (
+                    <form onSubmit={handleAddVisuel} className="bg-white border rounded-lg p-4 space-y-3">
+                      <h4 className="font-medium text-sm text-wikya-blue">Nouveau visuel</h4>
+                      <div className="grid md:grid-cols-2 gap-3">
+                        <div>
+                          <label className="block text-xs font-medium mb-1">Image *</label>
+                          <div className="space-y-2">
+                            <label className={`flex items-center justify-center gap-2 border-2 border-dashed rounded px-3 py-2 text-sm cursor-pointer hover:border-wikya-blue transition-colors ${uploading ? 'opacity-50' : ''}`}>
+                              <input type="file" accept="image/*" className="hidden" disabled={uploading}
+                                onChange={e => e.target.files[0] && uploadImage(e.target.files[0])} />
+                              {uploading ? '⏳ Upload...' : '📁 Choisir un fichier'}
+                            </label>
+                            {visuelForm.image_url && (
+                              <div className="flex items-center gap-2">
+                                <img src={visuelForm.image_url} alt="" className="w-16 h-10 object-cover rounded border" />
+                                <span className="text-xs text-green-600">✅ Image uploadée</span>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                        <div>
+                          <label className="block text-xs font-medium mb-1">URL de destination</label>
+                          <input value={visuelForm.lien_url} onChange={e => setVisuelForm({ ...visuelForm, lien_url: e.target.value })}
+                            className="w-full border rounded px-3 py-2 text-sm" placeholder="https://..." />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-medium mb-1">Format *</label>
+                          <select required value={visuelForm.format} onChange={e => setVisuelForm({ ...visuelForm, format: e.target.value })}
+                            className="w-full border rounded px-3 py-2 text-sm">
+                            {FORMATS.map(f => <option key={f.value} value={f.value}>{f.label}</option>)}
+                          </select>
+                        </div>
+                        <div>
+                          <label className="block text-xs font-medium mb-1">Position *</label>
+                          <select required value={visuelForm.position} onChange={e => setVisuelForm({ ...visuelForm, position: e.target.value })}
+                            className="w-full border rounded px-3 py-2 text-sm">
+                            {POSITIONS.map(p => <option key={p.value} value={p.value}>{p.label}</option>)}
+                          </select>
+                        </div>
+                      </div>
+                      <div className="flex gap-2">
+                        <button type="submit" disabled={savingVisuel || !visuelForm.image_url} className="btn btn-primary text-sm disabled:opacity-60">
+                          {savingVisuel ? 'Ajout...' : 'Ajouter le visuel'}
+                        </button>
+                        <button type="button" onClick={() => { setShowNewVisuel(null); setVisuelForm({ image_url: '', lien_url: '', format: 'medium_rectangle', position: 'repertoire-inline' }); }}
+                          className="text-sm px-4 py-2 border rounded hover:bg-gray-50">Annuler</button>
+                      </div>
+                    </form>
+                  ) : (
+                    <button onClick={() => setShowNewVisuel(c.id)}
+                      className="w-full text-sm text-wikya-blue border-2 border-dashed border-wikya-blue/30 rounded-lg py-2 hover:bg-wikya-blue/5 transition-colors">
+                      + Ajouter un visuel
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
           ))}
-          {data.length === 0 && <p className="text-gray-400 text-center py-10">Aucune annonce configurée.</p>}
+          {campagnes.length === 0 && <p className="text-gray-400 text-center py-10">Aucune campagne configurée.</p>}
         </div>
       )}
     </div>
