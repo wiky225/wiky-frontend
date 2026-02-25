@@ -1,5 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
+import { useAuth } from '../context/AuthContext';
 import AdBanner from '../components/AdBanner';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
@@ -19,6 +21,40 @@ function SkeletonCard() {
         </div>
       </div>
     </div>
+  );
+}
+
+// ── CARTE ANONYME (visiteur non connecté) ────────────────────
+function ConducteurCardAnonymous({ conducteur }) {
+  const initiales = [conducteur.prenom?.[0], conducteur.nom?.[0]]
+    .filter(Boolean).join('. ') + '.';
+
+  return (
+    <Link
+      to="/connexion"
+      className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all hover:-translate-y-1 flex flex-col"
+    >
+      <div className="relative w-full h-48 bg-wikya-blue/10 flex items-center justify-center">
+        <span className="text-4xl font-bold text-wikya-blue/40">{initiales}</span>
+        <span className="absolute top-3 right-3 bg-gray-200 text-gray-500 text-xs px-2 py-1 rounded-full font-medium">
+          🔒 Profil masqué
+        </span>
+      </div>
+      <div className="p-4 flex flex-col flex-1">
+        <h3 className="text-lg font-bold text-wikya-blue">{initiales}</h3>
+        {(conducteur.ville || conducteur.commune) && (
+          <p className="text-sm text-gray-500 mt-1 flex items-center gap-1">
+            📍 {[conducteur.ville, conducteur.commune].filter(Boolean).join(' — ')}
+          </p>
+        )}
+        <p className="text-xs text-gray-400 mt-3 italic">
+          Connectez-vous pour voir le profil complet
+        </p>
+        <div className="mt-4 flex justify-end">
+          <span className="text-wikya-orange font-semibold text-sm">Se connecter →</span>
+        </div>
+      </div>
+    </Link>
   );
 }
 
@@ -131,6 +167,7 @@ function ConducteurCardList({ conducteur }) {
 
 // ── PAGE PRINCIPALE ──────────────────────────────────────────
 export default function Repertoire() {
+  const { user } = useAuth();
   const [conducteurs, setConducteurs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -221,6 +258,10 @@ export default function Repertoire() {
 
   return (
     <div className="min-h-screen bg-gray-50 py-12">
+      <Helmet>
+        <title>Répertoire des conducteurs VTC - Wikya Côte d'Ivoire</title>
+        <meta name="description" content="Parcourez des centaines de profils de conducteurs VTC vérifiés en Côte d'Ivoire. Filtrez par ville, plateforme (Yango, Bolt, InDriver) et expérience." />
+      </Helmet>
       <div className="container-custom">
 
         {/* En-tête */}
@@ -228,6 +269,26 @@ export default function Repertoire() {
           <h1 className="text-4xl font-bold text-wikya-blue mb-1">Répertoire des Conducteurs VTC</h1>
           <p className="text-gray-500">Trouvez le conducteur qui correspond à vos besoins.</p>
         </div>
+
+        {/* CTA visiteur */}
+        {!user && (
+          <div className="bg-wikya-blue text-white rounded-xl p-5 mb-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div>
+              <p className="font-semibold">🔒 Profils partiellement masqués</p>
+              <p className="text-sm text-blue-200 mt-0.5">
+                Connectez-vous ou créez un compte pour accéder aux profils complets.
+              </p>
+            </div>
+            <div className="flex gap-3 shrink-0">
+              <Link to="/connexion" className="btn bg-white text-wikya-blue hover:bg-gray-100 text-sm py-2">
+                Se connecter
+              </Link>
+              <Link to="/inscription" className="btn bg-wikya-orange text-white hover:bg-wikya-orange-dark text-sm py-2">
+                S'inscrire
+              </Link>
+            </div>
+          </div>
+        )}
 
         {/* Bannière pub */}
         <AdBanner position="repertoire-inline" className="mb-6" />
@@ -296,11 +357,17 @@ export default function Repertoire() {
           </div>
         ) : viewMode === 'grid' ? (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {conducteursFiltres.map(c => <ConducteurCardGrid key={c.id} conducteur={c} />)}
+            {conducteursFiltres.map(c => user
+              ? <ConducteurCardGrid key={c.id} conducteur={c} />
+              : <ConducteurCardAnonymous key={c.id} conducteur={c} />
+            )}
           </div>
         ) : (
           <div className="space-y-3">
-            {conducteursFiltres.map(c => <ConducteurCardList key={c.id} conducteur={c} />)}
+            {conducteursFiltres.map(c => user
+              ? <ConducteurCardList key={c.id} conducteur={c} />
+              : <ConducteurCardAnonymous key={c.id} conducteur={c} />
+            )}
           </div>
         )}
 

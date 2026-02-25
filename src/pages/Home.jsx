@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import useEmblaCarousel from 'embla-carousel-react';
 import AdBanner from '../components/AdBanner';
 
@@ -339,6 +340,10 @@ function CTASection() {
 export default function Home() {
   return (
     <div>
+      <Helmet>
+        <title>Wikya - Plateforme VTC Côte d'Ivoire | Conducteurs & Recruteurs</title>
+        <meta name="description" content="Wikya est la première plateforme de mise en relation entre conducteurs VTC professionnels et recruteurs en Côte d'Ivoire. Trouvez un conducteur ou un emploi sur Yango, Bolt, InDriver." />
+      </Helmet>
       {/* Hero */}
       <section className="gradient-wikya text-white py-20">
         <div className="container-custom text-center">

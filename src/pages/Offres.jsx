@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useAuth } from '../context/AuthContext';
 import AdBanner from '../components/AdBanner';
 
@@ -8,9 +9,9 @@ const TYPES_VEHICULES = ['Moto', 'Tricycle', 'Camionette', 'Véhicule standard',
 const TYPES_CONTRAT = ['Location simple (VTC uniquement)', 'Achat progressif (véhicule au conducteur après X ans)', 'Les deux propositions'];
 
 function CarteOffre({ offre, hasContact }) {
-  const nom = offre.nom_entreprise || (offre.nom_responsable
-    ? `${offre.prenom_responsable} ${offre.nom_responsable}`
-    : offre.type_recruteur === 'entreprise' ? 'Entreprise' : 'Particulier');
+  const nom = offre.nom_entreprise ||
+    [offre.prenom_responsable, offre.nom_responsable].filter(Boolean).join(' ') ||
+    (offre.type_recruteur === 'entreprise' ? 'Entreprise' : 'Particulier');
 
   const totalVehicules = (offre.vehicules || []).reduce((s, v) => s + (parseInt(v.nombre) || 0), 0);
 
@@ -192,6 +193,10 @@ export default function Offres() {
 
   return (
     <div className="min-h-screen bg-gray-50 py-12">
+      <Helmet>
+        <title>Offres de recrutement VTC - Wikya Côte d'Ivoire</title>
+        <meta name="description" content="Consultez les offres de recrutement de conducteurs VTC en Côte d'Ivoire. Trouvez un emploi sur Yango, Bolt ou InDriver avec le meilleur recruteur." />
+      </Helmet>
       <div className="container-custom">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-wikya-blue mb-2">Offres des recruteurs</h1>
