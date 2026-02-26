@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useAuth } from '../context/AuthContext';
 import AdBanner from '../components/AdBanner';
@@ -8,12 +9,43 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 const TYPES_VEHICULES = ['Moto', 'Tricycle', 'Camionette', 'Véhicule standard', 'Véhicule électrique', 'Véhicule business'];
 const TYPES_CONTRAT = ['Location simple (VTC uniquement)', 'Achat progressif (véhicule au conducteur après X ans)', 'Les deux propositions'];
 
-function CarteOffre({ offre, hasContact }) {
+function CarteOffre({ offre, canMessage, session }) {
   const nom = offre.nom_entreprise ||
     [offre.prenom_responsable, offre.nom_responsable].filter(Boolean).join(' ') ||
     (offre.type_recruteur === 'entreprise' ? 'Entreprise' : 'Particulier');
 
   const totalVehicules = (offre.vehicules || []).reduce((s, v) => s + (parseInt(v.nombre) || 0), 0);
+
+  const [message, setMessage] = useState('');
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
+  const [errMsg, setErrMsg] = useState('');
+
+  const handleMessage = async () => {
+    if (!message.trim()) return;
+    setSending(true);
+    setErrMsg('');
+    try {
+      const res = await fetch(`${API_URL}/api/offres/${offre.id}/message`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session?.access_token}`,
+        },
+        body: JSON.stringify({ message }),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || 'Erreur envoi');
+      }
+      setSent(true);
+      setMessage('');
+    } catch (err) {
+      setErrMsg(err.message);
+    } finally {
+      setSending(false);
+    }
+  };
 
   return (
     <div className="bg-white rounded-xl shadow-md p-6 flex flex-col gap-4">
@@ -59,54 +91,68 @@ function CarteOffre({ offre, hasContact }) {
         </div>
       )}
 
-      {/* Détails */}
-      <div className="grid grid-cols-2 gap-2 text-sm">
-        {offre.heures_travail && (
-          <div className="flex items-center gap-1.5 text-gray-600">
-            <span>🕐</span> {offre.heures_travail}
-          </div>
-        )}
-        {offre.jours_travail?.length > 0 && (
-          <div className="flex items-center gap-1.5 text-gray-600">
-            <span>📅</span> {offre.jours_travail.length === 7 ? 'Tous les jours' : offre.jours_travail.join(', ')}
-          </div>
-        )}
-        {offre.garde_vehicule && (
-          <div className="flex items-center gap-1.5 text-gray-600 col-span-2">
-            <span>🚗</span> {offre.garde_vehicule}
-          </div>
-        )}
-        {offre.type_contrat && (
-          <div className="flex items-center gap-1.5 text-gray-600 col-span-2">
-            <span>📄</span> {offre.type_contrat}
-          </div>
+      {/* Détails — visibles uniquement si conducteur abonné */}
+      {canMessage && (
+        <div className="grid grid-cols-2 gap-2 text-sm">
+          {offre.heures_travail && (
+            <div className="flex items-center gap-1.5 text-gray-600">
+              <span>🕐</span> {offre.heures_travail}
+            </div>
+          )}
+          {offre.jours_travail?.length > 0 && (
+            <div className="flex items-center gap-1.5 text-gray-600">
+              <span>📅</span> {offre.jours_travail.length === 7 ? 'Tous les jours' : offre.jours_travail.join(', ')}
+            </div>
+          )}
+          {offre.garde_vehicule && (
+            <div className="flex items-center gap-1.5 text-gray-600 col-span-2">
+              <span>🚗</span> {offre.garde_vehicule}
+            </div>
+          )}
+          {offre.type_contrat && (
+            <div className="flex items-center gap-1.5 text-gray-600 col-span-2">
+              <span>📄</span> {offre.type_contrat}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Zone contact */}
+      <div className="pt-2 border-t">
+        {canMessage ? (
+          sent ? (
+            <div className="bg-green-50 text-green-700 rounded-lg px-4 py-3 text-sm font-medium">
+              ✅ Message envoyé au recruteur sur WhatsApp !
+            </div>
+          ) : (
+            <div className="flex flex-col gap-2">
+              <textarea
+                value={message}
+                onChange={e => setMessage(e.target.value)}
+                placeholder="Bonjour, je suis intéressé par votre offre..."
+                className="w-full border rounded-lg px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-wikya-blue"
+                rows={3}
+              />
+              {errMsg && <p className="text-red-500 text-xs">{errMsg}</p>}
+              <button
+                onClick={handleMessage}
+                disabled={sending || !message.trim()}
+                className="btn btn-primary text-sm disabled:opacity-60"
+              >
+                {sending ? 'Envoi...' : '📩 Envoyer un message au recruteur'}
+              </button>
+            </div>
+          )
+        ) : (
+          <Link to="/paiement?role=conducteur" className="flex items-center justify-between bg-wikya-blue/5 hover:bg-wikya-blue/10 rounded-lg px-4 py-3 transition-colors">
+            <div>
+              <p className="text-sm font-semibold text-wikya-blue">🔒 Contacter ce recruteur</p>
+              <p className="text-xs text-gray-500 mt-0.5">Abonnez-vous pour envoyer un message — 1 000 FCFA / 2 mois</p>
+            </div>
+            <span className="text-wikya-orange font-semibold text-sm shrink-0">S'abonner →</span>
+          </Link>
         )}
       </div>
-
-      {/* Contact */}
-      {hasContact && offre.telephone ? (
-        <div className="flex gap-2 pt-2 border-t flex-wrap">
-          <a
-            href={`https://wa.me/${offre.telephone?.replace(/\D/g, '').replace(/^0/, '225')}`}
-            target="_blank" rel="noopener noreferrer"
-            className="btn btn-primary text-sm flex-1 text-center"
-          >
-            WhatsApp
-          </a>
-          <a
-            href={`tel:+${offre.telephone?.replace(/\D/g, '').replace(/^0/, '225')}`}
-            className="btn btn-outline text-sm flex-1 text-center"
-          >
-            📞 Appeler
-          </a>
-        </div>
-      ) : !hasContact ? (
-        <div className="pt-2 border-t">
-          <a href="/connexion" className="text-sm text-wikya-blue hover:underline">
-            Connectez-vous pour contacter ce recruteur →
-          </a>
-        </div>
-      ) : null}
     </div>
   );
 }
@@ -117,11 +163,23 @@ export default function Offres() {
   const [loading, setLoading] = useState(true);
   const [filtreVehicule, setFiltreVehicule] = useState('');
   const [filtreContrat, setFiltreContrat] = useState('');
+  const [abonnementActif, setAbonnementActif] = useState(false);
 
   const isConducteur = user?.user_metadata?.role === 'conducteur';
   const isRecruteur = user?.user_metadata?.role === 'recruteur';
   const isAdmin = user?.user_metadata?.role === 'admin';
-  const hasContact = isConducteur || isAdmin;
+  const canMessage = isAdmin || abonnementActif;
+
+  // Vérifier l'abonnement du conducteur
+  useEffect(() => {
+    if (!isConducteur || !session?.access_token) return;
+    fetch(`${API_URL}/api/paiements/me`, {
+      headers: { Authorization: `Bearer ${session.access_token}` },
+    })
+      .then(r => r.json())
+      .then(d => setAbonnementActif(d.actif === true))
+      .catch(() => {});
+  }, [isConducteur, session]);
 
   useEffect(() => {
     const fetchOffres = async () => {
@@ -182,7 +240,7 @@ export default function Offres() {
           ) : (
             <div className="space-y-6">
               {offresFiltrees.map(o => (
-                <CarteOffre key={o.id} offre={o} hasContact={true} />
+                <CarteOffre key={o.id} offre={o} canMessage={true} session={session} />
               ))}
             </div>
           )}
@@ -240,11 +298,24 @@ export default function Offres() {
         {/* Bannière publicitaire */}
         <AdBanner position="offres-inline" className="mb-4" />
 
-        {/* CTA conducteur non connecté */}
+        {/* CTA visiteur non connecté */}
         {!user && (
           <div className="bg-wikya-blue text-white rounded-xl p-5 mb-8 flex items-center justify-between flex-wrap gap-4">
-            <p className="font-medium">Connectez-vous pour voir les coordonnées des recruteurs et les contacter directement.</p>
-            <a href="/connexion" className="btn bg-white text-wikya-blue hover:bg-gray-100 text-sm">Se connecter</a>
+            <p className="font-medium">Connectez-vous pour contacter les recruteurs directement.</p>
+            <Link to="/connexion" className="btn bg-white text-wikya-blue hover:bg-gray-100 text-sm">Se connecter</Link>
+          </div>
+        )}
+
+        {/* CTA conducteur non abonné */}
+        {isConducteur && !abonnementActif && (
+          <div className="bg-wikya-orange/10 border border-wikya-orange/30 rounded-xl p-5 mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div>
+              <p className="font-semibold text-wikya-blue">🔒 Abonnez-vous pour contacter les recruteurs</p>
+              <p className="text-sm text-gray-600 mt-0.5">Envoyez des messages directement aux recruteurs — 1 000 FCFA pour 2 mois.</p>
+            </div>
+            <Link to="/paiement?role=conducteur" className="btn bg-wikya-orange text-white hover:bg-wikya-orange-dark text-sm shrink-0">
+              S'abonner maintenant
+            </Link>
           </div>
         )}
 
@@ -255,7 +326,7 @@ export default function Offres() {
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {offresFiltrees.map(o => (
-              <CarteOffre key={o.id} offre={o} hasContact={hasContact} />
+              <CarteOffre key={o.id} offre={o} canMessage={canMessage} session={session} />
             ))}
           </div>
         )}

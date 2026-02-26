@@ -59,7 +59,7 @@ function ConducteurCardAnonymous({ conducteur }) {
 }
 
 // ── CARTE GRILLE ─────────────────────────────────────────────
-function ConducteurCardGrid({ conducteur }) {
+function ConducteurCardGrid({ conducteur, showFullName }) {
   const plateformes = conducteur.plateformes_vtc
     ? conducteur.plateformes_vtc.split(/[,;/]/).map(p => p.trim()).filter(Boolean)
     : [];
@@ -80,7 +80,9 @@ function ConducteurCardGrid({ conducteur }) {
         </span>
       </div>
       <div className="p-4 flex flex-col flex-1">
-        <h3 className="text-lg font-bold text-wikya-blue">{conducteur.prenom} {conducteur.nom}</h3>
+        <h3 className="text-lg font-bold text-wikya-blue">
+          {showFullName ? `${conducteur.prenom} ${conducteur.nom}` : conducteur.prenom}
+        </h3>
         <div className="mt-1 space-y-1">
           {(conducteur.ville || conducteur.commune) && (
             <p className="text-sm text-gray-500 flex items-center gap-1">
@@ -117,7 +119,7 @@ function ConducteurCardGrid({ conducteur }) {
 }
 
 // ── CARTE LISTE ──────────────────────────────────────────────
-function ConducteurCardList({ conducteur }) {
+function ConducteurCardList({ conducteur, showFullName }) {
   const plateformes = conducteur.plateformes_vtc
     ? conducteur.plateformes_vtc.split(/[,;/]/).map(p => p.trim()).filter(Boolean)
     : [];
@@ -134,7 +136,9 @@ function ConducteurCardList({ conducteur }) {
       />
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 flex-wrap">
-          <h3 className="text-base font-bold text-wikya-blue">{conducteur.prenom} {conducteur.nom}</h3>
+          <h3 className="text-base font-bold text-wikya-blue">
+            {showFullName ? `${conducteur.prenom} ${conducteur.nom}` : conducteur.prenom}
+          </h3>
           <span className="bg-green-100 text-green-700 text-xs px-2 py-0.5 rounded-full font-medium">
             Disponible
           </span>
@@ -167,11 +171,29 @@ function ConducteurCardList({ conducteur }) {
 
 // ── PAGE PRINCIPALE ──────────────────────────────────────────
 export default function Repertoire() {
-  const { user } = useAuth();
+  const { user, session } = useAuth();
   const [conducteurs, setConducteurs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [viewMode, setViewMode] = useState('grid');
+  const [abonnementActif, setAbonnementActif] = useState(false);
+
+  const isConducteur = user?.user_metadata?.role === 'conducteur';
+  const isRecruteur = user?.user_metadata?.role === 'recruteur';
+  const isAdmin = user?.user_metadata?.role === 'admin';
+  // Recruteurs et admins voient toujours le nom complet
+  // Conducteurs : uniquement si abonnés
+  const showFullName = isRecruteur || isAdmin || abonnementActif;
+
+  useEffect(() => {
+    if (!isConducteur || !session?.access_token) return;
+    fetch(`${API_URL}/api/paiements/me`, {
+      headers: { Authorization: `Bearer ${session.access_token}` },
+    })
+      .then(r => r.json())
+      .then(d => setAbonnementActif(d.actif === true))
+      .catch(() => {});
+  }, [isConducteur, session]);
 
   const [search, setSearch] = useState('');
   const [filtreVille, setFiltreVille] = useState('');
@@ -358,14 +380,14 @@ export default function Repertoire() {
         ) : viewMode === 'grid' ? (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {conducteursFiltres.map(c => user
-              ? <ConducteurCardGrid key={c.id} conducteur={c} />
+              ? <ConducteurCardGrid key={c.id} conducteur={c} showFullName={showFullName} />
               : <ConducteurCardAnonymous key={c.id} conducteur={c} />
             )}
           </div>
         ) : (
           <div className="space-y-3">
             {conducteursFiltres.map(c => user
-              ? <ConducteurCardList key={c.id} conducteur={c} />
+              ? <ConducteurCardList key={c.id} conducteur={c} showFullName={showFullName} />
               : <ConducteurCardAnonymous key={c.id} conducteur={c} />
             )}
           </div>
