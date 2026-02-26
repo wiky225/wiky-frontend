@@ -147,24 +147,32 @@ function SliderConducteurs() {
                 const plateformes = c.plateformes_vtc
                   ? c.plateformes_vtc.split(/[,;/]/).map(p => p.trim()).filter(Boolean)
                   : [];
+                const initiales = [c.prenom?.[0], c.nom?.[0]].filter(Boolean).join('');
                 return (
                   <Link
                     key={c.id}
-                    to={`/conducteur/${c.id}`}
+                    to="/inscription"
                     className="flex-none w-[78vw] sm:w-64 md:w-72 bg-white border rounded-xl shadow-sm hover:shadow-md transition-all hover:-translate-y-1 overflow-hidden"
                   >
-                    <div className="relative">
+                    {/* Photo floutée + initiales */}
+                    <div className="relative w-full h-40">
                       <img
                         src={c.photo_url || `https://ui-avatars.com/api/?name=${c.prenom}+${c.nom}&size=300&background=253b56&color=fff`}
-                        alt={`${c.prenom} ${c.nom}`}
-                        className="w-full h-40 object-cover"
+                        alt="Conducteur"
+                        className="w-full h-full object-cover blur-sm scale-105"
                       />
+                      <div className="absolute inset-0 bg-wikya-blue/40 flex items-center justify-center">
+                        <span className="text-4xl font-bold text-white/80 tracking-widest">{initiales}</span>
+                      </div>
                       <span className="absolute top-2 right-2 bg-green-500 text-white text-xs px-2 py-0.5 rounded-full font-medium">
                         Disponible
                       </span>
+                      <span className="absolute top-2 left-2 bg-black/40 text-white text-xs px-2 py-0.5 rounded-full">
+                        🔒
+                      </span>
                     </div>
                     <div className="p-4">
-                      <p className="font-bold text-wikya-blue">{c.prenom} {c.nom}</p>
+                      <p className="font-bold text-wikya-blue">{c.prenom}</p>
                       {(c.ville || c.commune) && (
                         <p className="text-xs text-gray-500 mt-1">
                           📍 {[c.ville, c.commune].filter(Boolean).join(' — ')}
@@ -182,6 +190,7 @@ function SliderConducteurs() {
                           )}
                         </div>
                       )}
+                      <p className="text-xs text-wikya-orange mt-3 font-medium">S'inscrire pour voir le profil →</p>
                     </div>
                   </Link>
                 );
