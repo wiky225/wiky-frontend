@@ -305,6 +305,9 @@ function TabWhatsapp({ token }) {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(null);
+  const [editingId, setEditingId] = useState(null);   // id du conducteur en cours d'édition
+  const [editTel, setEditTel] = useState('');          // valeur en cours de saisie
+  const [savingTel, setSavingTel] = useState(false);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -332,6 +335,37 @@ function TabWhatsapp({ token }) {
     navigator.clipboard.writeText(message);
     setCopied(i);
     setTimeout(() => setCopied(null), 2000);
+  };
+
+  const startEdit = (d) => {
+    setEditingId(d.id);
+    setEditTel(d.telephone || '');
+  };
+
+  const cancelEdit = () => {
+    setEditingId(null);
+    setEditTel('');
+  };
+
+  const saveTelephone = async (id) => {
+    if (!editTel.trim()) return;
+    setSavingTel(true);
+    try {
+      const res = await fetch(`${API_URL}/api/admin/conducteurs/${id}`, {
+        method: 'PATCH',
+        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ telephone: editTel.trim() }),
+      });
+      if (!res.ok) throw new Error('Erreur sauvegarde');
+      // Mise à jour locale immédiate sans recharger toute la liste
+      setData(prev => prev.map(d => d.id === id ? { ...d, telephone: editTel.trim() } : d));
+      setEditingId(null);
+      setEditTel('');
+    } catch (err) {
+      alert('Erreur : ' + err.message);
+    } finally {
+      setSavingTel(false);
+    }
   };
 
   const exportCSV = () => {
@@ -421,7 +455,42 @@ function TabWhatsapp({ token }) {
                       <p className="font-medium">{d.prenom} {d.nom}</p>
                       <p className="text-xs text-gray-400">{d.email}</p>
                     </td>
-                    <td className="p-3 text-gray-600">{d.telephone || '—'}</td>
+
+                    {/* Téléphone — éditable en ligne */}
+                    <td className="p-3">
+                      {editingId === d.id ? (
+                        <div className="flex items-center gap-1.5">
+                          <input
+                            value={editTel}
+                            onChange={e => setEditTel(e.target.value)}
+                            onKeyDown={e => { if (e.key === 'Enter') saveTelephone(d.id); if (e.key === 'Escape') cancelEdit(); }}
+                            placeholder="+22507XXXXXXXX"
+                            className="border border-wikya-blue rounded px-2 py-1 text-sm w-36 focus:outline-none focus:ring-1 focus:ring-wikya-blue"
+                            autoFocus
+                          />
+                          <button onClick={() => saveTelephone(d.id)} disabled={savingTel}
+                            className="text-xs px-2 py-1 bg-green-500 text-white rounded hover:bg-green-600 disabled:opacity-50">
+                            {savingTel ? '…' : '✓'}
+                          </button>
+                          <button onClick={cancelEdit}
+                            className="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded hover:bg-gray-200">
+                            ✕
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-1.5 group">
+                          <span className={`text-sm ${d.telephone ? 'text-gray-700' : 'text-gray-400 italic'}`}>
+                            {d.telephone || 'Aucun numéro'}
+                          </span>
+                          <button onClick={() => startEdit(d)}
+                            className="opacity-0 group-hover:opacity-100 text-xs px-1.5 py-0.5 bg-gray-100 text-gray-500 rounded hover:bg-wikya-blue/10 hover:text-wikya-blue transition-all"
+                            title="Modifier le numéro">
+                            ✏️
+                          </button>
+                        </div>
+                      )}
+                    </td>
+
                     <td className="p-3">
                       <a href={d.lien} target="_blank" rel="noopener noreferrer"
                         className="text-wikya-blue hover:underline text-xs break-all">
@@ -439,11 +508,14 @@ function TabWhatsapp({ token }) {
                             WhatsApp
                           </a>
                         ) : (
-                          <span className="text-xs text-gray-400 italic">Pas de tél.</span>
+                          <button onClick={() => startEdit(d)}
+                            className="text-xs px-3 py-1.5 bg-orange-100 text-wikya-orange rounded-lg hover:bg-orange-200 font-medium">
+                            ✏️ Ajouter un numéro
+                          </button>
                         )}
                         <button onClick={() => copyMessage(i, d.message)}
                           className="text-xs px-2 py-1 bg-gray-100 rounded hover:bg-gray-200 transition-colors">
-                          {copied === i ? '✅ Copié' : '📋'}
+                          {copied === i ? '✅' : '📋'}
                         </button>
                       </div>
                     </td>
