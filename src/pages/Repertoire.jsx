@@ -282,7 +282,7 @@ export default function Repertoire() {
     <div className="min-h-screen bg-gray-50 py-12">
       <Helmet>
         <title>Répertoire des conducteurs VTC - Wikya Côte d'Ivoire</title>
-        <meta name="description" content="Parcourez des centaines de profils de conducteurs VTC vérifiés en Côte d'Ivoire. Filtrez par ville, plateforme (Yango, Bolt, InDriver) et expérience." />
+        <meta name="description" content="Parcourez des centaines de profils de conducteurs VTC vérifiés en Côte d'Ivoire. Filtrez par ville, type de service et expérience pour trouver le bon profil." />
       </Helmet>
       <div className="container-custom">
 

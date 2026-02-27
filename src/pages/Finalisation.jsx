@@ -292,7 +292,7 @@ export default function Finalisation() {
             {form.experience_vtc && (
               <div>
                 <label className="block text-sm font-medium mb-1">Compagnie(s) précédente(s)</label>
-                <input type="text" name="compagnie_precedente" value={form.compagnie_precedente} onChange={handleChange} placeholder="Ex: Yango, Uber" className="w-full border rounded px-3 py-2" />
+                <input type="text" name="compagnie_precedente" value={form.compagnie_precedente} onChange={handleChange} placeholder="Ex: Yango" className="w-full border rounded px-3 py-2" />
               </div>
             )}
 
@@ -303,12 +303,12 @@ export default function Finalisation() {
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1">Plateformes VTC utilisées</label>
-                <input type="text" name="plateformes_vtc" value={form.plateformes_vtc} onChange={handleChange} placeholder="Ex: Yango, Bolt" className="w-full border rounded px-3 py-2" />
+                <input type="text" name="plateformes_vtc" value={form.plateformes_vtc} onChange={handleChange} placeholder="Ex: Yango" className="w-full border rounded px-3 py-2" />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">Préférences Yango Pro</label>
+              <label className="block text-sm font-medium mb-2">Type de service VTC</label>
               <div className="flex flex-wrap gap-2">
                 {YANGO_OPTIONS.map(opt => (
                   <button key={opt} type="button" onClick={() => toggleArray('preferences_yango', opt)}

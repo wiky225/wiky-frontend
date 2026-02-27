@@ -252,7 +252,7 @@ function TabProfil({ profil, session, onUpdate }) {
           </div>
           <div className="md:col-span-2">
             <label className="block text-xs font-medium text-gray-500 mb-1">Plateformes VTC</label>
-            <input value={form.plateformes_vtc} onChange={e => set('plateformes_vtc', e.target.value)} className="w-full border rounded-lg px-3 py-2 text-sm" placeholder="Ex: Yango, Uber, Bolt" />
+            <input value={form.plateformes_vtc} onChange={e => set('plateformes_vtc', e.target.value)} className="w-full border rounded-lg px-3 py-2 text-sm" placeholder="Ex: Yango" />
           </div>
         </div>
         <div className="mb-4">
@@ -272,7 +272,7 @@ function TabProfil({ profil, session, onUpdate }) {
           </div>
         </div>
         <div>
-          <label className="block text-xs font-medium text-gray-500 mb-2">Préférences Yango</label>
+          <label className="block text-xs font-medium text-gray-500 mb-2">Type de service VTC</label>
           <div className="flex flex-wrap gap-2">
             {PREFERENCES_YANGO.map(p => (
               <button

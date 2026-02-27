@@ -351,7 +351,7 @@ export default function Home() {
     <div>
       <Helmet>
         <title>Wikya - Plateforme VTC Côte d'Ivoire | Conducteurs & Recruteurs</title>
-        <meta name="description" content="Wikya est la première plateforme de mise en relation entre conducteurs VTC professionnels et recruteurs en Côte d'Ivoire. Trouvez un conducteur ou un emploi sur Yango, Bolt, InDriver." />
+        <meta name="description" content="Wikya est la première plateforme de mise en relation entre conducteurs VTC professionnels et recruteurs en Côte d'Ivoire. Trouvez un conducteur ou un emploi VTC à Abidjan." />
       </Helmet>
       {/* Hero */}
       <section className="gradient-wikya text-white py-20">

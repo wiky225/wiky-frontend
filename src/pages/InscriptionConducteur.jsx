@@ -246,7 +246,7 @@ export default function InscriptionConducteur() {
 
           <div>
             <label className="block text-sm font-medium mb-2">Plateformes VTC utilisées *</label>
-            <input type="text" name="plateformes_vtc" required onChange={handleChange} placeholder="Ex: Uber, Yango, Bolt" className="input" />
+            <input type="text" name="plateformes_vtc" required onChange={handleChange} placeholder="Ex: Yango" className="input" />
           </div>
 
           <div>

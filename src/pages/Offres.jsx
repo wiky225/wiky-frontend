@@ -253,7 +253,7 @@ export default function Offres() {
     <div className="min-h-screen bg-gray-50 py-12">
       <Helmet>
         <title>Offres de recrutement VTC - Wikya Côte d'Ivoire</title>
-        <meta name="description" content="Consultez les offres de recrutement de conducteurs VTC en Côte d'Ivoire. Trouvez un emploi sur Yango, Bolt ou InDriver avec le meilleur recruteur." />
+        <meta name="description" content="Consultez les offres de recrutement de conducteurs VTC en Côte d'Ivoire. Trouvez le meilleur recruteur et décrochez un emploi VTC à Abidjan." />
       </Helmet>
       <div className="container-custom">
         <div className="mb-8">

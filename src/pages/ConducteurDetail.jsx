@@ -248,7 +248,7 @@ export default function ConducteurDetail() {
                     )}
                     {Array.isArray(conducteur.preferences_yango) && conducteur.preferences_yango.length > 0 && (
                       <div>
-                        <h3 className="font-semibold text-wikya-blue">🚗 Préférences Yango</h3>
+                        <h3 className="font-semibold text-wikya-blue">🚗 Type de service VTC</h3>
                         <div className="flex flex-wrap gap-2 mt-1">
                           {conducteur.preferences_yango.map(p => (
                             <span key={p} className="text-xs bg-orange-50 text-wikya-orange border border-wikya-orange rounded-full px-3 py-1">{p}</span>
