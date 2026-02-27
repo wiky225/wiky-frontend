@@ -40,7 +40,7 @@ function StatCard({ label, value, sub, color = 'blue' }) {
 }
 
 // ── VUE D'ENSEMBLE ──────────────────────────────────────────
-function TabStats({ token }) {
+function TabStats({ token, notifications = [], unreadCount = 0, markNotifRead, markAllRead }) {
   const [stats, setStats] = useState(null);
 
   useEffect(() => {
@@ -64,6 +64,47 @@ function TabStats({ token }) {
         <StatCard label="Abonnés actifs" value={stats.recruteurs.abonnes} color="green" />
         <StatCard label="Avis publiés" value={stats.avis.total} color="orange" />
       </div>
+
+      {/* ── Notifications internes ── */}
+      {notifications.length > 0 && (
+        <div>
+          <div className="flex justify-between items-center mb-3">
+            <h2 className="text-xl font-bold text-wikya-blue">
+              Finalisations récentes
+              {unreadCount > 0 && (
+                <span className="ml-2 bg-red-500 text-white text-xs rounded-full px-2 py-0.5 align-middle">
+                  {unreadCount} nouvelle{unreadCount > 1 ? 's' : ''}
+                </span>
+              )}
+            </h2>
+            {unreadCount > 0 && (
+              <button onClick={markAllRead} className="text-sm text-wikya-blue hover:underline">
+                Tout marquer comme lu
+              </button>
+            )}
+          </div>
+          <div className="space-y-2">
+            {notifications.map(n => (
+              <div key={n.id} className={`flex items-center justify-between p-3 rounded-lg border ${n.lu ? 'bg-gray-50 border-gray-200' : 'bg-blue-50 border-blue-200'}`}>
+                <div>
+                  <p className={`text-sm font-medium ${n.lu ? 'text-gray-600' : 'text-wikya-blue'}`}>
+                    {!n.lu && <span className="inline-block w-2 h-2 bg-red-500 rounded-full mr-2 align-middle" />}
+                    {n.titre}
+                  </p>
+                  <p className="text-xs text-gray-400 mt-0.5">
+                    {new Date(n.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                  </p>
+                </div>
+                {!n.lu && (
+                  <button onClick={() => markNotifRead(n.id)} className="text-xs text-blue-600 hover:underline ml-4 shrink-0">
+                    ✓ Lu
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -379,6 +420,8 @@ function TabWhatsapp({ token }) {
   };
 
   const FRONTEND_URL = 'https://wikya.ci';
+
+  // Message campagne conducteurs
   const messageCampagne = `Bonjour ! 👋\n\nMerci pour votre intérêt suite à notre campagne *"Tu cherches position ?"*.\n\nPour vous pré-inscrire *gratuitement* sur Wikya et être visible par nos recruteurs partenaires, cliquez ici :\n\n👉 ${FRONTEND_URL}/inscription-conducteur\n\nC'est rapide (2 minutes) ! N'hésitez pas si vous avez des questions.\n\nL'équipe Wikya`;
 
   const [copiedCampagne, setCopiedCampagne] = useState(false);
@@ -386,6 +429,16 @@ function TabWhatsapp({ token }) {
     navigator.clipboard.writeText(messageCampagne);
     setCopiedCampagne(true);
     setTimeout(() => setCopiedCampagne(false), 2000);
+  };
+
+  // Message prospection recruteurs
+  const messageRecruteur = `Du mal à trouver un conducteur ? 🚗\n\nWikya est la première plateforme de mise en relation entre recruteurs et conducteurs VTC en Côte d'Ivoire.\n\nPubliez votre offre en quelques minutes et recevez des candidatures directement sur WhatsApp.\n\n👉 ${FRONTEND_URL}/inscription-recruteur\n\nL'équipe Wikya`;
+
+  const [copiedRecruteur, setCopiedRecruteur] = useState(false);
+  const copyRecruteur = () => {
+    navigator.clipboard.writeText(messageRecruteur);
+    setCopiedRecruteur(true);
+    setTimeout(() => setCopiedRecruteur(false), 2000);
   };
 
   return (
@@ -408,6 +461,27 @@ function TabWhatsapp({ token }) {
           className={`mt-3 inline-flex items-center gap-2 px-4 py-2 rounded-lg font-semibold text-sm transition-colors ${copiedCampagne ? 'bg-green-100 text-green-700' : 'bg-wikya-blue text-white hover:bg-blue-800'}`}
         >
           {copiedCampagne ? '✅ Message copié !' : '📋 Copier ce message'}
+        </button>
+        <p className="text-xs text-gray-400 mt-2">Collez ce message dans n'importe quelle conversation WhatsApp.</p>
+      </div>
+
+      {/* ── Message prospection recruteurs ── */}
+      <div className="bg-wikya-orange/5 border-2 border-wikya-orange/20 rounded-xl p-5">
+        <div className="flex items-start gap-3 mb-4">
+          <span className="text-2xl">🏢</span>
+          <div>
+            <h3 className="font-bold text-wikya-orange">Prospection recruteurs</h3>
+            <p className="text-sm text-gray-500 mt-0.5">Pour les recruteurs qui ont du mal à trouver un conducteur et ne sont pas encore inscrits.</p>
+          </div>
+        </div>
+        <div className="bg-white border rounded-lg p-4 text-sm text-gray-700 whitespace-pre-wrap font-mono text-xs leading-relaxed">
+          {messageRecruteur}
+        </div>
+        <button
+          onClick={copyRecruteur}
+          className={`mt-3 inline-flex items-center gap-2 px-4 py-2 rounded-lg font-semibold text-sm transition-colors ${copiedRecruteur ? 'bg-green-100 text-green-700' : 'bg-wikya-orange text-white hover:bg-orange-600'}`}
+        >
+          {copiedRecruteur ? '✅ Message copié !' : '📋 Copier ce message'}
         </button>
         <p className="text-xs text-gray-400 mt-2">Collez ce message dans n'importe quelle conversation WhatsApp.</p>
       </div>
@@ -922,6 +996,7 @@ export default function DashboardAdmin() {
   const { user, session } = useAuth();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('stats');
+  const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
     if (user && user.user_metadata?.role !== 'admin') {
@@ -929,9 +1004,40 @@ export default function DashboardAdmin() {
     }
   }, [user, navigate]);
 
+  const fetchNotifications = useCallback(async (tok) => {
+    try {
+      const res = await fetch(`${API_URL}/api/admin/notifications`, {
+        headers: { Authorization: `Bearer ${tok}` }
+      });
+      const data = await res.json();
+      setNotifications(Array.isArray(data) ? data : []);
+    } catch (_) {}
+  }, []);
+
+  useEffect(() => {
+    if (session) fetchNotifications(session.access_token);
+  }, [session, fetchNotifications]);
+
   if (!session) return <div className="min-h-screen flex items-center justify-center">Chargement...</div>;
 
   const token = session.access_token;
+  const unreadCount = notifications.filter(n => !n.lu).length;
+
+  const markNotifRead = async (id) => {
+    await fetch(`${API_URL}/api/admin/notifications/${id}/lu`, {
+      method: 'PATCH',
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    setNotifications(prev => prev.map(n => n.id === id ? { ...n, lu: true } : n));
+  };
+
+  const markAllRead = async () => {
+    await fetch(`${API_URL}/api/admin/notifications/tout-lire`, {
+      method: 'PATCH',
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    setNotifications(prev => prev.map(n => ({ ...n, lu: true })));
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -947,20 +1053,33 @@ export default function DashboardAdmin() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`px-4 py-2 text-sm font-medium rounded-t-lg border-b-2 transition-colors ${
+              className={`relative px-4 py-2 text-sm font-medium rounded-t-lg border-b-2 transition-colors ${
                 activeTab === tab.id
                   ? 'border-wikya-orange text-wikya-orange bg-white'
                   : 'border-transparent text-gray-500 hover:text-wikya-blue'
               }`}
             >
               {tab.label}
+              {tab.id === 'stats' && unreadCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center leading-none">
+                  {unreadCount > 9 ? '9+' : unreadCount}
+                </span>
+              )}
             </button>
           ))}
         </div>
 
         {/* Contenu */}
         <div className="bg-white rounded-lg shadow p-6">
-          {activeTab === 'stats' && <TabStats token={token} />}
+          {activeTab === 'stats' && (
+            <TabStats
+              token={token}
+              notifications={notifications}
+              unreadCount={unreadCount}
+              markNotifRead={markNotifRead}
+              markAllRead={markAllRead}
+            />
+          )}
           {activeTab === 'conducteurs' && <TabConducteurs token={token} />}
           {activeTab === 'recruteurs' && <TabRecruteurs token={token} />}
           {activeTab === 'avis' && <TabAvis token={token} />}
