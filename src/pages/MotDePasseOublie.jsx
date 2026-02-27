@@ -19,7 +19,7 @@ export default function MotDePasseOublie() {
       if (error) throw error;
       setEnvoye(true);
     } catch (err) {
-      setErreur(err.message || "Impossible d'envoyer l'email.");
+      setErreur("Impossible d'envoyer l'email. Vérifiez l'adresse saisie.");
     } finally {
       setLoading(false);
     }
