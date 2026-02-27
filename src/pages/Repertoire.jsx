@@ -177,13 +177,13 @@ export default function Repertoire() {
   const [error, setError] = useState(null);
   const [viewMode, setViewMode] = useState('grid');
   const [abonnementActif, setAbonnementActif] = useState(false);
+  const [recruteurAbonne, setRecruteurAbonne] = useState(null); // null = chargement en cours
 
   const isConducteur = user?.user_metadata?.role === 'conducteur';
   const isRecruteur = user?.user_metadata?.role === 'recruteur';
   const isAdmin = user?.user_metadata?.role === 'admin';
-  // Recruteurs et admins voient toujours le nom complet
-  // Conducteurs : uniquement si abonnés
-  const showFullName = isRecruteur || isAdmin || abonnementActif;
+  // Noms complets : admin toujours, recruteur abonné, conducteur abonné
+  const showFullName = isAdmin || (isRecruteur && recruteurAbonne) || abonnementActif;
 
   useEffect(() => {
     if (!isConducteur || !session?.access_token) return;
@@ -194,6 +194,16 @@ export default function Repertoire() {
       .then(d => setAbonnementActif(d.actif === true))
       .catch(() => {});
   }, [isConducteur, session]);
+
+  useEffect(() => {
+    if (!isRecruteur || !session?.access_token) return;
+    fetch(`${API_URL}/api/abonnements/check`, {
+      headers: { Authorization: `Bearer ${session.access_token}` },
+    })
+      .then(r => r.json())
+      .then(d => setRecruteurAbonne(d.active === true))
+      .catch(() => setRecruteurAbonne(false));
+  }, [isRecruteur, session]);
 
   const [search, setSearch] = useState('');
   const [filtreVille, setFiltreVille] = useState('');
@@ -309,6 +319,21 @@ export default function Repertoire() {
                 S'inscrire
               </Link>
             </div>
+          </div>
+        )}
+
+        {/* Bannière paywall recruteur non abonné */}
+        {isRecruteur && recruteurAbonne === false && (
+          <div className="bg-orange-50 border border-orange-200 rounded-xl p-5 mb-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div>
+              <p className="font-semibold text-orange-800">🔒 Contacts des conducteurs masqués</p>
+              <p className="text-sm text-orange-700 mt-0.5">
+                Abonnez-vous pour voir les numéros de téléphone, emails et accéder aux profils complets.
+              </p>
+            </div>
+            <a href="/paiement?role=recruteur" className="btn bg-wikya-orange text-white hover:bg-wikya-orange-dark text-sm py-2 shrink-0">
+              S'abonner — 10 000 FCFA/mois
+            </a>
           </div>
         )}
 

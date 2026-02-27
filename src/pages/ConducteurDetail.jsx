@@ -45,7 +45,8 @@ export default function ConducteurDetail() {
 
   const isRecruteur = user?.user_metadata?.role === 'recruteur';
   const isAdmin = user?.user_metadata?.role === 'admin';
-  const hasFullAccess = isRecruteur || isAdmin;
+  const [recruteurAbonne, setRecruteurAbonne] = useState(false);
+  const hasFullAccess = isAdmin || (isRecruteur && recruteurAbonne);
 
   useEffect(() => {
     const fetchAll = async () => {
@@ -68,6 +69,16 @@ export default function ConducteurDetail() {
     };
     fetchAll();
   }, [id, session]);
+
+  useEffect(() => {
+    if (!isRecruteur || !session?.access_token) return;
+    fetch(`${API_URL}/api/abonnements/check`, {
+      headers: { Authorization: `Bearer ${session.access_token}` }
+    })
+      .then(r => r.json())
+      .then(d => setRecruteurAbonne(d.active === true))
+      .catch(() => {});
+  }, [isRecruteur, session]);
 
   useEffect(() => {
     const checkFavori = async () => {
@@ -296,6 +307,19 @@ export default function ConducteurDetail() {
                   <p className="text-wikya-blue font-semibold mb-2">Accédez aux coordonnées complètes</p>
                   <p className="text-sm text-gray-600 mb-3">Connectez-vous en tant que recruteur pour voir le contact, le permis, les avis et recruter ce conducteur.</p>
                   <a href="/connexion" className="btn btn-primary text-sm">Se connecter</a>
+                </div>
+              )}
+
+              {/* CTA abonnement pour recruteur non abonné */}
+              {isRecruteur && !recruteurAbonne && (
+                <div className="mt-6 p-4 bg-orange-50 border border-orange-300 rounded-lg">
+                  <p className="text-orange-800 font-semibold mb-1">🔒 Coordonnées masquées</p>
+                  <p className="text-sm text-orange-700 mb-3">
+                    Abonnez-vous pour voir les contacts, accéder aux documents et recruter directement.
+                  </p>
+                  <a href="/paiement?role=recruteur" className="btn bg-wikya-orange text-white hover:bg-wikya-orange-dark text-sm">
+                    S'abonner — 10 000 FCFA/mois
+                  </a>
                 </div>
               )}
 
