@@ -318,8 +318,13 @@ function TabWhatsapp({ token }) {
 
   // Génère le lien wa.me avec le message pré-rempli
   const waLink = (telephone, message) => {
-    const phone = (telephone || '').replace(/\D/g, ''); // garde uniquement les chiffres
+    let phone = (telephone || '').replace(/\D/g, ''); // garde uniquement les chiffres
     if (!phone) return null;
+    // Normalisation Côte d'Ivoire : +225 suivi d'un chiffre non-zéro → insérer le 0
+    // Exemples : 2257XXXXXXXX → 22507XXXXXXXX / 2255XXXXXXXX → 22505XXXXXXXX
+    if (phone.startsWith('225') && phone.length === 11 && phone[3] !== '0') {
+      phone = '2250' + phone.substring(3);
+    }
     return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
   };
 
@@ -339,8 +344,45 @@ function TabWhatsapp({ token }) {
     a.href = url; a.download = 'whatsapp_finalisation.csv'; a.click();
   };
 
+  const FRONTEND_URL = 'https://wikya.ci';
+  const messageCampagne = `Bonjour ! 👋\n\nMerci pour votre intérêt suite à notre campagne *"Tu cherches position ?"*.\n\nPour vous pré-inscrire *gratuitement* sur Wikya et être visible par nos recruteurs partenaires, cliquez ici :\n\n👉 ${FRONTEND_URL}/inscription-conducteur\n\nC'est rapide (2 minutes) ! N'hésitez pas si vous avez des questions.\n\nL'équipe Wikya`;
+
+  const [copiedCampagne, setCopiedCampagne] = useState(false);
+  const copyCampagne = () => {
+    navigator.clipboard.writeText(messageCampagne);
+    setCopiedCampagne(true);
+    setTimeout(() => setCopiedCampagne(false), 2000);
+  };
+
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
+
+      {/* ── Bouton campagne "Tu cherches position ?" ── */}
+      <div className="bg-wikya-blue/5 border-2 border-wikya-blue/20 rounded-xl p-5">
+        <div className="flex items-start gap-3 mb-4">
+          <span className="text-2xl">📣</span>
+          <div>
+            <h3 className="font-bold text-wikya-blue">Campagne "Tu cherches position ?"</h3>
+            <p className="text-sm text-gray-500 mt-0.5">Pour les personnes qui ont répondu à la campagne mais ne se sont pas encore pré-inscrites.</p>
+          </div>
+        </div>
+        <div className="bg-white border rounded-lg p-4 text-sm text-gray-700 whitespace-pre-wrap font-mono text-xs leading-relaxed">
+          {messageCampagne}
+        </div>
+        <button
+          onClick={copyCampagne}
+          className={`mt-3 inline-flex items-center gap-2 px-4 py-2 rounded-lg font-semibold text-sm transition-colors ${copiedCampagne ? 'bg-green-100 text-green-700' : 'bg-wikya-blue text-white hover:bg-blue-800'}`}
+        >
+          {copiedCampagne ? '✅ Message copié !' : '📋 Copier ce message'}
+        </button>
+        <p className="text-xs text-gray-400 mt-2">Collez ce message dans n'importe quelle conversation WhatsApp.</p>
+      </div>
+
+      {/* ── Séparateur ── */}
+      <div className="border-t pt-2">
+        <h3 className="font-semibold text-gray-700 mb-3">Conducteurs pré-inscrits à relancer</h3>
+      </div>
+
       <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-sm text-green-800">
         <p className="font-medium mb-1">Comment utiliser cette liste ?</p>
         <p>Cliquez sur <strong>WhatsApp</strong> pour ouvrir une conversation avec le conducteur. Le message d'invitation est pré-rempli — il vous suffit d'envoyer.</p>
