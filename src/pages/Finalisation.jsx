@@ -17,6 +17,10 @@ const VILLES_CI = [
 const SITUATIONS = ['Célibataire', 'Fiancé(e)', 'Marié(e)', 'Veuf(ve)'];
 const YANGO_OPTIONS = ['Moto', 'Tricycle', 'Camionette', 'Véhicule', 'GOYA'];
 const COLLAB_OPTIONS = ['Conducteur salarié', 'Recette journalière', 'Véhicule au bout de 3 ans'];
+const NATIONALITES = [
+  'Ivoirien(ne)', 'Burkinabè', 'Malien(ne)', 'Guinéen(ne)', 'Sénégalais(e)',
+  'Nigérien(ne)', 'Béninois(e)', 'Togolais(e)', 'Ghanéen(ne)', 'Nigérian(e)', 'Camerounais(e)'
+];
 
 export default function Finalisation() {
   const { token } = useParams();
@@ -40,6 +44,8 @@ export default function Finalisation() {
           if (data.expired) { setExpired(true); return; }
           throw new Error(data.error || 'Lien invalide');
         }
+        const nat = data.nationalite || '';
+        const natConnue = NATIONALITES.includes(nat);
         setForm({
           nom: data.nom || '',
           prenom: data.prenom || '',
@@ -47,6 +53,8 @@ export default function Finalisation() {
           telephone: data.telephone || '',
           contact_secondaire: data.contact_secondaire || '',
           date_naissance: data.date_naissance || '',
+          nationalite: natConnue || !nat ? nat : 'Autre',
+          nationalite_autre: !natConnue && nat ? nat : '',
           ville: data.ville || '',
           commune: data.commune || '',
           quartier: data.quartier || '',
@@ -99,10 +107,11 @@ export default function Finalisation() {
 
     setSubmitting(true);
     try {
+      const nationaliteFinale = form.nationalite === 'Autre' ? form.nationalite_autre.trim() : form.nationalite;
       const res = await fetch(`${API_URL}/api/finaliser/${token}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...form, password })
+        body: JSON.stringify({ ...form, nationalite: nationaliteFinale, password })
       });
       const data = await res.json();
       if (!res.ok) {
@@ -224,7 +233,12 @@ export default function Finalisation() {
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1">Nombre d'enfants</label>
-                <input type="number" name="nombre_enfants" min="0" value={form.nombre_enfants} onChange={handleChange} className="w-full border rounded px-3 py-2" />
+                <select name="nombre_enfants" value={form.nombre_enfants} onChange={handleChange} className="w-full border rounded px-3 py-2">
+                  <option value="">Sélectionnez...</option>
+                  {[...Array(13)].map((_, i) => (
+                    <option key={i} value={i}>{i === 0 ? 'Aucun' : i}</option>
+                  ))}
+                </select>
               </div>
             </div>
           </div>
@@ -235,7 +249,22 @@ export default function Finalisation() {
             <div className="grid md:grid-cols-3 gap-4">
               <div>
                 <label className="block text-sm font-medium mb-1">Nationalité *</label>
-                <input type="text" name="nationalite" value={form.nationalite || ''} onChange={handleChange} required placeholder="Ex: Ivoirien(ne)" className="w-full border rounded px-3 py-2" />
+                <select name="nationalite" value={form.nationalite || ''} onChange={handleChange} required className="w-full border rounded px-3 py-2">
+                  <option value="">Sélectionnez...</option>
+                  {NATIONALITES.map(n => <option key={n} value={n}>{n}</option>)}
+                  <option value="Autre">Autre</option>
+                </select>
+                {form.nationalite === 'Autre' && (
+                  <input
+                    type="text"
+                    name="nationalite_autre"
+                    value={form.nationalite_autre || ''}
+                    onChange={handleChange}
+                    required
+                    placeholder="Précisez votre nationalité"
+                    className="w-full border rounded px-3 py-2 mt-2"
+                  />
+                )}
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1">Type de pièce *</label>
@@ -271,7 +300,7 @@ export default function Finalisation() {
 
           {/* Localisation */}
           <div className="bg-white rounded-lg shadow p-6 space-y-4">
-            <h2 className="text-xl font-bold text-wikya-blue border-b pb-2">📍 Localisation</h2>
+            <h2 className="text-xl font-bold text-wikya-blue border-b pb-2">📍 Localisation <span className="text-sm font-normal text-gray-500">(lieu de résidence)</span></h2>
             <div className="grid md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium mb-1">Ville *</label>
@@ -313,11 +342,26 @@ export default function Finalisation() {
             <div className="grid md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium mb-1">Années d'expérience</label>
-                <input type="text" name="annees_experience" value={form.annees_experience} onChange={handleChange} placeholder="Ex: 3 ans" className="w-full border rounded px-3 py-2" />
+                <select name="annees_experience" value={form.annees_experience} onChange={handleChange} className="w-full border rounded px-3 py-2">
+                  <option value="">Sélectionnez...</option>
+                  <option value="Moins d'1 an">Moins d'1 an</option>
+                  {[...Array(15)].map((_, i) => (
+                    <option key={i + 1} value={`${i + 1} an${i + 1 > 1 ? 's' : ''}`}>{i + 1} an{i + 1 > 1 ? 's' : ''}</option>
+                  ))}
+                  <option value="Plus de 15 ans">Plus de 15 ans</option>
+                </select>
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Plateformes VTC utilisées</label>
-                <input type="text" name="plateformes_vtc" value={form.plateformes_vtc} onChange={handleChange} placeholder="Ex: Yango" className="w-full border rounded px-3 py-2" />
+                <label className="block text-sm font-medium mb-1">Dernière plateforme utilisée</label>
+                <select name="plateformes_vtc" value={form.plateformes_vtc} onChange={handleChange} className="w-full border rounded px-3 py-2">
+                  <option value="">Sélectionnez...</option>
+                  <option value="Yango">Yango</option>
+                  <option value="Uber">Uber</option>
+                  <option value="Heetch">Heetch</option>
+                  <option value="Africab">Africab</option>
+                  <option value="Taxijet">Taxijet</option>
+                  <option value="Aucune">Aucune (nouveau conducteur)</option>
+                </select>
               </div>
             </div>
 
