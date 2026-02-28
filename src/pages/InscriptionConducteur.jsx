@@ -261,18 +261,38 @@ export default function InscriptionConducteur() {
             </div>
             <div>
               <label className="block text-sm font-medium mb-2">Nombre d'enfants *</label>
-              <input type="number" name="nombre_enfants" min="0" required onChange={handleChange} className="input" />
+              <select name="nombre_enfants" required onChange={handleChange} className="input">
+                <option value="">Sélectionnez...</option>
+                {[...Array(13)].map((_, i) => (
+                  <option key={i} value={i}>{i === 0 ? 'Aucun' : i}</option>
+                ))}
+              </select>
             </div>
           </div>
 
           <div>
             <label className="block text-sm font-medium mb-2">Années d'expérience *</label>
-            <input type="text" name="annees_experience" required onChange={handleChange} placeholder="Ex: 3 ans" className="input" />
+            <select name="annees_experience" required onChange={handleChange} className="input">
+              <option value="">Sélectionnez...</option>
+              <option value="Moins d'1 an">Moins d'1 an</option>
+              {[...Array(15)].map((_, i) => (
+                <option key={i + 1} value={`${i + 1} an${i + 1 > 1 ? 's' : ''}`}>{i + 1} an{i + 1 > 1 ? 's' : ''}</option>
+              ))}
+              <option value="Plus de 15 ans">Plus de 15 ans</option>
+            </select>
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2">Plateformes VTC utilisées *</label>
-            <input type="text" name="plateformes_vtc" required onChange={handleChange} placeholder="Ex: Yango" className="input" />
+            <label className="block text-sm font-medium mb-2">Dernière plateforme utilisée *</label>
+            <select name="plateformes_vtc" required onChange={handleChange} className="input">
+              <option value="">Sélectionnez...</option>
+              <option value="Yango">Yango</option>
+              <option value="Uber">Uber</option>
+              <option value="Heetch">Heetch</option>
+              <option value="Africab">Africab</option>
+              <option value="Taxijet">Taxijet</option>
+              <option value="Aucune">Aucune (nouveau conducteur)</option>
+            </select>
           </div>
 
           <div>
