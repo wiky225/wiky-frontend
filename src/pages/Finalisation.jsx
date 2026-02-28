@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import PhoneInput from '../components/PhoneInput';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+import API_URL from '../lib/api.js';
 
 const COMMUNES_ABIDJAN = [
   'Abobo', 'Adjamé', 'Attécoubé', 'Cocody', 'Koumassi',
@@ -25,6 +25,7 @@ export default function Finalisation() {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
   const [alreadyDone, setAlreadyDone] = useState(false);
+  const [expired, setExpired] = useState(false);
   const [form, setForm] = useState(null);
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
@@ -36,6 +37,7 @@ export default function Finalisation() {
         const data = await res.json();
         if (!res.ok) {
           if (data.already_done) { setAlreadyDone(true); return; }
+          if (data.expired) { setExpired(true); return; }
           throw new Error(data.error || 'Lien invalide');
         }
         setForm({
@@ -128,6 +130,18 @@ export default function Finalisation() {
         <h2 className="text-2xl font-bold text-wikya-blue mb-3">Profil déjà finalisé</h2>
         <p className="text-gray-600 mb-6">Votre compte est déjà activé. Connectez-vous pour accéder à votre espace.</p>
         <Link to="/connexion" className="btn btn-primary w-full">Se connecter</Link>
+      </div>
+    </div>
+  );
+
+  if (expired) return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="bg-white rounded-lg shadow-lg p-8 max-w-md text-center">
+        <div className="text-5xl mb-4">⏰</div>
+        <h2 className="text-2xl font-bold text-orange-500 mb-3">Lien expiré</h2>
+        <p className="text-gray-600 mb-2">Ce lien de finalisation n'est plus valide.</p>
+        <p className="text-gray-600 mb-6">Contactez l'équipe Wikya pour recevoir un nouveau lien.</p>
+        <a href="https://wa.me/2250575421717" className="btn btn-primary w-full">Contacter Wikya sur WhatsApp</a>
       </div>
     </div>
   );

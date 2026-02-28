@@ -5,7 +5,6 @@ import Header from './components/Header'
 import Footer from './components/Footer'
 import Home from './pages/Home'
 import Repertoire from './pages/Repertoire'
-import ProfilConducteur from './pages/ProfilConducteur'
 import InscriptionConducteur from './pages/InscriptionConducteur'
 import InscriptionRecruteur from './pages/InscriptionRecruteur'
 import Login from './pages/Login'
@@ -45,7 +44,6 @@ function App() {
             <Route path="/conducteur/:id" element={<ConducteurDetail />} />
 			<Route path="/" element={<Home />} />
             <Route path="/repertoire" element={<Repertoire />} />
-            <Route path="/profil/:id" element={<ProfilConducteur />} />
             <Route path="/inscription" element={<Inscription />} />
             <Route path="/inscription-conducteur" element={<InscriptionConducteur />} />
             <Route path="/inscription-recruteur" element={<InscriptionRecruteur />} />

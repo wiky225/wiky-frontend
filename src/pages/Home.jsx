@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet-async';
 import useEmblaCarousel from 'embla-carousel-react';
 import AdBanner from '../components/AdBanner';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+import API_URL from '../lib/api.js';
 
 // ── STATS DYNAMIQUES ──────────────────────────────────────────
 function StatsSection() {

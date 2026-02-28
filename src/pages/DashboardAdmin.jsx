@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+import API_URL from '../lib/api.js';
 
 const TABS = [
   { id: 'stats', label: '📊 Vue d\'ensemble' },
@@ -486,9 +486,24 @@ function TabWhatsapp({ token }) {
         <p className="text-xs text-gray-400 mt-2">Collez ce message dans n'importe quelle conversation WhatsApp.</p>
       </div>
 
+      {/* ── Message de finalisation ── */}
+      <div className="bg-green-50 border-2 border-green-200 rounded-xl p-5">
+        <div className="flex items-start gap-3 mb-4">
+          <span className="text-2xl">✅</span>
+          <div>
+            <h3 className="font-bold text-green-700">Message d'invitation à finaliser</h3>
+            <p className="text-sm text-gray-500 mt-0.5">Envoyé aux conducteurs pré-inscrits qui n'ont pas encore finalisé leur profil.</p>
+          </div>
+        </div>
+        <div className="bg-white border rounded-lg p-4 text-sm text-gray-700 whitespace-pre-wrap font-mono text-xs leading-relaxed">
+          {`Bonjour [Prénom] 👋\n\nSuite à votre inscription lors de notre campagne *"Tu cherches position ? Inscris-toi ici"*, nous revenons vers vous comme promis.\n\nNous avons mis en place *Wikya*, une plateforme qui vous met en relation avec des recruteurs VTC — entreprises et particuliers — pour que vous puissiez proposer vos services et consulter leurs offres.\n\nBienvenue sur Wikya ! 🎉\nFinalisez votre inscription ici :\n👉 [lien personnalisé]`}
+        </div>
+        <p className="text-xs text-gray-400 mt-2">Le prénom et le lien sont automatiquement personnalisés pour chaque conducteur.</p>
+      </div>
+
       {/* ── Séparateur ── */}
       <div className="border-t pt-2">
-        <h3 className="font-semibold text-gray-700 mb-3">Conducteurs pré-inscrits à relancer</h3>
+        <h3 className="font-semibold text-gray-700 mb-3">Conducteurs pré-inscrits à contacter</h3>
       </div>
 
       <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-sm text-green-800">

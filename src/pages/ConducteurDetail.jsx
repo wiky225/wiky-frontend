@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import AdBanner from '../components/AdBanner';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+import API_URL from '../lib/api.js';
 
 const BADGES_POSITIFS = ['✅ Ponctuel', '✅ Professionnel', '✅ Bonne conduite', '✅ Expérimenté'];
 const BADGES_NEGATIFS = ['⚠️ Non fiable', '❌ À éviter'];

@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet-async';
 import { useAuth } from '../context/AuthContext';
 import AdBanner from '../components/AdBanner';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+import API_URL from '../lib/api.js';
 
 const TYPES_VEHICULES = ['Moto', 'Tricycle', 'Camionette', 'Véhicule standard', 'Véhicule électrique', 'Véhicule business'];
 const TYPES_CONTRAT = ['Location simple (VTC uniquement)', 'Achat progressif (véhicule au conducteur après X ans)', 'Les deux propositions'];
@@ -200,8 +200,8 @@ export default function Offres() {
           const data = await res.json();
           setOffres(data);
         }
-      } catch (err) {
-        console.error(err);
+      } catch {
+        // Echec silencieux : la liste reste vide
       } finally {
         setLoading(false);
       }
