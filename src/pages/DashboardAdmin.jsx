@@ -165,6 +165,7 @@ function TabConducteurs({ token }) {
                 <th className="text-left p-3">Téléphone</th>
                 <th className="text-left p-3">Statut</th>
                 <th className="text-left p-3">Finalisé</th>
+                <th className="text-left p-3">Permis</th>
                 <th className="text-left p-3">Actions</th>
               </tr>
             </thead>
@@ -183,6 +184,16 @@ function TabConducteurs({ token }) {
                     {c.inscription_finalisee
                       ? <span className="text-green-600">✅</span>
                       : <span className="text-orange-500">⏳</span>}
+                  </td>
+                  <td className="p-3">
+                    <div className="flex gap-1 flex-wrap">
+                      {c.permis_recto_url
+                        ? <a href={c.permis_recto_url} target="_blank" rel="noreferrer" className="text-xs px-2 py-1 bg-blue-50 text-blue-600 rounded hover:bg-blue-100">R</a>
+                        : <span className="text-xs text-gray-300">—</span>}
+                      {c.permis_verso_url
+                        ? <a href={c.permis_verso_url} target="_blank" rel="noreferrer" className="text-xs px-2 py-1 bg-blue-50 text-blue-600 rounded hover:bg-blue-100">V</a>
+                        : null}
+                    </div>
                   </td>
                   <td className="p-3">
                     <div className="flex gap-2">

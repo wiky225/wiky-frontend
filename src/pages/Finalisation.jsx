@@ -33,6 +33,7 @@ export default function Finalisation() {
   const [form, setForm] = useState(null);
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
+  const [uploadingPermis, setUploadingPermis] = useState({ recto: false, verso: false });
 
   useEffect(() => {
     const load = async () => {
@@ -68,6 +69,8 @@ export default function Finalisation() {
           annees_experience: data.annees_experience || '',
           plateformes_vtc: data.plateformes_vtc || '',
           description: data.description || '',
+          permis_recto_url: data.permis_recto_url || '',
+          permis_verso_url: data.permis_verso_url || '',
         });
       } catch (err) {
         setError(err.message);
@@ -123,6 +126,26 @@ export default function Finalisation() {
       setError(err.message);
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const handlePermisUpload = async (file, side) => {
+    if (!file) return;
+    setUploadingPermis(prev => ({ ...prev, [side]: true }));
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      const res = await fetch(`${API_URL}/api/finaliser/${token}/upload-permis`, {
+        method: 'POST',
+        body: formData,
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Erreur upload');
+      setForm(prev => ({ ...prev, [`permis_${side}_url`]: data.url }));
+    } catch (err) {
+      setError(`Erreur upload permis ${side} : ${err.message}`);
+    } finally {
+      setUploadingPermis(prev => ({ ...prev, [side]: false }));
     }
   };
 
@@ -397,6 +420,36 @@ export default function Finalisation() {
             <div>
               <label className="block text-sm font-medium mb-1">Description (facultatif)</label>
               <textarea name="description" rows={3} value={form.description} onChange={handleChange} placeholder="Parlez de vous, vos compétences..." className="w-full border rounded px-3 py-2" />
+            </div>
+          </div>
+
+          {/* Documents — Permis de conduire */}
+          <div className="bg-white rounded-lg shadow p-6 space-y-4">
+            <h2 className="text-xl font-bold text-wikya-blue border-b pb-2">📄 Permis de conduire</h2>
+            <p className="text-sm text-gray-500">Téléchargez une photo ou un scan de votre permis (recto et verso). Formats acceptés : JPG, PNG, PDF — 10 Mo max.</p>
+            <div className="grid md:grid-cols-2 gap-4">
+              {['recto', 'verso'].map(side => (
+                <div key={side}>
+                  <label className="block text-sm font-medium mb-1 capitalize">Permis — {side}</label>
+                  {form[`permis_${side}_url`] ? (
+                    <div className="flex items-center gap-2 p-2 bg-green-50 border border-green-200 rounded">
+                      <span className="text-green-600 text-sm">✅ Fichier uploadé</span>
+                      <a href={form[`permis_${side}_url`]} target="_blank" rel="noreferrer" className="text-xs text-wikya-blue underline">Voir</a>
+                      <button type="button" onClick={() => setForm(prev => ({ ...prev, [`permis_${side}_url`]: '' }))}
+                        className="ml-auto text-xs text-red-500 hover:underline">Supprimer</button>
+                    </div>
+                  ) : (
+                    <label className={`flex items-center justify-center border-2 border-dashed rounded-lg p-4 cursor-pointer transition-colors ${uploadingPermis[side] ? 'opacity-60 cursor-not-allowed border-gray-300' : 'border-gray-300 hover:border-wikya-blue'}`}>
+                      <input type="file" className="hidden" accept="image/*,.pdf"
+                        disabled={uploadingPermis[side]}
+                        onChange={e => handlePermisUpload(e.target.files[0], side)} />
+                      {uploadingPermis[side]
+                        ? <span className="text-sm text-gray-500">Envoi en cours...</span>
+                        : <span className="text-sm text-gray-500">Cliquez pour sélectionner un fichier</span>}
+                    </label>
+                  )}
+                </div>
+              ))}
             </div>
           </div>
 
