@@ -163,7 +163,21 @@ export default function InscriptionConducteur() {
           <div className="grid md:grid-cols-3 gap-4">
             <div>
               <label className="block text-sm font-medium mb-2">Nationalité *</label>
-              <input type="text" name="nationalite" required onChange={handleChange} placeholder="Ex: Ivoirien(ne)" className="input" />
+              <select name="nationalite" required onChange={handleChange} className="input">
+                <option value="">Sélectionnez...</option>
+                <option value="Ivoirien(ne)">Ivoirien(ne)</option>
+                <option value="Burkinabè">Burkinabè</option>
+                <option value="Malien(ne)">Malien(ne)</option>
+                <option value="Guinéen(ne)">Guinéen(ne)</option>
+                <option value="Sénégalais(e)">Sénégalais(e)</option>
+                <option value="Nigérien(ne)">Nigérien(ne)</option>
+                <option value="Béninois(e)">Béninois(e)</option>
+                <option value="Togolais(e)">Togolais(e)</option>
+                <option value="Ghanéen(ne)">Ghanéen(ne)</option>
+                <option value="Nigérian(e)">Nigérian(e)</option>
+                <option value="Camerounais(e)">Camerounais(e)</option>
+                <option value="Autre">Autre</option>
+              </select>
             </div>
             <div>
               <label className="block text-sm font-medium mb-2">Type de pièce *</label>
