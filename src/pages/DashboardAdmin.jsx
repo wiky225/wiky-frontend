@@ -431,6 +431,16 @@ function TabWhatsapp({ token }) {
     setTimeout(() => setCopiedCampagne(false), 2000);
   };
 
+  // Nouvelle campagne conducteurs (Wikya live)
+  const messageNouvelleCampagne = `Tu cherches une position ? 🚗\n\nInscris-toi gratuitement sur Wikya qui est la première plateforme qui te met en relation avec des recruteurs VTC en Côte d'Ivoire — entreprises et particuliers.\n\n✅ Inscription gratuite\n✅ Profil visible par tous les recruteurs\n✅ Consulte les offres disponibles\n\nRejoins Wikya maintenant :\n👉 ${FRONTEND_URL}/inscription-conducteur\n\nL'équipe Wikya`;
+
+  const [copiedNouvelleCampagne, setCopiedNouvelleCampagne] = useState(false);
+  const copyNouvelleCampagne = () => {
+    navigator.clipboard.writeText(messageNouvelleCampagne);
+    setCopiedNouvelleCampagne(true);
+    setTimeout(() => setCopiedNouvelleCampagne(false), 2000);
+  };
+
   // Message prospection recruteurs
   const messageRecruteur = `Du mal à trouver un conducteur ? 🚗\n\nWikya est la première plateforme de mise en relation entre recruteurs et conducteurs VTC en Côte d'Ivoire.\n\nPubliez votre offre en quelques minutes et recevez des candidatures directement sur WhatsApp.\n\n👉 ${FRONTEND_URL}/inscription-recruteur\n\nL'équipe Wikya`;
 
@@ -461,6 +471,27 @@ function TabWhatsapp({ token }) {
           className={`mt-3 inline-flex items-center gap-2 px-4 py-2 rounded-lg font-semibold text-sm transition-colors ${copiedCampagne ? 'bg-green-100 text-green-700' : 'bg-wikya-blue text-white hover:bg-blue-800'}`}
         >
           {copiedCampagne ? '✅ Message copié !' : '📋 Copier ce message'}
+        </button>
+        <p className="text-xs text-gray-400 mt-2">Collez ce message dans n'importe quelle conversation WhatsApp.</p>
+      </div>
+
+      {/* ── Nouvelle campagne conducteurs (Wikya live) ── */}
+      <div className="bg-purple-50 border-2 border-purple-200 rounded-xl p-5">
+        <div className="flex items-start gap-3 mb-4">
+          <span className="text-2xl">🚀</span>
+          <div>
+            <h3 className="font-bold text-purple-700">Nouvelle campagne — Wikya est live !</h3>
+            <p className="text-sm text-gray-500 mt-0.5">Pour de nouveaux conducteurs VTC qui ne connaissent pas encore Wikya.</p>
+          </div>
+        </div>
+        <div className="bg-white border rounded-lg p-4 text-sm text-gray-700 whitespace-pre-wrap font-mono text-xs leading-relaxed">
+          {messageNouvelleCampagne}
+        </div>
+        <button
+          onClick={copyNouvelleCampagne}
+          className={`mt-3 inline-flex items-center gap-2 px-4 py-2 rounded-lg font-semibold text-sm transition-colors ${copiedNouvelleCampagne ? 'bg-green-100 text-green-700' : 'bg-purple-600 text-white hover:bg-purple-700'}`}
+        >
+          {copiedNouvelleCampagne ? '✅ Message copié !' : '📋 Copier ce message'}
         </button>
         <p className="text-xs text-gray-400 mt-2">Collez ce message dans n'importe quelle conversation WhatsApp.</p>
       </div>
