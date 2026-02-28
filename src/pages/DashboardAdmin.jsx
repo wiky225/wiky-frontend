@@ -422,7 +422,7 @@ function TabWhatsapp({ token }) {
   const FRONTEND_URL = 'https://wikya.ci';
 
   // Message campagne conducteurs
-  const messageCampagne = `Bonjour ! 👋\n\nMerci pour votre intérêt suite à notre campagne *"Tu cherches position ?"*.\n\nPour vous pré-inscrire *gratuitement* sur Wikya et être visible par nos recruteurs partenaires, cliquez ici :\n\n👉 ${FRONTEND_URL}/inscription-conducteur\n\nC'est rapide (2 minutes) ! N'hésitez pas si vous avez des questions.\n\nL'équipe Wikya`;
+  const messageCampagne = `Bonjour ! 👋\n\nMerci pour votre intérêt suite à notre campagne *"Tu cherches position ?"*.\n\nInscrivez-vous *gratuitement* sur Wikya, notre plateforme qui vous met en relation avec des recruteurs VTC — entreprises et particuliers — pour que vous puissiez proposer vos services et consulter leurs offres :\n\n👉 ${FRONTEND_URL}/inscription-conducteur\n\nC'est rapide (2 minutes) ! N'hésitez pas si vous avez des questions.\n\nL'équipe Wikya`;
 
   const [copiedCampagne, setCopiedCampagne] = useState(false);
   const copyCampagne = () => {
