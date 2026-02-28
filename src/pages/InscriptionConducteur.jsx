@@ -26,7 +26,7 @@ export default function InscriptionConducteur() {
   const [formData, setFormData] = useState({
     nom: '', prenom: '', sexe: '', date_naissance: '', email: '', telephone: '',
     password: '', password_confirm: '',
-    nationalite: '', type_piece: '', numero_piece: '',
+    nationalite: '', nationalite_autre: '', type_piece: '', numero_piece: '',
     ville: '', commune: '', quartier: '', annees_experience: '',
     plateformes_vtc: '', situation_matrimoniale: '', nombre_enfants: 0,
     description: ''
@@ -67,9 +67,11 @@ export default function InscriptionConducteur() {
 
       // 2. Créer le profil conducteur
       const { nom, prenom, sexe, date_naissance, email, telephone,
-        nationalite, type_piece, numero_piece,
+        nationalite, nationalite_autre, type_piece, numero_piece,
         ville, commune, quartier, annees_experience,
         plateformes_vtc, situation_matrimoniale, nombre_enfants, description } = formData;
+
+      const nationaliteFinale = nationalite === 'Autre' ? nationalite_autre.trim() : nationalite;
 
       const response = await fetch(`${API_URL}/api/conducteurs`, {
         method: 'POST',
@@ -79,7 +81,7 @@ export default function InscriptionConducteur() {
         },
         body: JSON.stringify({
           nom, prenom, sexe, date_naissance, email, telephone,
-          nationalite, type_piece, numero_piece,
+          nationalite: nationaliteFinale, type_piece, numero_piece,
           ville, commune, quartier, annees_experience,
           plateformes_vtc, situation_matrimoniale,
           nombre_enfants: parseInt(nombre_enfants) || 0,
@@ -178,6 +180,16 @@ export default function InscriptionConducteur() {
                 <option value="Camerounais(e)">Camerounais(e)</option>
                 <option value="Autre">Autre</option>
               </select>
+              {formData.nationalite === 'Autre' && (
+                <input
+                  type="text"
+                  name="nationalite_autre"
+                  required
+                  onChange={handleChange}
+                  placeholder="Précisez votre nationalité"
+                  className="input mt-2"
+                />
+              )}
             </div>
             <div>
               <label className="block text-sm font-medium mb-2">Type de pièce *</label>
