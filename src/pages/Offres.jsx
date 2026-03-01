@@ -156,7 +156,7 @@ function CarteOffre({ offre, canMessage, session }) {
           <Link to="/paiement?role=conducteur" className="flex items-center justify-between bg-wikya-blue/5 hover:bg-wikya-blue/10 rounded-lg px-4 py-3 transition-colors">
             <div>
               <p className="text-sm font-semibold text-wikya-blue">🔒 Contacter ce recruteur</p>
-              <p className="text-xs text-gray-500 mt-0.5">Abonnez-vous pour envoyer un message — 1 000 FCFA / 2 mois</p>
+              <p className="text-xs text-gray-500 mt-0.5">Abonnez-vous pour envoyer un message — 2 500 FCFA / 2 mois</p>
             </div>
             <span className="text-wikya-orange font-semibold text-sm shrink-0">S'abonner →</span>
           </Link>
@@ -327,7 +327,7 @@ export default function Offres() {
           <div className="bg-wikya-orange/10 border border-wikya-orange/30 rounded-xl p-5 mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
               <p className="font-semibold text-wikya-blue">🔒 Abonnez-vous pour contacter les recruteurs</p>
-              <p className="text-sm text-gray-600 mt-0.5">Envoyez des messages directement aux recruteurs — 1 000 FCFA pour 2 mois.</p>
+              <p className="text-sm text-gray-600 mt-0.5">Envoyez des messages directement aux recruteurs — 2 500 FCFA pour 2 mois.</p>
             </div>
             <Link to="/paiement?role=conducteur" className="btn bg-wikya-orange text-white hover:bg-wikya-orange-dark text-sm shrink-0">
               S'abonner maintenant

@@ -12,7 +12,7 @@ const SECTIONS = [
       },
       {
         q: "Wikya est-il gratuit ?",
-        r: "L'inscription est totalement gratuite pour les conducteurs. Un abonnement optionnel à 1 000 FCFA pour 2 mois permet aux conducteurs de contacter les recruteurs directement. Pour les recruteurs, l'accès aux coordonnées complètes des conducteurs nécessite un abonnement à 10 000 FCFA/mois.",
+        r: "L'inscription est totalement gratuite pour les conducteurs. Un abonnement optionnel à 2 500 FCFA pour 2 mois permet aux conducteurs de contacter les recruteurs directement. Pour les recruteurs, l'accès aux coordonnées complètes des conducteurs nécessite un abonnement à 10 000 FCFA/mois.",
       },
       {
         q: "Comment contacter l'équipe Wikya ?",
@@ -33,7 +33,7 @@ const SECTIONS = [
       },
       {
         q: "À quoi sert l'abonnement conducteur ?",
-        r: "L'abonnement conducteur (1 000 FCFA / 2 mois) vous permet de consulter les offres de recrutement en détail et d'envoyer des messages directement aux recruteurs via WhatsApp.",
+        r: "L'abonnement conducteur (2 500 FCFA / 2 mois) vous permet de consulter les offres de recrutement en détail et d'envoyer des messages directement aux recruteurs via WhatsApp.",
       },
       {
         q: "Comment payer mon abonnement ?",

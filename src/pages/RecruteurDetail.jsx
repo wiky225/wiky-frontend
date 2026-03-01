@@ -141,7 +141,7 @@ export default function RecruteurDetail() {
               ) : isConducteur && !abonnementActif ? (
                 <>
                   <p className="font-semibold text-wikya-blue mb-1">🔒 Abonnez-vous pour contacter ce recruteur</p>
-                  <p className="text-sm text-gray-600 mb-3">Accédez aux contacts directs — 1 000 FCFA pour 2 mois.</p>
+                  <p className="text-sm text-gray-600 mb-3">Accédez aux contacts directs — 2 500 FCFA pour 2 mois.</p>
                   <Link to="/paiement?role=conducteur" className="btn bg-wikya-orange text-white hover:bg-orange-600 text-sm">S'abonner maintenant</Link>
                 </>
               ) : null}

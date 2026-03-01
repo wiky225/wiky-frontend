@@ -52,7 +52,7 @@ export default function ConditionsGenerales() {
               <div className="bg-gray-50 rounded-xl p-4">
                 <p className="font-semibold text-gray-700 mb-2">Conducteurs VTC</p>
                 <ul className="space-y-1.5 list-disc ml-4">
-                  <li>Abonnement : <strong>1 000 FCFA</strong> tous les 2 mois</li>
+                  <li>Abonnement : <strong>2 500 FCFA</strong> tous les 2 mois</li>
                   <li>Sans abonnement actif, le profil est visible mais les coordonnées de contact sont masquées</li>
                   <li>Période de grâce de 2 jours après expiration avant désactivation des contacts</li>
                   <li>Rappels envoyés 15 jours et 3 jours avant expiration</li>

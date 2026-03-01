@@ -626,7 +626,7 @@ function DashboardConducteur() {
               to="/paiement?role=conducteur"
               className="btn bg-wikya-orange text-white hover:bg-wikya-orange-dark text-sm shrink-0"
             >
-              S'abonner — 1 000 FCFA / 2 mois
+              S'abonner — 2 500 FCFA / 2 mois
             </Link>
           </div>
         ) : profil.date_fin_abonnement && Math.ceil((new Date(profil.date_fin_abonnement) - new Date()) / (1000 * 60 * 60 * 24)) <= 7 ? (
@@ -643,7 +643,7 @@ function DashboardConducteur() {
               to="/paiement?role=conducteur"
               className="btn bg-wikya-orange text-white hover:bg-wikya-orange-dark text-sm shrink-0"
             >
-              Renouveler — 1 000 FCFA
+              Renouveler — 2 500 FCFA
             </Link>
           </div>
         ) : null}
