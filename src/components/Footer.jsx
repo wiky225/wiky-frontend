@@ -136,6 +136,7 @@ function Footer() {
             <a href="https://www.answerlabs.net" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
               <span>Réalisé par</span>
               <img src="/assets/answerlabs-logo.png" alt="Answer Labs" className="h-4 inline-block" />
+              <span>Answer Labs</span>
             </a>
           </div>
         </div>
