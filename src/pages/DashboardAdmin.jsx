@@ -357,9 +357,11 @@ function TabWhatsapp({ token }) {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(null);
-  const [editingId, setEditingId] = useState(null);   // id du conducteur en cours d'édition
-  const [editTel, setEditTel] = useState('');          // valeur en cours de saisie
+  const [editingId, setEditingId] = useState(null);
+  const [editTel, setEditTel] = useState('');
   const [savingTel, setSavingTel] = useState(false);
+  const [search, setSearch] = useState('');
+  const [filtreTel, setFiltreTel] = useState('');
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -553,32 +555,75 @@ function TabWhatsapp({ token }) {
         <p>Cliquez sur <strong>WhatsApp</strong> pour ouvrir une conversation avec le conducteur. Le message d'invitation est pré-rempli — il vous suffit d'envoyer.</p>
       </div>
 
-      <div className="flex justify-between items-center flex-wrap gap-3">
-        <p className="text-sm text-gray-500">{data.length} conducteur(s) non finalisé(s)</p>
-        <div className="flex gap-2">
-          <button onClick={load} className="btn btn-outline">🔄 Actualiser</button>
-          {data.length > 0 && <button onClick={exportCSV} className="btn btn-primary">⬇️ Exporter CSV</button>}
-        </div>
+      {/* ── Recherche et filtres ── */}
+      <div className="flex flex-wrap gap-3 items-center">
+        <input
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          placeholder="Rechercher par nom, prénom ou email..."
+          className="border rounded px-3 py-2 text-sm flex-1 min-w-[220px] focus:outline-none focus:ring-2 focus:ring-wikya-blue"
+        />
+        <select
+          value={filtreTel}
+          onChange={e => setFiltreTel(e.target.value)}
+          className="border rounded px-3 py-2 text-sm"
+        >
+          <option value="">Tous</option>
+          <option value="avec">Avec téléphone</option>
+          <option value="sans">Sans téléphone</option>
+        </select>
+        {(search || filtreTel) && (
+          <button onClick={() => { setSearch(''); setFiltreTel(''); }} className="text-sm text-wikya-orange hover:underline">
+            Réinitialiser
+          </button>
+        )}
       </div>
 
-      {loading ? <p className="text-gray-400">Chargement...</p> : data.length === 0 ? (
-        <div className="text-center py-12 text-gray-400">
-          <p className="text-4xl mb-3">✅</p>
-          <p>Tous les conducteurs ont finalisé leur inscription.</p>
-        </div>
-      ) : (
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="text-left p-3">Conducteur</th>
-                <th className="text-left p-3">Téléphone</th>
-                <th className="text-left p-3">Lien de finalisation</th>
-                <th className="text-left p-3">Contact</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.map((d, i) => {
+      {(() => {
+        const dataFiltree = data.filter(d => {
+          const q = search.toLowerCase();
+          if (q && !`${d.prenom} ${d.nom} ${d.email}`.toLowerCase().includes(q)) return false;
+          if (filtreTel === 'avec' && !d.telephone) return false;
+          if (filtreTel === 'sans' && d.telephone) return false;
+          return true;
+        });
+
+        return (
+          <>
+            <div className="flex justify-between items-center flex-wrap gap-3">
+              <p className="text-sm text-gray-500">
+                {dataFiltree.length} conducteur(s)
+                {(search || filtreTel) && <span className="text-gray-400"> sur {data.length} total</span>}
+              </p>
+              <div className="flex gap-2">
+                <button onClick={load} className="btn btn-outline">🔄 Actualiser</button>
+                {dataFiltree.length > 0 && <button onClick={exportCSV} className="btn btn-primary">⬇️ Exporter CSV</button>}
+              </div>
+            </div>
+
+            {loading ? <p className="text-gray-400">Chargement...</p> : data.length === 0 ? (
+              <div className="text-center py-12 text-gray-400">
+                <p className="text-4xl mb-3">✅</p>
+                <p>Tous les conducteurs ont finalisé leur inscription.</p>
+              </div>
+            ) : dataFiltree.length === 0 ? (
+              <div className="text-center py-12 text-gray-400">
+                <p className="text-2xl mb-3">🔍</p>
+                <p>Aucun résultat pour cette recherche.</p>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="text-left p-3">Conducteur</th>
+                      <th className="text-left p-3">Téléphone</th>
+                      <th className="text-left p-3">Lien de finalisation</th>
+                      <th className="text-left p-3">Contact</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {dataFiltree.map((d, i) => {
                 const link = waLink(d.telephone, d.message);
                 return (
                   <tr key={i} className="border-t hover:bg-gray-50">
@@ -656,7 +701,10 @@ function TabWhatsapp({ token }) {
             </tbody>
           </table>
         </div>
-      )}
+            )}
+          </>
+        );
+      })()}
     </div>
   );
 }
