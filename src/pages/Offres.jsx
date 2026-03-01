@@ -51,7 +51,7 @@ function CarteOffre({ offre, canMessage, session }) {
     <div className="bg-white rounded-xl shadow-md p-6 flex flex-col gap-4">
       {/* En-tête */}
       <div className="flex items-start justify-between gap-2">
-        <div className="flex items-center gap-3">
+        <Link to={`/recruteur/${offre.recruteur_id}`} className="flex items-center gap-3 hover:opacity-80 transition-opacity">
           {offre.logo_url && (
             <img
               src={offre.logo_url}
@@ -65,7 +65,7 @@ function CarteOffre({ offre, canMessage, session }) {
               {offre.type_recruteur === 'entreprise' ? '🏢 Entreprise' : '👤 Particulier'}
             </span>
           </div>
-        </div>
+        </Link>
         {totalVehicules > 0 && (
           <div className="text-right shrink-0">
             <div className="text-2xl font-bold text-wikya-blue">{totalVehicules}</div>
