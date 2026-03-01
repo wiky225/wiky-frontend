@@ -249,8 +249,8 @@ function ApercuOffres() {
         <div className="grid md:grid-cols-3 gap-6">
           {offres.map(o => {
             const nom = o.type_recruteur === 'entreprise'
-              ? o.nom_entreprise
-              : `${o.prenom_responsable} ${o.nom_responsable}`;
+              ? (o.nom_entreprise || 'Entreprise')
+              : 'Particulier';
             const totalVehicules = (o.vehicules || []).reduce((s, v) => s + (parseInt(v.nombre) || 0), 0);
             return (
               <div key={o.id} className="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow">

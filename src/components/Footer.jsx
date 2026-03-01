@@ -133,7 +133,10 @@ function Footer() {
         <div className="border-t border-white/10">
           <div className="container-custom py-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs opacity-50">
             <p>&copy; {ANNEE} Wikya by ATL Cars — Tous droits réservés</p>
-            <p>Fait avec ❤️ à Abidjan</p>
+            <a href="https://www.answerlabs.net" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+              <span>Réalisé par</span>
+              <img src="/assets/answerlabs-logo.png" alt="Answer Labs" className="h-4 inline-block" />
+            </a>
           </div>
         </div>
       </footer>
