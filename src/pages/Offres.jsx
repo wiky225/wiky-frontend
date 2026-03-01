@@ -51,14 +51,23 @@ function CarteOffre({ offre, canMessage, session }) {
     <div className="bg-white rounded-xl shadow-md p-6 flex flex-col gap-4">
       {/* En-tête */}
       <div className="flex items-start justify-between gap-2">
-        <div>
-          <h2 className="text-lg font-bold text-wikya-blue">{nom}</h2>
-          <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${offre.type_recruteur === 'entreprise' ? 'bg-blue-100 text-blue-700' : 'bg-orange-100 text-wikya-orange'}`}>
-            {offre.type_recruteur === 'entreprise' ? '🏢 Entreprise' : '👤 Particulier'}
-          </span>
+        <div className="flex items-center gap-3">
+          {offre.logo_url && (
+            <img
+              src={offre.logo_url}
+              alt={nom}
+              className={`w-12 h-12 object-contain rounded-lg border bg-gray-50 shrink-0 ${!canMessage ? 'blur-sm' : ''}`}
+            />
+          )}
+          <div>
+            <h2 className="text-lg font-bold text-wikya-blue">{nom}</h2>
+            <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${offre.type_recruteur === 'entreprise' ? 'bg-blue-100 text-blue-700' : 'bg-orange-100 text-wikya-orange'}`}>
+              {offre.type_recruteur === 'entreprise' ? '🏢 Entreprise' : '👤 Particulier'}
+            </span>
+          </div>
         </div>
         {totalVehicules > 0 && (
-          <div className="text-right">
+          <div className="text-right shrink-0">
             <div className="text-2xl font-bold text-wikya-blue">{totalVehicules}</div>
             <div className="text-xs text-gray-500">véhicule{totalVehicules > 1 ? 's' : ''}</div>
           </div>

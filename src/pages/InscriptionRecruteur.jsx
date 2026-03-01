@@ -13,6 +13,8 @@ function InscriptionRecruteur() {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
   const recaptchaRef = useRef(null);
+  const [logoFile, setLogoFile] = useState(null);
+  const [logoPreview, setLogoPreview] = useState(null);
   const [formData, setFormData] = useState({
     type_recruteur: 'entreprise',
     nom_entreprise: '',
@@ -26,6 +28,13 @@ function InscriptionRecruteur() {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleLogo = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setLogoFile(file);
+    setLogoPreview(URL.createObjectURL(file));
   };
 
   const handleSubmit = async (e) => {
@@ -67,18 +76,22 @@ function InscriptionRecruteur() {
       const { type_recruteur, nom_entreprise, nom_responsable, prenom_responsable,
         email, telephone } = formData;
 
+      const fd = new FormData();
+      fd.append('type_recruteur', type_recruteur);
+      fd.append('nom_entreprise', type_recruteur === 'entreprise' ? nom_entreprise : '');
+      fd.append('nom_responsable', nom_responsable);
+      fd.append('prenom_responsable', prenom_responsable);
+      fd.append('email', email);
+      fd.append('telephone', telephone);
+      fd.append('captchaToken', captchaToken);
+      if (logoFile) fd.append('logo', logoFile);
+
       const response = await fetch(`${API_URL}/api/recruteurs`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
           ...(token && { 'Authorization': `Bearer ${token}` })
         },
-        body: JSON.stringify({
-          type_recruteur,
-          nom_entreprise: type_recruteur === 'entreprise' ? nom_entreprise : '',
-          nom_responsable, prenom_responsable,
-          email, telephone, captchaToken
-        })
+        body: fd
       });
 
       if (!response.ok) {
@@ -166,10 +179,27 @@ function InscriptionRecruteur() {
             </div>
 
             {formData.type_recruteur === 'entreprise' && (
-              <div>
-                <label className="block text-sm font-semibold text-wikya-gray mb-2">Nom de l'entreprise *</label>
-                <input type="text" name="nom_entreprise" className="input" required onChange={handleChange} />
-              </div>
+              <>
+                <div>
+                  <label className="block text-sm font-semibold text-wikya-gray mb-2">Nom de l'entreprise *</label>
+                  <input type="text" name="nom_entreprise" className="input" required onChange={handleChange} />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-wikya-gray mb-2">
+                    Logo de l'entreprise <span className="text-gray-400 font-normal">(optionnel)</span>
+                  </label>
+                  <div className="flex items-center gap-4">
+                    {logoPreview && (
+                      <img src={logoPreview} alt="Aperçu logo" className="w-16 h-16 object-contain border rounded-lg bg-gray-50" />
+                    )}
+                    <label className="cursor-pointer inline-flex items-center gap-2 border border-dashed border-gray-300 rounded-lg px-4 py-3 text-sm text-gray-500 hover:border-wikya-blue hover:text-wikya-blue transition-colors">
+                      <span>🖼️</span> {logoPreview ? 'Changer le logo' : 'Importer le logo'}
+                      <input type="file" accept="image/*" className="hidden" onChange={handleLogo} />
+                    </label>
+                  </div>
+                </div>
+              </>
             )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

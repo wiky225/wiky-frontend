@@ -316,6 +316,8 @@ function TabProfil({ profil, session, onUpdate }) {
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(null);
+  const [logoPreview, setLogoPreview] = useState(null);
+  const [logoUploading, setLogoUploading] = useState(false);
 
   const save = async () => {
     setSaving(true); setSuccess(false); setError(null);
@@ -333,6 +335,39 @@ function TabProfil({ profil, session, onUpdate }) {
     finally { setSaving(false); }
   };
 
+  const handleLogoUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setLogoUploading(true);
+    setLogoPreview(URL.createObjectURL(file));
+    try {
+      const fd = new FormData();
+      fd.append('file', file);
+      const uploadRes = await fetch(`${API_URL}/api/upload/image`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${session?.access_token}` },
+        body: fd
+      });
+      if (!uploadRes.ok) throw new Error('Erreur upload');
+      const { url } = await uploadRes.json();
+
+      const patchRes = await fetch(`${API_URL}/api/recruteurs/${profil.id}`, {
+        method: 'PATCH',
+        headers: { Authorization: `Bearer ${session?.access_token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ logo_url: url })
+      });
+      if (!patchRes.ok) throw new Error('Erreur mise à jour');
+      onUpdate(await patchRes.json());
+      setSuccess(true);
+      setTimeout(() => setSuccess(false), 3000);
+    } catch (err) {
+      setError(err.message);
+      setLogoPreview(null);
+    } finally {
+      setLogoUploading(false);
+    }
+  };
+
   return (
     <div className="space-y-5 max-w-lg">
       <div>
@@ -348,11 +383,27 @@ function TabProfil({ profil, session, onUpdate }) {
       </div>
 
       {form.type_recruteur === 'entreprise' && (
-        <div>
-          <label className="block text-sm font-medium mb-1">Nom de l'entreprise</label>
-          <input value={form.nom_entreprise} onChange={e => setForm(p => ({ ...p, nom_entreprise: e.target.value }))}
-            className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-wikya-blue" />
-        </div>
+        <>
+          <div>
+            <label className="block text-sm font-medium mb-1">Nom de l'entreprise</label>
+            <input value={form.nom_entreprise} onChange={e => setForm(p => ({ ...p, nom_entreprise: e.target.value }))}
+              className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-wikya-blue" />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-2">Logo de l'entreprise</label>
+            <div className="flex items-center gap-4">
+              {(logoPreview || profil?.logo_url) && (
+                <img src={logoPreview || profil.logo_url} alt="Logo entreprise"
+                  className="w-16 h-16 object-contain border rounded-lg bg-gray-50" />
+              )}
+              <label className={`cursor-pointer inline-flex items-center gap-2 border border-dashed border-gray-300 rounded-lg px-4 py-2 text-sm transition-colors ${logoUploading ? 'opacity-50 cursor-not-allowed' : 'hover:border-wikya-blue hover:text-wikya-blue text-gray-500'}`}>
+                🖼️ {logoUploading ? 'Upload...' : (profil?.logo_url || logoPreview ? 'Changer le logo' : 'Importer le logo')}
+                <input type="file" accept="image/*" className="hidden" onChange={handleLogoUpload} disabled={logoUploading} />
+              </label>
+            </div>
+          </div>
+        </>
       )}
 
       <div className="grid grid-cols-2 gap-4">
