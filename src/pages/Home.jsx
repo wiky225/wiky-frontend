@@ -20,14 +20,13 @@ function StatsSection() {
   const items = [
     { number: stats ? `${stats.conducteurs}+` : '—', label: 'Conducteurs inscrits' },
     { number: stats ? `${stats.recruteurs}+` : '—', label: 'Recruteurs actifs' },
-    { number: '4', label: 'Plateformes VTC couvertes' },
     { number: '24/7', label: 'Assistance WhatsApp' },
   ];
 
   return (
     <section className="py-12 bg-white">
       <div className="container-custom">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-3 gap-6 max-w-2xl mx-auto">
           {items.map((item, i) => (
             <div key={i} className="text-center p-6 bg-wikya-gray-light rounded-xl hover:-translate-y-1 transition-transform">
               <div className="text-4xl font-bold text-wikya-blue mb-2">{item.number}</div>

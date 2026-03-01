@@ -198,6 +198,7 @@ function InscriptionRecruteur() {
                       <input type="file" accept="image/*" className="hidden" onChange={handleLogo} />
                     </label>
                   </div>
+                  <p className="text-xs text-gray-400 mt-2">JPG, PNG ou SVG · Max 2 Mo · Carré recommandé (ex : 400×400 px)</p>
                 </div>
               </>
             )}

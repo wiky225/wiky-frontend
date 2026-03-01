@@ -370,18 +370,6 @@ function TabProfil({ profil, session, onUpdate }) {
 
   return (
     <div className="space-y-5 max-w-lg">
-      <div>
-        <label className="block text-sm font-medium mb-1">Type de recruteur</label>
-        <div className="flex gap-3">
-          {['particulier', 'entreprise'].map(t => (
-            <button key={t} type="button" onClick={() => setForm(prev => ({ ...prev, type_recruteur: t }))}
-              className={`flex-1 py-2 px-3 rounded border text-sm capitalize transition-colors ${form.type_recruteur === t ? 'bg-wikya-blue text-white border-wikya-blue' : 'bg-white border-gray-300 hover:border-wikya-blue'}`}>
-              {t === 'entreprise' ? '🏢 Entreprise' : '👤 Particulier'}
-            </button>
-          ))}
-        </div>
-      </div>
-
       {form.type_recruteur === 'entreprise' && (
         <>
           <div>
@@ -402,6 +390,7 @@ function TabProfil({ profil, session, onUpdate }) {
                 <input type="file" accept="image/*" className="hidden" onChange={handleLogoUpload} disabled={logoUploading} />
               </label>
             </div>
+            <p className="text-xs text-gray-400 mt-2">JPG, PNG ou SVG · Max 2 Mo · Carré recommandé (ex : 400×400 px)</p>
           </div>
         </>
       )}
@@ -620,6 +609,17 @@ export default function DashboardRecruteur() {
               )}
               {activeTab === 'profil' && profil && (
                 <TabProfil profil={profil} session={session} onUpdate={setProfil} />
+              )}
+              {activeTab === 'profil' && !profil && (
+                <div className="text-center py-12">
+                  <p className="text-4xl mb-3">⚠️</p>
+                  <p className="text-gray-700 font-semibold mb-2">Profil introuvable</p>
+                  <p className="text-gray-500 text-sm mb-4">
+                    Votre profil recruteur n'a pas été créé correctement lors de l'inscription.<br />
+                    Contactez le support ou réessayez de vous inscrire.
+                  </p>
+                  <a href="mailto:support@wikya.ci" className="btn btn-primary text-sm">Contacter le support</a>
+                </div>
               )}
             </div>
           </div>

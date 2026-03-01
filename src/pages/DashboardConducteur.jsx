@@ -485,6 +485,7 @@ function TabDocuments({ profil, session, onUpdate }) {
         {uploading[field] ? 'Upload en cours...' : url ? 'Remplacer' : 'Ajouter'}
         <input type="file" accept="image/*" className="hidden" onChange={e => uploadFile(field, e.target.files[0])} />
       </label>
+      <p className="text-xs text-gray-400 mt-2 text-center">JPG ou PNG · Max 5 Mo</p>
     </div>
   );
 

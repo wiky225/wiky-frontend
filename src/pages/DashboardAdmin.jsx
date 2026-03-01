@@ -1043,6 +1043,7 @@ function TabAnnonces({ token }) {
                                 onChange={e => e.target.files[0] && uploadImage(e.target.files[0])} />
                               {uploading ? '⏳ Upload...' : '📁 Choisir un fichier'}
                             </label>
+                            <p className="text-xs text-gray-400">JPG ou PNG · Max 5 Mo · Ratio recommandé : 4:1 (ex : 800×200 px)</p>
                             {visuelForm.image_url && (
                               <div className="flex items-center gap-2">
                                 <img src={visuelForm.image_url} alt="" className="w-16 h-10 object-cover rounded border" />
