@@ -1,9 +1,12 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import PhoneInput from '../components/PhoneInput';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 import API_URL from '../lib/api.js';
+
+const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
 
 const COMMUNES_ABIDJAN = [
   'Abobo', 'Adjamé', 'Attécoubé', 'Cocody', 'Koumassi',
@@ -23,6 +26,7 @@ export default function InscriptionConducteur() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
+  const recaptchaRef = useRef(null);
   const [formData, setFormData] = useState({
     nom: '', prenom: '', sexe: '', date_naissance: '', email: '', telephone: '',
     password: '', password_confirm: '',
@@ -47,6 +51,12 @@ export default function InscriptionConducteur() {
 
     if (formData.password.length < 6) {
       setError('Le mot de passe doit contenir au moins 6 caractères.');
+      return;
+    }
+
+    const captchaToken = recaptchaRef.current?.getValue();
+    if (!captchaToken) {
+      setError('Veuillez confirmer que vous n\'êtes pas un robot.');
       return;
     }
 
@@ -85,7 +95,7 @@ export default function InscriptionConducteur() {
           ville, commune, quartier, annees_experience,
           plateformes_vtc, situation_matrimoniale,
           nombre_enfants: parseInt(nombre_enfants) || 0,
-          description
+          description, captchaToken
         })
       });
 
@@ -324,6 +334,10 @@ export default function InscriptionConducteur() {
                 professionnelle avec des recruteurs VTC abonnés à la plateforme.
               </label>
             </div>
+          </div>
+
+          <div className="flex justify-center">
+            <ReCAPTCHA ref={recaptchaRef} sitekey={RECAPTCHA_SITE_KEY} hl="fr" />
           </div>
 
           <button

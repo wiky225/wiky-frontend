@@ -1,14 +1,18 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import PhoneInput from '../components/PhoneInput';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 import API_URL from '../lib/api.js';
+
+const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
 
 function InscriptionRecruteur() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
+  const recaptchaRef = useRef(null);
   const [formData, setFormData] = useState({
     type_recruteur: 'entreprise',
     nom_entreprise: '',
@@ -35,6 +39,12 @@ function InscriptionRecruteur() {
 
     if (formData.password.length < 6) {
       setError('Le mot de passe doit contenir au moins 6 caractères.');
+      return;
+    }
+
+    const captchaToken = recaptchaRef.current?.getValue();
+    if (!captchaToken) {
+      setError('Veuillez confirmer que vous n\'êtes pas un robot.');
       return;
     }
 
@@ -67,7 +77,7 @@ function InscriptionRecruteur() {
           type_recruteur,
           nom_entreprise: type_recruteur === 'entreprise' ? nom_entreprise : '',
           nom_responsable, prenom_responsable,
-          email, telephone
+          email, telephone, captchaToken
         })
       });
 
@@ -207,6 +217,10 @@ function InscriptionRecruteur() {
                 </Link>{' '}
                 de Wikya. J'autorise le traitement de mes données personnelles à des fins de recrutement VTC.
               </label>
+            </div>
+
+            <div className="flex justify-center">
+              <ReCAPTCHA ref={recaptchaRef} sitekey={RECAPTCHA_SITE_KEY} hl="fr" />
             </div>
 
             <button
