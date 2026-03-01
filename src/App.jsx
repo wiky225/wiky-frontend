@@ -26,10 +26,19 @@ import PrivateRoute from './components/PrivateRoute'
 
 function NotFound() {
   return (
-    <div className="py-20 text-center min-h-screen bg-wikya-gray-light flex flex-col items-center justify-center">
-      <div className="text-8xl font-bold text-wikya-blue mb-4">404</div>
-      <h1 className="text-2xl font-semibold text-wikya-gray mb-6">Page introuvable</h1>
-      <a href="/" className="btn btn-primary">Retour à l'accueil</a>
+    <div className="min-h-screen bg-wikya-gray-light flex flex-col items-center justify-center py-20 px-4">
+      <div className="text-9xl font-extrabold text-wikya-blue opacity-10 select-none leading-none">404</div>
+      <div className="-mt-8 text-center">
+        <h1 className="text-3xl font-bold text-wikya-blue mb-3">Page introuvable</h1>
+        <p className="text-wikya-gray mb-8 max-w-sm">
+          La page que vous cherchez n'existe pas ou a été déplacée.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          <a href="/" className="btn btn-primary">Retour à l'accueil</a>
+          <a href="/repertoire" className="btn btn-secondary">Voir les conducteurs</a>
+          <a href="/offres" className="btn btn-outline">Voir les offres</a>
+        </div>
+      </div>
     </div>
   )
 }
