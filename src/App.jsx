@@ -21,6 +21,7 @@ import ResetPassword from './pages/ResetPassword'
 import MentionsLegales from './pages/MentionsLegales'
 import PolitiqueConfidentialite from './pages/PolitiqueConfidentialite'
 import ConditionsGenerales from './pages/ConditionsGenerales'
+import FAQ from './pages/FAQ'
 import PrivateRoute from './components/PrivateRoute'
 
 function NotFound() {
@@ -60,6 +61,7 @@ function App() {
             <Route path="/mentions-legales" element={<MentionsLegales />} />
             <Route path="/politique-confidentialite" element={<PolitiqueConfidentialite />} />
             <Route path="/conditions-generales" element={<ConditionsGenerales />} />
+            <Route path="/faq" element={<FAQ />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>

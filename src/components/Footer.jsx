@@ -95,6 +95,11 @@ function Footer() {
                     CGU
                   </Link>
                 </li>
+                <li>
+                  <Link to="/faq" className={lienClass}>
+                    FAQ
+                  </Link>
+                </li>
               </ul>
             </div>
 

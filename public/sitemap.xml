@@ -55,4 +55,10 @@
     <priority>0.3</priority>
   </url>
 
+  <url>
+    <loc>https://wikya.ci/faq</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
 </urlset>
