@@ -61,6 +61,13 @@ export default function RecruteurDetail() {
       <Helmet>
         <title>{nom} — Recruteur VTC Wikya</title>
         <meta name="description" content={`Profil du recruteur ${nom} sur Wikya. Découvrez ses offres VTC en Côte d'Ivoire.`} />
+        <meta property="og:title" content={`${nom} — Recruteur VTC | Wikya`} />
+        <meta property="og:description" content={`${nom} recrute des conducteurs VTC en Côte d'Ivoire. Consultez ses offres et postulez sur Wikya.`} />
+        <meta property="og:image" content={recruteur.logo_url || 'https://wikya.ci/assets/wikya-logo-new.png'} />
+        <meta property="og:url" content={`https://wikya.ci/recruteur/${id}`} />
+        <meta property="og:type" content="profile" />
+        <meta property="og:site_name" content="Wikya" />
+        <meta name="twitter:card" content="summary" />
       </Helmet>
       <div className="container-custom max-w-3xl">
         <Link to="/offres" className="text-wikya-orange hover:underline mb-6 inline-block">← Retour aux offres</Link>

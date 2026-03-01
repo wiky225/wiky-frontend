@@ -352,6 +352,13 @@ export default function Home() {
       <Helmet>
         <title>Wikya - Plateforme VTC Côte d'Ivoire | Conducteurs & Recruteurs</title>
         <meta name="description" content="Wikya est la première plateforme de mise en relation entre conducteurs VTC professionnels et recruteurs en Côte d'Ivoire. Trouvez un conducteur ou un emploi VTC à Abidjan." />
+        <meta property="og:title" content="Wikya - Plateforme VTC Côte d'Ivoire" />
+        <meta property="og:description" content="La première plateforme de mise en relation entre conducteurs VTC professionnels et recruteurs en Côte d'Ivoire." />
+        <meta property="og:image" content="https://wikya.ci/assets/wikya-logo-new.png" />
+        <meta property="og:url" content="https://wikya.ci/" />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="Wikya" />
+        <meta name="twitter:card" content="summary" />
       </Helmet>
       {/* Hero */}
       <section className="gradient-wikya text-white py-20">

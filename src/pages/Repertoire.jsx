@@ -293,6 +293,13 @@ export default function Repertoire() {
       <Helmet>
         <title>Répertoire des conducteurs VTC - Wikya Côte d'Ivoire</title>
         <meta name="description" content="Parcourez des centaines de profils de conducteurs VTC vérifiés en Côte d'Ivoire. Filtrez par ville, type de service et expérience pour trouver le bon profil." />
+        <meta property="og:title" content="Répertoire des conducteurs VTC - Wikya" />
+        <meta property="og:description" content="Des centaines de profils de conducteurs VTC vérifiés en Côte d'Ivoire. Filtrez par ville, service et expérience." />
+        <meta property="og:image" content="https://wikya.ci/assets/wikya-logo-new.png" />
+        <meta property="og:url" content="https://wikya.ci/repertoire" />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="Wikya" />
+        <meta name="twitter:card" content="summary" />
       </Helmet>
       <div className="container-custom">
 

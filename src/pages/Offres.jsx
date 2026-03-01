@@ -263,6 +263,13 @@ export default function Offres() {
       <Helmet>
         <title>Offres de recrutement VTC - Wikya Côte d'Ivoire</title>
         <meta name="description" content="Consultez les offres de recrutement de conducteurs VTC en Côte d'Ivoire. Trouvez le meilleur recruteur et décrochez un emploi VTC à Abidjan." />
+        <meta property="og:title" content="Offres de recrutement VTC - Wikya Côte d'Ivoire" />
+        <meta property="og:description" content="Consultez les offres de recrutement VTC en Côte d'Ivoire. Trouvez le meilleur recruteur et décrochez un emploi à Abidjan." />
+        <meta property="og:image" content="https://wikya.ci/assets/wikya-logo-new.png" />
+        <meta property="og:url" content="https://wikya.ci/offres" />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="Wikya" />
+        <meta name="twitter:card" content="summary" />
       </Helmet>
       <div className="container-custom">
         <div className="mb-8">

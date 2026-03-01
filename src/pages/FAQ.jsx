@@ -121,6 +121,13 @@ export default function FAQ() {
       <Helmet>
         <title>FAQ — Questions fréquentes | Wikya Côte d'Ivoire</title>
         <meta name="description" content="Retrouvez les réponses aux questions fréquentes sur Wikya : inscription, abonnement, offres de recrutement, paiement Wave, et plus encore." />
+        <meta property="og:title" content="FAQ Wikya — Questions fréquentes" />
+        <meta property="og:description" content="Toutes les réponses sur Wikya : inscription, abonnement, offres de recrutement, paiement Wave." />
+        <meta property="og:image" content="https://wikya.ci/assets/wikya-logo-new.png" />
+        <meta property="og:url" content="https://wikya.ci/faq" />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="Wikya" />
+        <meta name="twitter:card" content="summary" />
       </Helmet>
 
       <div className="max-w-3xl mx-auto">

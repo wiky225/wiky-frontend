@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { useAuth } from '../context/AuthContext';
 import AdBanner from '../components/AdBanner';
 
@@ -160,8 +161,22 @@ export default function ConducteurDetail() {
   avis.forEach(a => (a.badges || []).forEach(b => { badgesCount[b] = (badgesCount[b] || 0) + 1; }));
   const topBadges = Object.entries(badgesCount).sort((a, b) => b[1] - a[1]).slice(0, 4).map(([b]) => b);
 
+  const lieu = [conducteur.commune, conducteur.ville].filter(Boolean).join(', ') || 'Côte d\'Ivoire';
+  const ogImage = conducteur.photo_url || 'https://wikya.ci/assets/wikya-logo-new.png';
+
   return (
     <div className="min-h-screen bg-gray-50 py-12">
+      <Helmet>
+        <title>{conducteur.prenom} {conducteur.nom} — Conducteur VTC {lieu} | Wikya</title>
+        <meta name="description" content={`Profil du conducteur VTC ${conducteur.prenom} ${conducteur.nom} sur Wikya. Expérience, évaluations et informations de contact en Côte d'Ivoire.`} />
+        <meta property="og:title" content={`${conducteur.prenom} ${conducteur.nom} — Conducteur VTC Wikya`} />
+        <meta property="og:description" content={`Conducteur VTC basé à ${lieu}. Consultez son profil, ses évaluations et contactez-le sur Wikya.`} />
+        <meta property="og:image" content={ogImage} />
+        <meta property="og:url" content={`https://wikya.ci/conducteur/${id}`} />
+        <meta property="og:type" content="profile" />
+        <meta property="og:site_name" content="Wikya" />
+        <meta name="twitter:card" content={conducteur.photo_url ? 'summary_large_image' : 'summary'} />
+      </Helmet>
       <div className="container-custom">
         <Link to="/repertoire" className="text-wikya-orange hover:underline mb-6 inline-block">← Retour au répertoire</Link>
 
