@@ -483,9 +483,11 @@ function TabDocuments({ profil, session, onUpdate }) {
       )}
       <label className={`btn ${url ? 'btn-outline' : 'btn-primary'} text-sm w-full text-center cursor-pointer block ${uploading[field] ? 'opacity-60 pointer-events-none' : ''}`}>
         {uploading[field] ? 'Upload en cours...' : url ? 'Remplacer' : 'Ajouter'}
-        <input type="file" accept="image/*" className="hidden" onChange={e => uploadFile(field, e.target.files[0])} />
+        <input type="file" accept={field === 'photo_url' ? 'image/*' : 'image/*,.pdf'} className="hidden" onChange={e => uploadFile(field, e.target.files[0])} />
       </label>
-      <p className="text-xs text-gray-400 mt-2 text-center">JPG ou PNG · Max 5 Mo</p>
+      <p className="text-xs text-gray-400 mt-2 text-center">
+        {field === 'photo_url' ? 'JPG ou PNG · Max 5 Mo' : 'JPG, PNG ou PDF · Max 5 Mo'}
+      </p>
     </div>
   );
 
