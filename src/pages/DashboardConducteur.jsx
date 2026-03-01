@@ -605,6 +605,12 @@ function DashboardConducteur() {
     );
   }
 
+  const launchEndDate = import.meta.env.VITE_LAUNCH_END_DATE;
+  const isLaunchPeriod = launchEndDate ? new Date() < new Date(launchEndDate) : false;
+  const launchEndFormatted = launchEndDate
+    ? new Date(launchEndDate).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
+    : '';
+
   return (
     <div className="min-h-screen bg-gray-50 py-10">
       <div className="container-custom">
@@ -614,7 +620,17 @@ function DashboardConducteur() {
         </div>
 
         {/* Bannière abonnement */}
-        {!profil.abonnement_actif ? (
+        {isLaunchPeriod ? (
+          <div className="bg-green-50 border border-green-200 text-green-800 rounded-xl p-4 mb-6 flex items-center gap-3">
+            <span className="text-2xl shrink-0">🎉</span>
+            <div>
+              <p className="font-semibold">Accès gratuit — Période de lancement</p>
+              <p className="text-green-700 text-sm mt-0.5">
+                Toutes les fonctionnalités sont gratuites jusqu'au {launchEndFormatted}. L'abonnement sera requis ensuite.
+              </p>
+            </div>
+          </div>
+        ) : !profil.abonnement_actif ? (
           <div className="bg-wikya-blue text-white rounded-xl p-4 mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
               <p className="font-semibold">🔒 Votre profil n'est pas encore contactable</p>

@@ -7,7 +7,7 @@ import API_URL from '../lib/api.js';
 const CONFIG = {
   conducteur: {
     label: 'Conducteur',
-    montant: '1 000',
+    montant: '2 500',
     duree: '2 mois',
     avantages: [
       'Profil contactable par tous les recruteurs abonnés',
@@ -38,6 +38,12 @@ export default function Paiement() {
   const roleParam = searchParams.get('role');
   const role = roleParam || user?.user_metadata?.role;
   const config = CONFIG[role];
+
+  const launchEndDate = import.meta.env.VITE_LAUNCH_END_DATE;
+  const isLaunchPeriod = launchEndDate ? new Date() < new Date(launchEndDate) : false;
+  const launchEndFormatted = launchEndDate
+    ? new Date(launchEndDate).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
+    : '';
 
   const handlePayer = async () => {
     if (!session?.access_token) return;
@@ -178,27 +184,40 @@ export default function Paiement() {
             </div>
           </div>
 
+          {/* Notice période de lancement conducteur */}
+          {isLaunchPeriod && role === 'conducteur' && (
+            <div className="bg-green-50 border border-green-200 rounded-xl p-4 mb-4 text-center">
+              <p className="text-green-800 font-semibold mb-1">🎉 Accès gratuit jusqu'au {launchEndFormatted}</p>
+              <p className="text-green-700 text-sm">Vous n'avez pas besoin de payer pendant la période de lancement.</p>
+              <Link to="/dashboard-conducteur" className="mt-3 inline-block btn bg-green-600 text-white hover:bg-green-700 text-sm">
+                Accéder à mon espace →
+              </Link>
+            </div>
+          )}
+
           {erreur && (
             <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm mb-4">
               {erreur}
             </div>
           )}
 
-          {user ? (
-            <button
-              onClick={handlePayer}
-              disabled={loading}
-              className="btn btn-primary w-full text-base py-4 disabled:opacity-60"
-            >
-              {loading ? 'Connexion à Wave...' : `Payer ${config.montant} FCFA avec Wave`}
-            </button>
-          ) : (
-            <Link
-              to={`/connexion`}
-              className="btn btn-primary w-full text-center block"
-            >
-              Se connecter pour payer
-            </Link>
+          {!(isLaunchPeriod && role === 'conducteur') && (
+            user ? (
+              <button
+                onClick={handlePayer}
+                disabled={loading}
+                className="btn btn-primary w-full text-base py-4 disabled:opacity-60"
+              >
+                {loading ? 'Connexion à Wave...' : `Payer ${config.montant} FCFA avec Wave`}
+              </button>
+            ) : (
+              <Link
+                to={`/connexion`}
+                className="btn btn-primary w-full text-center block"
+              >
+                Se connecter pour payer
+              </Link>
+            )
           )}
 
           <p className="text-center text-xs text-gray-400 mt-4">
