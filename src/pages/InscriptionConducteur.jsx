@@ -1,12 +1,12 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import PhoneInput from '../components/PhoneInput';
-import ReCAPTCHA from 'react-google-recaptcha';
+import { Turnstile } from '@marsidev/react-turnstile';
 
 import API_URL from '../lib/api.js';
 
-const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
+const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY;
 
 const COMMUNES_ABIDJAN = [
   'Abobo', 'Adjamé', 'Attécoubé', 'Cocody', 'Koumassi',
@@ -26,7 +26,7 @@ export default function InscriptionConducteur() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
-  const recaptchaRef = useRef(null);
+  const [captchaToken, setCaptchaToken] = useState(null);
   const [formData, setFormData] = useState({
     nom: '', prenom: '', sexe: '', date_naissance: '', email: '', telephone: '',
     password: '', password_confirm: '',
@@ -54,7 +54,6 @@ export default function InscriptionConducteur() {
       return;
     }
 
-    const captchaToken = recaptchaRef.current?.getValue();
     if (!captchaToken) {
       setError('Veuillez confirmer que vous n\'êtes pas un robot.');
       return;
@@ -337,7 +336,7 @@ export default function InscriptionConducteur() {
           </div>
 
           <div className="flex justify-center">
-            <ReCAPTCHA ref={recaptchaRef} sitekey={RECAPTCHA_SITE_KEY} hl="fr" />
+            <Turnstile siteKey={TURNSTILE_SITE_KEY} onSuccess={(token) => setCaptchaToken(token)} />
           </div>
 
           <button
