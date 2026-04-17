@@ -156,37 +156,55 @@ function ConducteurCardList({ conducteur, showFullName }) {
     ? conducteur.plateformes_vtc.split(/[,;/]/).map(p => p.trim()).filter(Boolean)
     : [];
 
+  const statutConfig = {
+    'Disponible':   { dot: 'bg-green-400', text: 'text-green-700', bg: 'bg-green-50' },
+    'En poste':     { dot: 'bg-orange-400', text: 'text-orange-700', bg: 'bg-orange-50' },
+    'Indisponible': { dot: 'bg-gray-400', text: 'text-gray-600', bg: 'bg-gray-100' },
+  };
+  const statut = statutConfig[conducteur.statut] || statutConfig['Disponible'];
+
   return (
     <Link
       to={`/conducteur/${conducteur.id}`}
-      className="bg-white rounded-lg shadow hover:shadow-md transition-all flex gap-4 p-4 items-center"
+      className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md hover:border-gray-200 transition-all flex gap-4 p-4 items-center"
     >
       <img
         src={conducteur.photo_url || `https://ui-avatars.com/api/?name=${conducteur.prenom}+${conducteur.nom}&size=80&background=253b56&color=fff`}
         alt={`${conducteur.prenom} ${conducteur.nom}`}
-        className="w-16 h-16 rounded-full object-cover shrink-0"
+        className="w-14 h-14 rounded-full object-cover shrink-0 ring-2 ring-gray-100"
       />
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 flex-wrap">
-          <h3 className="text-base font-bold text-wikya-blue">
+          <h3 className="text-base font-semibold text-wikya-blue">
             {showFullName ? `${conducteur.prenom} ${conducteur.nom}` : conducteur.prenom}
           </h3>
-          <span className="bg-green-100 text-green-700 text-xs px-2 py-0.5 rounded-full font-medium">
-            Disponible
+          <span className={`${statut.bg} ${statut.text} text-xs px-2 py-0.5 rounded-full font-medium flex items-center gap-1`}>
+            <span className={`w-1.5 h-1.5 rounded-full ${statut.dot}`}></span>
+            {conducteur.statut || 'Disponible'}
           </span>
         </div>
-        <div className="flex flex-wrap gap-x-4 mt-1">
+        <div className="flex flex-wrap gap-x-3 mt-1">
           {(conducteur.ville || conducteur.commune) && (
-            <span className="text-xs text-gray-500">📍 {[conducteur.ville, conducteur.commune].filter(Boolean).join(' — ')}</span>
+            <span className="text-xs text-gray-500 flex items-center gap-1">
+              <svg className="w-3 h-3 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+              </svg>
+              {[conducteur.ville, conducteur.commune].filter(Boolean).join(' — ')}
+            </span>
           )}
           {conducteur.annees_experience && (
-            <span className="text-xs text-gray-500">⏱️ {conducteur.annees_experience}</span>
+            <span className="text-xs text-gray-500 flex items-center gap-1">
+              <svg className="w-3 h-3 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              {conducteur.annees_experience}
+            </span>
           )}
         </div>
         {plateformes.length > 0 && (
           <div className="flex flex-wrap gap-1 mt-2">
             {plateformes.slice(0, 4).map(p => (
-              <span key={p} className="text-xs bg-blue-50 text-wikya-blue border border-blue-100 rounded-full px-2 py-0.5">
+              <span key={p} className="text-xs bg-blue-50 text-wikya-blue border border-blue-100 rounded-full px-2 py-0.5 font-medium">
                 {p}
               </span>
             ))}
@@ -196,7 +214,9 @@ function ConducteurCardList({ conducteur, showFullName }) {
           </div>
         )}
       </div>
-      <span className="text-wikya-orange font-semibold text-sm shrink-0">→</span>
+      <svg className="w-5 h-5 text-wikya-orange shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+      </svg>
     </Link>
   );
 }
