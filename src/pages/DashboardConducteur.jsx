@@ -9,7 +9,6 @@ const TABS = [
   { id: 'profil', label: '👤 Mon Profil' },
   { id: 'stats', label: '📊 Mes Stats' },
   { id: 'avis', label: '💬 Mes Avis' },
-  { id: 'documents', label: '🪪 Mes Documents' },
 ];
 
 const EXPERIENCES = ["Moins d'1 an", '1-2 ans', '3-5 ans', '5-10 ans', 'Plus de 10 ans'];
@@ -188,6 +187,7 @@ function TabProfil({ profil, session, onUpdate }) {
   };
 
   return (
+    <>
     <form onSubmit={handleSubmit} className="space-y-5">
       {/* Identité */}
       <section className="bg-white rounded-xl shadow-sm p-6">
@@ -314,6 +314,10 @@ function TabProfil({ profil, session, onUpdate }) {
         </button>
       </div>
     </form>
+
+    {/* Documents — fusionné dans l'onglet Profil */}
+    <TabDocuments profil={profil} session={session} onUpdate={onUpdate} />
+    </>
   );
 }
 
@@ -492,7 +496,8 @@ function TabDocuments({ profil, session, onUpdate }) {
   );
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 mt-5">
+      <h3 className="font-bold text-wikya-blue text-base">Mes Documents</h3>
       {erreur && (
         <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">{erreur}</div>
       )}
@@ -680,9 +685,6 @@ function DashboardConducteur() {
             )}
             {activeTab === 'stats' && <TabStats profil={profil} />}
             {activeTab === 'avis' && <TabAvis profilId={profil.id} />}
-            {activeTab === 'documents' && (
-              <TabDocuments profil={profil} session={session} onUpdate={handleUpdate} />
-            )}
           </main>
         </div>
       </div>

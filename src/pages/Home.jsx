@@ -62,7 +62,11 @@ function CommentCaMarche() {
           {/* Recruteur */}
           <div className="bg-white rounded-2xl p-8 shadow-sm">
             <div className="flex items-center gap-3 mb-6">
-              <span className="text-3xl">🏢</span>
+              <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center shrink-0">
+                <svg className="w-6 h-6 text-wikya-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                </svg>
+              </div>
               <h3 className="text-xl font-bold text-wikya-blue">Je suis recruteur</h3>
             </div>
             <div className="space-y-4">
@@ -83,7 +87,11 @@ function CommentCaMarche() {
           {/* Conducteur */}
           <div className="bg-white rounded-2xl p-8 shadow-sm">
             <div className="flex items-center gap-3 mb-6">
-              <span className="text-3xl">🚗</span>
+              <div className="w-10 h-10 rounded-xl bg-orange-100 flex items-center justify-center shrink-0">
+                <svg className="w-6 h-6 text-wikya-orange" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                </svg>
+              </div>
               <h3 className="text-xl font-bold text-wikya-blue">Je suis conducteur</h3>
             </div>
             <div className="space-y-4">
@@ -153,21 +161,24 @@ function SliderConducteurs() {
                     to="/inscription"
                     className="flex-none w-[78vw] sm:w-64 md:w-72 bg-white border rounded-xl shadow-sm hover:shadow-md transition-all hover:-translate-y-1 overflow-hidden"
                   >
-                    {/* Photo floutée + initiales */}
-                    <div className="relative w-full h-40">
+                    {/* Photo anonymisée + overlay gradient */}
+                    <div className="relative w-full h-40 bg-wikya-blue overflow-hidden">
                       <img
                         src={c.photo_url || `https://ui-avatars.com/api/?name=${c.prenom}+${c.nom}&size=300&background=253b56&color=fff`}
                         alt="Conducteur"
-                        className="w-full h-full object-cover blur-sm scale-105"
+                        className="w-full h-full object-cover opacity-30"
                       />
-                      <div className="absolute inset-0 bg-wikya-blue/40 flex items-center justify-center">
-                        <span className="text-4xl font-bold text-white/80 tracking-widest">{initiales}</span>
+                      <div className="absolute inset-0 bg-gradient-to-t from-wikya-blue/90 via-wikya-blue/50 to-transparent" />
+                      <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
+                        <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center text-lg font-bold text-white">
+                          {initiales}
+                        </div>
+                        <svg className="w-5 h-5 text-white/80" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
                       </div>
                       <span className="absolute top-2 right-2 bg-green-500 text-white text-xs px-2 py-0.5 rounded-full font-medium">
                         Disponible
-                      </span>
-                      <span className="absolute top-2 left-2 bg-black/40 text-white text-xs px-2 py-0.5 rounded-full">
-                        🔒
                       </span>
                     </div>
                     <div className="p-4">
@@ -257,7 +268,7 @@ function ApercuOffres() {
                   <div>
                     <h3 className="font-bold text-wikya-blue">{nom}</h3>
                     <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${o.type_recruteur === 'entreprise' ? 'bg-blue-100 text-blue-700' : 'bg-orange-100 text-wikya-orange'}`}>
-                      {o.type_recruteur === 'entreprise' ? '🏢 Entreprise' : '👤 Particulier'}
+                      {o.type_recruteur === 'entreprise' ? 'Entreprise' : 'Particulier'}
                     </span>
                   </div>
                   {totalVehicules > 0 && (
@@ -290,22 +301,38 @@ function ApercuOffres() {
 // ── FEATURES ──────────────────────────────────────────────────
 const FEATURES = [
   {
-    icon: '⭐',
+    icon: (
+      <svg className="w-8 h-8 text-wikya-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+      </svg>
+    ),
     title: 'Avis & Notation',
     description: 'Les recruteurs notent les conducteurs avec étoiles et badges. Identifiez rapidement les meilleurs profils.',
   },
   {
-    icon: '💼',
+    icon: (
+      <svg className="w-8 h-8 text-wikya-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+      </svg>
+    ),
     title: 'Offres de recrutement',
     description: 'Les recruteurs publient leurs conditions : type de véhicule, recette journalière, type de contrat.',
   },
   {
-    icon: '❤️',
+    icon: (
+      <svg className="w-8 h-8 text-wikya-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+      </svg>
+    ),
     title: 'Favoris',
     description: 'Sauvegardez les meilleurs profils et retrouvez-les facilement dans votre espace recruteur.',
   },
   {
-    icon: '🔍',
+    icon: (
+      <svg className="w-8 h-8 text-wikya-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+      </svg>
+    ),
     title: 'Recherche avancée',
     description: 'Filtrez par ville, années d\'expérience et plateforme VTC. Vue grille ou liste au choix.',
   },
@@ -319,7 +346,11 @@ function CTASection() {
         <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">Rejoignez la plateforme</h2>
         <div className="grid md:grid-cols-2 gap-8 max-w-3xl mx-auto">
           <div className="bg-white/10 rounded-2xl p-8 text-center hover:bg-white/20 transition-colors">
-            <div className="text-4xl mb-4">🏢</div>
+            <div className="w-16 h-16 rounded-2xl bg-white/20 flex items-center justify-center mx-auto mb-4">
+              <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+              </svg>
+            </div>
             <h3 className="text-xl font-bold mb-2">Je recrute</h3>
             <p className="text-blue-200 text-sm mb-6">
               Accédez à des centaines de profils vérifiés.<br />10 000 FCFA/mois.
@@ -329,7 +360,11 @@ function CTASection() {
             </Link>
           </div>
           <div className="bg-white/10 rounded-2xl p-8 text-center hover:bg-white/20 transition-colors">
-            <div className="text-4xl mb-4">🚗</div>
+            <div className="w-16 h-16 rounded-2xl bg-white/20 flex items-center justify-center mx-auto mb-4">
+              <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+            </div>
             <h3 className="text-xl font-bold mb-2">Je suis conducteur</h3>
             <p className="text-blue-200 text-sm mb-6">
               Inscription gratuite.<br />Soyez visible et trouvez un recruteur.
@@ -392,7 +427,7 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {FEATURES.map((f, i) => (
               <div key={i} className="card p-6 hover:-translate-y-2 transition-transform">
-                <div className="text-5xl mb-4">{f.icon}</div>
+                <div className="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center mb-4">{f.icon}</div>
                 <h3 className="text-xl font-bold text-wikya-blue mb-3">{f.title}</h3>
                 <p className="text-wikya-gray text-sm leading-relaxed">{f.description}</p>
               </div>
