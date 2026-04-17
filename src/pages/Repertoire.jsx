@@ -27,31 +27,44 @@ function SkeletonCard() {
 // ── CARTE ANONYME (visiteur non connecté) ────────────────────
 function ConducteurCardAnonymous({ conducteur }) {
   const initiales = [conducteur.prenom?.[0], conducteur.nom?.[0]]
-    .filter(Boolean).join('. ') + '.';
+    .filter(Boolean).join('').toUpperCase();
 
   return (
     <Link
       to="/connexion"
-      className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all hover:-translate-y-1 flex flex-col"
+      className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all hover:-translate-y-0.5 flex flex-col"
     >
-      <div className="relative w-full h-48 bg-wikya-blue/10 flex items-center justify-center">
-        <span className="text-4xl font-bold text-wikya-blue/40">{initiales}</span>
-        <span className="absolute top-3 right-3 bg-gray-200 text-gray-500 text-xs px-2 py-1 rounded-full font-medium">
-          🔒 Profil masqué
-        </span>
+      <div className="relative w-full h-48 bg-gradient-to-br from-wikya-blue/10 to-wikya-blue/20 flex items-center justify-center">
+        <div className="w-16 h-16 rounded-full bg-wikya-blue/20 flex items-center justify-center">
+          <span className="text-2xl font-bold text-wikya-blue/50">{initiales || '?'}</span>
+        </div>
+        <div className="absolute inset-0 flex items-end justify-center pb-4">
+          <span className="bg-white/90 backdrop-blur-sm text-gray-600 text-xs px-3 py-1.5 rounded-full font-medium flex items-center gap-1.5 shadow-sm">
+            <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+            </svg>
+            Profil masqué
+          </span>
+        </div>
       </div>
       <div className="p-4 flex flex-col flex-1">
-        <h3 className="text-lg font-bold text-wikya-blue">{initiales}</h3>
+        <h3 className="text-base font-semibold text-wikya-blue">Conducteur VTC</h3>
         {(conducteur.ville || conducteur.commune) && (
-          <p className="text-sm text-gray-500 mt-1 flex items-center gap-1">
-            📍 {[conducteur.ville, conducteur.commune].filter(Boolean).join(' — ')}
+          <p className="text-sm text-gray-500 mt-1 flex items-center gap-1.5">
+            <svg className="w-3.5 h-3.5 shrink-0 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+            </svg>
+            {[conducteur.ville, conducteur.commune].filter(Boolean).join(' — ')}
           </p>
         )}
-        <p className="text-xs text-gray-400 mt-3 italic">
-          Connectez-vous pour voir le profil complet
-        </p>
-        <div className="mt-4 flex justify-end">
-          <span className="text-wikya-orange font-semibold text-sm">Se connecter →</span>
+        <p className="text-xs text-gray-400 mt-3">Connectez-vous pour voir le profil complet</p>
+        <div className="mt-4 pt-3 border-t border-gray-50 flex justify-end">
+          <span className="text-wikya-orange font-semibold text-sm flex items-center gap-1">
+            Se connecter
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+          </span>
         </div>
       </div>
     </Link>
@@ -64,10 +77,17 @@ function ConducteurCardGrid({ conducteur, showFullName }) {
     ? conducteur.plateformes_vtc.split(/[,;/]/).map(p => p.trim()).filter(Boolean)
     : [];
 
+  const statutConfig = {
+    'Disponible':   { dot: 'bg-green-400', text: 'text-green-700', bg: 'bg-green-50', label: 'Disponible' },
+    'En poste':     { dot: 'bg-orange-400', text: 'text-orange-700', bg: 'bg-orange-50', label: 'En poste' },
+    'Indisponible': { dot: 'bg-gray-400', text: 'text-gray-600', bg: 'bg-gray-100', label: 'Indisponible' },
+  };
+  const statut = statutConfig[conducteur.statut] || statutConfig['Disponible'];
+
   return (
     <Link
       to={`/conducteur/${conducteur.id}`}
-      className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all hover:-translate-y-1 flex flex-col"
+      className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md hover:border-gray-200 transition-all hover:-translate-y-0.5 flex flex-col"
     >
       <div className="relative">
         <img
@@ -75,43 +95,55 @@ function ConducteurCardGrid({ conducteur, showFullName }) {
           alt={`${conducteur.prenom} ${conducteur.nom}`}
           className="w-full h-48 object-cover"
         />
-        <span className="absolute top-3 right-3 bg-green-500 text-white text-xs px-2 py-1 rounded-full font-medium shadow">
-          Disponible
+        <span className={`absolute top-3 right-3 ${statut.bg} ${statut.text} text-xs px-2.5 py-1 rounded-full font-medium shadow-sm flex items-center gap-1.5`}>
+          <span className={`w-1.5 h-1.5 rounded-full ${statut.dot}`}></span>
+          {statut.label}
         </span>
       </div>
       <div className="p-4 flex flex-col flex-1">
-        <h3 className="text-lg font-bold text-wikya-blue">
+        <h3 className="text-base font-semibold text-wikya-blue">
           {showFullName ? `${conducteur.prenom} ${conducteur.nom}` : conducteur.prenom}
         </h3>
-        <div className="mt-1 space-y-1">
+        <div className="mt-1.5 space-y-1">
           {(conducteur.ville || conducteur.commune) && (
-            <p className="text-sm text-gray-500 flex items-center gap-1">
-              📍 {[conducteur.ville, conducteur.commune].filter(Boolean).join(' — ')}
+            <p className="text-sm text-gray-500 flex items-center gap-1.5">
+              <svg className="w-3.5 h-3.5 shrink-0 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+              </svg>
+              {[conducteur.ville, conducteur.commune].filter(Boolean).join(' — ')}
             </p>
           )}
           {conducteur.annees_experience && (
-            <p className="text-sm text-gray-500 flex items-center gap-1">
-              ⏱️ {conducteur.annees_experience}
+            <p className="text-sm text-gray-500 flex items-center gap-1.5">
+              <svg className="w-3.5 h-3.5 shrink-0 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              {conducteur.annees_experience}
             </p>
           )}
         </div>
         {plateformes.length > 0 && (
           <div className="flex flex-wrap gap-1 mt-3">
             {plateformes.slice(0, 3).map(p => (
-              <span key={p} className="text-xs bg-blue-50 text-wikya-blue border border-blue-100 rounded-full px-2 py-0.5">
+              <span key={p} className="text-xs bg-blue-50 text-wikya-blue border border-blue-100 rounded-full px-2 py-0.5 font-medium">
                 {p}
               </span>
             ))}
             {plateformes.length > 3 && (
-              <span className="text-xs text-gray-400">+{plateformes.length - 3}</span>
+              <span className="text-xs text-gray-400 self-center">+{plateformes.length - 3}</span>
             )}
           </div>
         )}
         {conducteur.description && (
-          <p className="text-sm text-gray-600 mt-2 line-clamp-2 flex-1">{conducteur.description}</p>
+          <p className="text-sm text-gray-500 mt-2 line-clamp-2 flex-1 leading-relaxed">{conducteur.description}</p>
         )}
-        <div className="mt-4 flex justify-end">
-          <span className="text-wikya-orange font-semibold text-sm">Voir profil →</span>
+        <div className="mt-4 pt-3 border-t border-gray-50 flex justify-end">
+          <span className="text-wikya-orange font-semibold text-sm flex items-center gap-1">
+            Voir profil
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+          </span>
         </div>
       </div>
     </Link>
