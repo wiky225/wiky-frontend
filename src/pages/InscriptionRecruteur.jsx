@@ -181,7 +181,7 @@ function InscriptionRecruteur() {
               <>
                 <div>
                   <label className="block text-sm font-semibold text-wikya-gray mb-2">Nom de l'entreprise *</label>
-                  <input type="text" name="nom_entreprise" className="input" required onChange={handleChange} />
+                  <input type="text" name="nom_entreprise" className="input" required onChange={handleChange} placeholder="Ex : ATL Cars SARLU" />
                 </div>
 
                 <div>
@@ -205,17 +205,17 @@ function InscriptionRecruteur() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-semibold text-wikya-gray mb-2">Nom du responsable *</label>
-                <input type="text" name="nom_responsable" className="input" required onChange={handleChange} />
+                <input type="text" name="nom_responsable" className="input" required onChange={handleChange} placeholder="Ex : Kouassi" />
               </div>
               <div>
                 <label className="block text-sm font-semibold text-wikya-gray mb-2">Prénom *</label>
-                <input type="text" name="prenom_responsable" className="input" required onChange={handleChange} />
+                <input type="text" name="prenom_responsable" className="input" required onChange={handleChange} placeholder="Ex : Jean-Marc" />
               </div>
             </div>
 
             <div>
               <label className="block text-sm font-semibold text-wikya-gray mb-2">Email professionnel *</label>
-              <input type="email" name="email" className="input" required onChange={handleChange} />
+              <input type="email" name="email" className="input" required onChange={handleChange} placeholder="Ex : contact@votreentreprise.ci" />
             </div>
 
             <div>
@@ -226,11 +226,11 @@ function InscriptionRecruteur() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-semibold text-wikya-gray mb-2">Mot de passe *</label>
-                <input type="password" name="password" className="input" required onChange={handleChange} />
+                <input type="password" name="password" className="input" required onChange={handleChange} placeholder="Min. 6 caractères" />
               </div>
               <div>
                 <label className="block text-sm font-semibold text-wikya-gray mb-2">Confirmer le mot de passe *</label>
-                <input type="password" name="password_confirm" className="input" required onChange={handleChange} />
+                <input type="password" name="password_confirm" className="input" required onChange={handleChange} placeholder="Répéter le mot de passe" />
               </div>
             </div>
 
