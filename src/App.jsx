@@ -24,6 +24,7 @@ import ConditionsGenerales from './pages/ConditionsGenerales'
 import FAQ from './pages/FAQ'
 import RecruteurDetail from './pages/RecruteurDetail'
 import PrivateRoute from './components/PrivateRoute'
+import InstallPWA from './components/InstallPWA'
 
 function NotFound() {
   return (
@@ -50,6 +51,7 @@ function App() {
     <Router>
       <div className="min-h-screen flex flex-col">
         <Header />
+        <InstallPWA />
         <main className="flex-grow">
           <Routes>
             <Route path="/conducteur/:id" element={<ConducteurDetail />} />
