@@ -35,8 +35,9 @@ export default defineConfig({
         ]
       },
       workbox: {
-        // Cache les assets statiques (images, JS, CSS)
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
+        // Précache uniquement JS/CSS/HTML/fonts — les images sont gérées en runtime CacheFirst
+        globPatterns: ['**/*.{js,css,html,ico,svg,woff2}'],
+        globIgnores: ['**/images/**'],
         // Stratégie réseau : API toujours en live, pages en cache si offline
         runtimeCaching: [
           {
