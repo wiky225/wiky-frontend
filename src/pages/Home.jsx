@@ -6,6 +6,71 @@ import AdBanner from '../components/AdBanner';
 
 import API_URL from '../lib/api.js';
 
+// ── HERO SLIDER ───────────────────────────────────────────────
+const HERO_SLIDES = [
+  '/images/hero-drive-1.jpg',
+  '/images/hero-drive-2.jpg',
+  '/images/hero-drive-3.jpg',
+];
+
+function HeroSlider() {
+  const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    const t = setInterval(() => setCurrent(c => (c + 1) % HERO_SLIDES.length), 5000);
+    return () => clearInterval(t);
+  }, []);
+
+  return (
+    <section className="relative text-white overflow-hidden min-h-[520px] md:min-h-[600px] flex items-center">
+      {/* Photos en fondu */}
+      {HERO_SLIDES.map((src, i) => (
+        <div
+          key={i}
+          className="absolute inset-0 bg-cover bg-center transition-opacity duration-1000"
+          style={{ backgroundImage: `url(${src})`, opacity: i === current ? 1 : 0 }}
+        />
+      ))}
+      {/* Overlay gradient */}
+      <div className="absolute inset-0 bg-gradient-to-r from-wikya-blue/90 via-wikya-blue/75 to-wikya-blue/50" />
+
+      {/* Contenu */}
+      <div className="relative container-custom py-16 text-center">
+        <span className="inline-block text-xs font-semibold tracking-widest uppercase bg-white/20 rounded-full px-4 py-1.5 mb-6">
+          Plateforme VTC — Côte d'Ivoire
+        </span>
+        <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+          Trouvez votre <span className="text-wikya-orange">Conducteur VTC</span> idéal
+        </h1>
+        <p className="text-lg md:text-xl mb-8 opacity-90 max-w-3xl mx-auto">
+          La première plateforme de mise en relation entre conducteurs professionnels et recruteurs en Côte d'Ivoire
+        </p>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-10">
+          <Link to="/repertoire" className="btn btn-secondary text-lg px-8 py-4">
+            Voir les Conducteurs
+          </Link>
+          <Link to="/inscription-recruteur" className="btn bg-white text-wikya-blue hover:bg-gray-100 text-lg px-8 py-4">
+            Je Recrute
+          </Link>
+        </div>
+        {/* Dots navigation */}
+        <div className="flex justify-center gap-3">
+          {HERO_SLIDES.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setCurrent(i)}
+              className={`h-2 rounded-full transition-all duration-300 ${
+                i === current ? 'w-8 bg-wikya-orange' : 'w-2 bg-white/40 hover:bg-white/70'
+              }`}
+              aria-label={`Slide ${i + 1}`}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 // ── STATS DYNAMIQUES ──────────────────────────────────────────
 function StatsSection() {
   const [stats, setStats] = useState(null);
@@ -88,8 +153,12 @@ function CommentCaMarche() {
           <div className="bg-white rounded-2xl p-8 shadow-sm">
             <div className="flex items-center gap-3 mb-6">
               <div className="w-10 h-10 rounded-xl bg-orange-100 flex items-center justify-center shrink-0">
-                <svg className="w-6 h-6 text-wikya-orange" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                <svg className="w-6 h-6 text-wikya-orange" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+                  <circle cx="12" cy="12" r="9" />
+                  <circle cx="12" cy="12" r="2.5" />
+                  <line x1="12" y1="3" x2="12" y2="9.5" strokeLinecap="round" />
+                  <line x1="19.8" y1="16.5" x2="14.2" y2="13.3" strokeLinecap="round" />
+                  <line x1="4.2" y1="16.5" x2="9.8" y2="13.3" strokeLinecap="round" />
                 </svg>
               </div>
               <h3 className="text-xl font-bold text-wikya-blue">Je suis conducteur</h3>
@@ -362,7 +431,11 @@ function CTASection() {
           <div className="bg-white/10 rounded-2xl p-8 text-center hover:bg-white/20 transition-colors">
             <div className="w-16 h-16 rounded-2xl bg-white/20 flex items-center justify-center mx-auto mb-4">
               <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                <circle cx="12" cy="12" r="9" />
+                <circle cx="12" cy="12" r="2.5" />
+                <line x1="12" y1="3" x2="12" y2="9.5" strokeLinecap="round" />
+                <line x1="19.8" y1="16.5" x2="14.2" y2="13.3" strokeLinecap="round" />
+                <line x1="4.2" y1="16.5" x2="9.8" y2="13.3" strokeLinecap="round" />
               </svg>
             </div>
             <h3 className="text-xl font-bold mb-2">Je suis conducteur</h3>
@@ -394,25 +467,7 @@ export default function Home() {
         <meta property="og:site_name" content="Wikya" />
         <meta name="twitter:card" content="summary" />
       </Helmet>
-      {/* Hero */}
-      <section className="gradient-wikya text-white py-20">
-        <div className="container-custom text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6">
-            Trouvez votre <span className="text-wikya-orange">Conducteur VTC</span> idéal
-          </h1>
-          <p className="text-lg md:text-xl mb-8 opacity-90 max-w-3xl mx-auto">
-            La première plateforme de mise en relation entre conducteurs professionnels et recruteurs en Côte d'Ivoire
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link to="/repertoire" className="btn btn-secondary text-lg px-8 py-4">
-              Voir les Conducteurs
-            </Link>
-            <Link to="/inscription-recruteur" className="btn bg-white text-wikya-blue hover:bg-gray-100 text-lg px-8 py-4">
-              Je Recrute
-            </Link>
-          </div>
-        </div>
-      </section>
+      <HeroSlider />
 
       <StatsSection />
       <AdBanner position="home-leaderboard" className="py-2 bg-white" />
