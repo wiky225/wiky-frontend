@@ -8,9 +8,9 @@ import API_URL from '../lib/api.js';
 
 // ── HERO SLIDER ───────────────────────────────────────────────
 const HERO_SLIDES = [
-  '/images/hero-driver-1.png',
-  '/images/hero-driver-2.png',
-  '/images/hero-driver-3.png',
+  '/images/hero-driver-1.webp',
+  '/images/hero-driver-2.webp',
+  '/images/hero-driver-3.webp',
 ];
 
 function HeroSlider() {
