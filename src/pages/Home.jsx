@@ -22,34 +22,34 @@ function HeroSlider() {
   }, []);
 
   return (
-    <section className="relative text-white overflow-hidden min-h-[520px] md:min-h-[600px] flex items-center">
+    <section className="relative text-white overflow-hidden min-h-[480px] sm:min-h-[540px] md:min-h-[620px] flex items-center">
       {/* Photos en fondu */}
       {HERO_SLIDES.map((src, i) => (
         <div
           key={i}
-          className="absolute inset-0 bg-cover bg-center transition-opacity duration-1000"
+          className="absolute inset-0 bg-cover bg-[center_top_10%] md:bg-center transition-opacity duration-1000"
           style={{ backgroundImage: `url(${src})`, opacity: i === current ? 1 : 0 }}
         />
       ))}
-      {/* Overlay gradient */}
-      <div className="absolute inset-0 bg-gradient-to-r from-wikya-blue/90 via-wikya-blue/75 to-wikya-blue/50" />
+      {/* Overlay : plus dense en bas sur mobile pour lisibilité du texte */}
+      <div className="absolute inset-0 bg-gradient-to-t from-wikya-blue/95 via-wikya-blue/75 to-wikya-blue/40 md:bg-gradient-to-r md:from-wikya-blue/90 md:via-wikya-blue/75 md:to-wikya-blue/50" />
 
       {/* Contenu */}
-      <div className="relative container-custom py-16 text-center">
-        <span className="inline-block text-xs font-semibold tracking-widest uppercase bg-white/20 rounded-full px-4 py-1.5 mb-6">
+      <div className="relative container-custom py-12 md:py-20 text-center w-full">
+        <span className="inline-block text-xs font-semibold tracking-widest uppercase bg-white/20 rounded-full px-4 py-1.5 mb-5">
           Plateforme VTC — Côte d'Ivoire
         </span>
-        <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+        <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold mb-5 leading-tight px-2">
           Trouvez votre <span className="text-wikya-orange">Conducteur VTC</span> idéal
         </h1>
-        <p className="text-lg md:text-xl mb-8 opacity-90 max-w-3xl mx-auto">
+        <p className="text-base sm:text-lg md:text-xl mb-8 opacity-90 max-w-2xl mx-auto px-4">
           La première plateforme de mise en relation entre conducteurs professionnels et recruteurs en Côte d'Ivoire
         </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-10">
-          <Link to="/repertoire" className="btn btn-secondary text-lg px-8 py-4">
+        <div className="flex flex-col sm:flex-row gap-3 justify-center mb-10 px-6 sm:px-0">
+          <Link to="/repertoire" className="btn btn-secondary text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4">
             Voir les Conducteurs
           </Link>
-          <Link to="/inscription-recruteur" className="btn bg-white text-wikya-blue hover:bg-gray-100 text-lg px-8 py-4">
+          <Link to="/inscription-recruteur" className="btn bg-white text-wikya-blue hover:bg-gray-100 text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4">
             Je Recrute
           </Link>
         </div>
