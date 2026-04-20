@@ -13,6 +13,7 @@ import DashboardRecruteur from './pages/DashboardRecruteur'
 import Paiement from './pages/Paiement'
 import Inscription from './pages/Inscription'
 import Finalisation from './pages/Finalisation'
+import CompléterProfil from './pages/CompléterProfil'
 import DashboardAdmin from './pages/DashboardAdmin'
 import Offres from './pages/Offres'
 import AuthConfirm from './pages/AuthConfirm'
@@ -66,6 +67,7 @@ function App() {
             <Route path="/paiement" element={<Paiement />} />
             <Route path="/offres" element={<Offres />} />
             <Route path="/finaliser/:token" element={<Finalisation />} />
+            <Route path="/completer-profil" element={<PrivateRoute><CompléterProfil /></PrivateRoute>} />
             <Route path="/dashboard-admin" element={<PrivateRoute><DashboardAdmin /></PrivateRoute>} />
             <Route path="/auth/confirm" element={<AuthConfirm />} />
             <Route path="/mot-de-passe-oublie" element={<MotDePasseOublie />} />

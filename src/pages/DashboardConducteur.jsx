@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
 
@@ -516,6 +516,7 @@ function TabDocuments({ profil, session, onUpdate }) {
 // ── PAGE PRINCIPALE ───────────────────────────────────────────
 function DashboardConducteur() {
   const { user, session } = useAuth();
+  const navigate = useNavigate();
   const [profil, setProfil] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -547,13 +548,19 @@ function DashboardConducteur() {
         }
       }
 
+      // Garde-fou : profil non finalisé → rediriger vers complétion
+      if (data && data.inscription_finalisee === false) {
+        navigate('/completer-profil', { replace: true });
+        return;
+      }
+
       setProfil(data);
     } catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
-  }, [user]);
+  }, [user, navigate]);
 
   useEffect(() => { if (user) fetchProfil(); }, [user, fetchProfil]);
 

@@ -1,19 +1,24 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
+import API_URL from '../lib/api.js';
 
-/**
- * Page intermédiaire appelée quand l'utilisateur clique sur le lien
- * de confirmation d'email envoyé par Supabase.
- *
- * Supabase redirige vers :
- *   /auth/confirm#access_token=...&type=signup   (flux implicite)
- * ou
- *   /auth/confirm?code=...                        (flux PKCE)
- *
- * On échange le token / code, puis on redirige vers /connexion
- * avec un message de succès.
- */
+async function getRedirectPath(session) {
+  const role = session?.user?.user_metadata?.role;
+  if (role !== 'conducteur') return '/connexion?email_confirme=1';
+
+  try {
+    const res = await fetch(`${API_URL}/api/conducteurs/moi`, {
+      headers: { Authorization: `Bearer ${session.access_token}` },
+    });
+    if (!res.ok) return '/connexion?email_confirme=1';
+    const profil = await res.json();
+    return profil.inscription_finalisee ? '/dashboard-conducteur' : '/completer-profil';
+  } catch {
+    return '/connexion?email_confirme=1';
+  }
+}
+
 export default function AuthConfirm() {
   const navigate = useNavigate();
   const [erreur, setErreur] = useState('');
@@ -25,32 +30,42 @@ export default function AuthConfirm() {
       const code = params.get('code');
 
       if (code) {
-        const { error } = await supabase.auth.exchangeCodeForSession(code);
+        const { data, error } = await supabase.auth.exchangeCodeForSession(code);
         if (error) {
-          setErreur("Le lien de confirmation est invalide ou a expiré.");
+          setErreur('Le lien de confirmation est invalide ou a expiré.');
           return;
         }
-        // Déconnexion immédiate : on veut juste valider l'email,
-        // pas connecter l'utilisateur automatiquement.
-        await supabase.auth.signOut();
-        navigate('/connexion?email_confirme=1', { replace: true });
+        const path = await getRedirectPath(data.session);
+        // Si on redirige vers completer-profil, on garde la session active
+        if (path !== '/completer-profil') {
+          await supabase.auth.signOut();
+          navigate('/connexion?email_confirme=1', { replace: true });
+        } else {
+          navigate(path, { replace: true });
+        }
         return;
       }
 
       // ── Flux implicite : #access_token=... ────────────────────
-      // onAuthStateChange dans AuthContext intercepte déjà le hash
-      // et crée la session. On attend un tick puis on redirige.
       const hash = window.location.hash;
       if (hash.includes('access_token') && hash.includes('type=signup')) {
-        // Laisser Supabase traiter le hash, puis déconnecter
         setTimeout(async () => {
-          await supabase.auth.signOut();
-          navigate('/connexion?email_confirme=1', { replace: true });
+          const { data: { session } } = await supabase.auth.getSession();
+          if (!session) {
+            navigate('/connexion?email_confirme=1', { replace: true });
+            return;
+          }
+          const path = await getRedirectPath(session);
+          if (path !== '/completer-profil') {
+            await supabase.auth.signOut();
+            navigate('/connexion?email_confirme=1', { replace: true });
+          } else {
+            navigate(path, { replace: true });
+          }
         }, 800);
         return;
       }
 
-      // Aucun token trouvé → redirection simple
       navigate('/connexion', { replace: true });
     };
 
