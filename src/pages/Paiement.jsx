@@ -1,7 +1,14 @@
-import { useState, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
+import { QRCodeSVG } from 'qrcode.react';
 import { useAuth } from '../context/AuthContext';
-import API_URL from '../lib/api.js';
+
+const WAVE_LINKS = {
+  conducteur: 'https://pay.wave.com/m/M_jmHLrVUQHD8r/c/ci/?amount=2500',
+  recruteur:  'https://pay.wave.com/m/M_jmHLrVUQHD8r/c/ci/?amount=10000',
+};
+
+const WHATSAPP_NUMBER = '2250575421717';
 
 const CONFIG = {
   conducteur: {
@@ -27,24 +34,25 @@ const CONFIG = {
   },
 };
 
-const PROVIDERS = [
-  { id: 'momo', label: 'MTN MoMo', active: true, color: '#FFCC00', textColor: '#1A1A1A' },
-  { id: 'wave', label: 'Wave', active: false },
-  { id: 'orange', label: 'Orange Money', active: false },
-];
+function isMobileDevice() {
+  return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+}
 
-const POLL_INTERVAL_MS = 3000;
-const POLL_MAX_MS = 120000; // 2 min
+function buildWhatsAppUrl({ role, montant, prenom, nom, email }) {
+  const roleLabel = role === 'conducteur' ? 'conducteur' : 'recruteur';
+  const waveLink = WAVE_LINKS[role];
+  const msg = [
+    `Bonjour Wikya, je souhaite activer mon abonnement ${roleLabel} (${montant} F).`,
+    `Lien de paiement Wave : ${waveLink}`,
+    `Nom : ${prenom || ''} ${nom || ''} | Email : ${email || ''}`,
+  ].join('\n');
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
+}
 
 export default function Paiement() {
   const [searchParams] = useSearchParams();
-  const { user, session } = useAuth();
-  const [loading, setLoading] = useState(false);
-  const [erreur, setErreur] = useState('');
-  const [provider, setProvider] = useState('momo');
-  const [phone, setPhone] = useState('');
-  const [pollingState, setPollingState] = useState(null); // null | 'waiting' | 'confirme' | 'echec' | 'timeout'
-  const pollingRef = useRef(null);
+  const { user } = useAuth();
+  const [isMobile, setIsMobile] = useState(false);
 
   const status = searchParams.get('status');
   const roleParam = searchParams.get('role');
@@ -57,109 +65,18 @@ export default function Paiement() {
     ? new Date(launchEndDate).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
     : '';
 
-  function stopPolling() {
-    if (pollingRef.current) {
-      clearInterval(pollingRef.current.interval);
-      clearTimeout(pollingRef.current.timeout);
-      pollingRef.current = null;
-    }
-  }
+  useEffect(() => { setIsMobile(isMobileDevice()); }, []);
 
-  async function pollStatut(referenceId, token) {
-    try {
-      const res = await fetch(`${API_URL}/api/paiements/statut/${referenceId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (!res.ok) return;
-      const { statut } = await res.json();
-      if (statut === 'confirme') {
-        stopPolling();
-        setPollingState('confirme');
-        setLoading(false);
-      } else if (statut === 'echec') {
-        stopPolling();
-        setPollingState('echec');
-        setLoading(false);
-      }
-    } catch {
-      // réseau temporaire, on continue
-    }
-  }
+  const waveLink = WAVE_LINKS[role] || '';
+  const whatsappUrl = buildWhatsAppUrl({
+    role,
+    montant: config?.montant,
+    prenom: user?.user_metadata?.prenom || '',
+    nom: user?.user_metadata?.nom || '',
+    email: user?.email || '',
+  });
 
-  const handlePayer = async () => {
-    if (!session?.access_token) return;
-    setLoading(true);
-    setErreur('');
-
-    try {
-      const body = { role, provider };
-      if (provider === 'momo') {
-        if (!phone.trim()) {
-          setErreur('Veuillez entrer votre numéro MTN');
-          setLoading(false);
-          return;
-        }
-        // Formater : +225XXXXXXXXXX → 225XXXXXXXXXX
-        body.phone = phone.trim().replace(/^\+/, '');
-      }
-
-      const res = await fetch(`${API_URL}/api/paiements/initier`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${session.access_token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(body),
-      });
-
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.error || `Erreur ${res.status}`);
-      }
-
-      const data = await res.json();
-
-      if (provider === 'momo') {
-        const { referenceId } = data;
-        setPollingState('waiting');
-
-        const interval = setInterval(() => pollStatut(referenceId, session.access_token), POLL_INTERVAL_MS);
-        const timeout = setTimeout(() => {
-          stopPolling();
-          setPollingState('timeout');
-          setLoading(false);
-        }, POLL_MAX_MS);
-
-        pollingRef.current = { interval, timeout };
-      } else if (data.checkout_url) {
-        window.location.href = data.checkout_url;
-      }
-    } catch (err) {
-      setErreur(err.message);
-      setLoading(false);
-    }
-  };
-
-  // ── SUCCÈS MoMo (polling) ─────────────────────────────────────
-  if (pollingState === 'confirme') {
-    const dashPath = role === 'conducteur' ? '/dashboard-conducteur' : '/dashboard-recruteur';
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4">
-        <div className="bg-white rounded-2xl shadow-sm p-10 max-w-md w-full text-center">
-          <div className="text-6xl mb-4">🎉</div>
-          <h1 className="text-2xl font-bold text-wikya-blue mb-2">Paiement confirmé !</h1>
-          <p className="text-gray-500 mb-8">
-            Votre abonnement est maintenant actif. Profitez pleinement de la plateforme.
-          </p>
-          <Link to={dashPath} className="btn btn-primary w-full block text-center">
-            Accéder à mon espace →
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
-  // ── SUCCÈS Wave (redirect return) ────────────────────────────
+  // ── SUCCÈS ────────────────────────────────────────────────────
   if (status === 'succes') {
     const dashPath = role === 'conducteur' ? '/dashboard-conducteur' : '/dashboard-recruteur';
     return (
@@ -178,61 +95,26 @@ export default function Paiement() {
     );
   }
 
-  // ── ERREUR / TIMEOUT ─────────────────────────────────────────
-  if (status === 'erreur' || pollingState === 'echec' || pollingState === 'timeout') {
-    const message = pollingState === 'timeout'
-      ? 'La confirmation MTN n\'a pas été reçue dans le délai imparti. Si votre solde a été débité, contactez-nous.'
-      : 'Votre paiement n\'a pas été complété. Vous pouvez réessayer ou nous contacter.';
+  // ── ERREUR ────────────────────────────────────────────────────
+  if (status === 'erreur') {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4">
         <div className="bg-white rounded-2xl shadow-sm p-10 max-w-md w-full text-center">
           <div className="text-6xl mb-4">❌</div>
           <h1 className="text-2xl font-bold text-wikya-blue mb-2">Paiement non abouti</h1>
-          <p className="text-gray-500 mb-8">{message}</p>
+          <p className="text-gray-500 mb-8">
+            Votre paiement n'a pas été complété. Vous pouvez réessayer ou nous contacter.
+          </p>
           <button
-            onClick={() => { setPollingState(null); window.history.replaceState({}, '', `/paiement?role=${role}`); }}
+            onClick={() => window.location.replace(`/paiement?role=${role}`)}
             className="btn btn-primary w-full mb-3"
           >
             Réessayer
           </button>
-          <a
-            href="https://wa.me/2250575421717"
-            target="_blank" rel="noopener noreferrer"
-            className="text-sm text-wikya-orange hover:underline"
-          >
+          <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener noreferrer"
+            className="text-sm text-wikya-orange hover:underline">
             Besoin d'aide ? Contactez-nous sur WhatsApp
           </a>
-        </div>
-      </div>
-    );
-  }
-
-  // ── ATTENTE CONFIRMATION MTN ──────────────────────────────────
-  if (pollingState === 'waiting') {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4">
-        <div className="bg-white rounded-2xl shadow-sm p-10 max-w-md w-full text-center">
-          <div className="flex justify-center mb-6">
-            <div className="w-16 h-16 rounded-full bg-yellow-400 flex items-center justify-center animate-pulse">
-              <span className="text-2xl font-bold text-black">M</span>
-            </div>
-          </div>
-          <h1 className="text-xl font-bold text-wikya-blue mb-3">En attente de confirmation MTN</h1>
-          <p className="text-gray-500 text-sm mb-2">
-            Une notification a été envoyée sur le numéro <strong>{phone}</strong>.
-          </p>
-          <p className="text-gray-400 text-xs mb-6">
-            Confirmez le paiement sur votre téléphone. Cette page se met à jour automatiquement.
-          </p>
-          <div className="flex justify-center gap-1">
-            {[0, 1, 2].map(i => (
-              <div
-                key={i}
-                className="w-2 h-2 bg-wikya-orange rounded-full animate-bounce"
-                style={{ animationDelay: `${i * 0.15}s` }}
-              />
-            ))}
-          </div>
         </div>
       </div>
     );
@@ -255,10 +137,11 @@ export default function Paiement() {
     <div className="min-h-screen bg-gray-50 py-12 px-4">
       <div className="max-w-lg mx-auto">
         <div className="bg-white rounded-2xl shadow-sm p-8">
+
           <h1 className="text-2xl font-bold text-wikya-blue mb-1">
             Abonnement {config.label}
           </h1>
-          <p className="text-gray-400 text-sm mb-6">Paiement mobile sécurisé</p>
+          <p className="text-gray-400 text-sm mb-6">Paiement sécurisé via Wave</p>
 
           {/* Récapitulatif */}
           <div className="bg-gray-50 rounded-xl p-5 mb-6">
@@ -291,65 +174,9 @@ export default function Paiement() {
             </ul>
           </div>
 
-          {/* Sélecteur provider */}
-          <div className="mb-5">
-            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">
-              Moyen de paiement
-            </p>
-            <div className="grid grid-cols-3 gap-2">
-              {PROVIDERS.map(p => (
-                <button
-                  key={p.id}
-                  onClick={() => p.active && setProvider(p.id)}
-                  disabled={!p.active}
-                  className={[
-                    'relative border-2 rounded-xl py-3 px-2 text-center transition-all text-sm font-semibold',
-                    p.active && provider === p.id
-                      ? 'border-wikya-orange bg-orange-50 text-wikya-orange'
-                      : p.active
-                        ? 'border-gray-200 text-gray-700 hover:border-gray-300'
-                        : 'border-gray-100 text-gray-300 cursor-not-allowed bg-gray-50',
-                  ].join(' ')}
-                >
-                  {p.label}
-                  {!p.active && (
-                    <span className="absolute -top-2 left-1/2 -translate-x-1/2 bg-gray-200 text-gray-500 text-[10px] px-1.5 py-0.5 rounded-full whitespace-nowrap">
-                      Bientôt
-                    </span>
-                  )}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Saisie numéro MTN */}
-          {provider === 'momo' && (
-            <div className="mb-5">
-              <label className="block text-xs font-semibold text-gray-500 mb-2 uppercase tracking-wide">
-                Numéro MTN MoMo
-              </label>
-              <div className="flex items-center border-2 border-gray-200 rounded-xl overflow-hidden focus-within:border-wikya-orange transition-colors">
-                <span className="px-3 py-3 bg-gray-50 text-gray-500 text-sm border-r border-gray-200 shrink-0">
-                  +225
-                </span>
-                <input
-                  type="tel"
-                  value={phone.replace(/^\+?225/, '')}
-                  onChange={e => setPhone('225' + e.target.value.replace(/\D/g, '').slice(0, 10))}
-                  placeholder="01 23 45 67 89"
-                  className="flex-1 px-3 py-3 text-sm outline-none bg-white"
-                  maxLength={10}
-                />
-              </div>
-              <p className="text-xs text-gray-400 mt-1">
-                Vous recevrez une notification de confirmation sur ce numéro.
-              </p>
-            </div>
-          )}
-
           {/* Notice période de lancement conducteur */}
           {isLaunchPeriod && role === 'conducteur' && (
-            <div className="bg-green-50 border border-green-200 rounded-xl p-4 mb-4 text-center">
+            <div className="bg-green-50 border border-green-200 rounded-xl p-4 mb-6 text-center">
               <p className="text-green-800 font-semibold mb-1">🎉 Accès gratuit jusqu'au {launchEndFormatted}</p>
               <p className="text-green-700 text-sm">Vous n'avez pas besoin de payer pendant la période de lancement.</p>
               <Link to="/dashboard-conducteur" className="mt-3 inline-block btn bg-green-600 text-white hover:bg-green-700 text-sm">
@@ -358,40 +185,119 @@ export default function Paiement() {
             </div>
           )}
 
-          {erreur && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm mb-4">
-              {erreur}
-            </div>
+          {!(isLaunchPeriod && role === 'conducteur') && user && (
+            <>
+              {/* ── MOBILE : bouton WhatsApp principal ── */}
+              {isMobile && (
+                <div className="mb-5">
+                  <a
+                    href={whatsappUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center gap-3 w-full bg-[#25D366] hover:bg-[#1ebe5d] text-white font-semibold py-4 px-6 rounded-xl text-base transition-colors"
+                  >
+                    <svg className="w-6 h-6 shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                    </svg>
+                    Payer {config.montant} FCFA via WhatsApp
+                  </a>
+                  <p className="text-xs text-gray-400 text-center mt-2">
+                    Le lien Wave est inclus dans le message — payez depuis l'app Wave
+                  </p>
+                  <div className="flex items-center gap-3 my-4">
+                    <div className="flex-1 h-px bg-gray-200" />
+                    <span className="text-xs text-gray-400">ou</span>
+                    <div className="flex-1 h-px bg-gray-200" />
+                  </div>
+                  <a href={waveLink} target="_blank" rel="noopener noreferrer"
+                    className="block text-center text-sm text-wikya-blue hover:underline">
+                    Ouvrir directement la page Wave →
+                  </a>
+                </div>
+              )}
+
+              {/* ── DESKTOP : QR code principal ── */}
+              {!isMobile && (
+                <div className="mb-5">
+                  <div className="border-2 border-gray-100 rounded-xl p-6 text-center">
+                    <p className="text-sm font-semibold text-gray-700 mb-1">
+                      Scannez pour payer via Wave
+                    </p>
+                    <p className="text-xs text-gray-400 mb-4">
+                      Ouvrez l'app Wave sur votre téléphone → Payer → Scanner
+                    </p>
+                    <div className="flex justify-center mb-4">
+                      <div className="p-3 bg-white rounded-xl shadow-sm border border-gray-100 inline-block">
+                        <QRCodeSVG
+                          value={waveLink}
+                          size={160}
+                          bgColor="#ffffff"
+                          fgColor="#1A56DB"
+                          level="M"
+                        />
+                      </div>
+                    </div>
+                    <p className="text-xs text-gray-400 mb-4">
+                      Montant : <strong className="text-wikya-blue">{config.montant} FCFA</strong>
+                    </p>
+                    <a href={waveLink} target="_blank" rel="noopener noreferrer"
+                      className="text-xs text-wikya-blue hover:underline">
+                      Ou ouvrir la page Wave directement →
+                    </a>
+                  </div>
+                  <div className="flex items-center gap-3 my-4">
+                    <div className="flex-1 h-px bg-gray-200" />
+                    <span className="text-xs text-gray-400">sur téléphone</span>
+                    <div className="flex-1 h-px bg-gray-200" />
+                  </div>
+                  <a
+                    href={whatsappUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center gap-2 w-full border-2 border-[#25D366] text-[#25D366] hover:bg-green-50 font-medium py-3 px-4 rounded-xl text-sm transition-colors"
+                  >
+                    <svg className="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                    </svg>
+                    Payer via WhatsApp depuis mon téléphone
+                  </a>
+                </div>
+              )}
+
+              {/* ── Providers à venir ── */}
+              <div className="mt-2">
+                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">
+                  Autres moyens de paiement — bientôt disponibles
+                </p>
+                <div className="grid grid-cols-3 gap-2">
+                  {[
+                    { label: 'MTN MoMo', color: 'bg-yellow-400 text-black' },
+                    { label: 'Orange Money', color: 'bg-orange-500 text-white' },
+                    { label: 'Wave direct', color: 'bg-blue-500 text-white' },
+                  ].map(p => (
+                    <div key={p.label}
+                      className="relative border-2 border-gray-100 rounded-xl py-3 px-2 text-center text-xs font-semibold text-gray-300 bg-gray-50">
+                      {p.label}
+                      <span className="absolute -top-2 left-1/2 -translate-x-1/2 bg-gray-200 text-gray-500 text-[10px] px-1.5 py-0.5 rounded-full whitespace-nowrap">
+                        Bientôt
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
           )}
 
-          {!(isLaunchPeriod && role === 'conducteur') && (
-            user ? (
-              <button
-                onClick={handlePayer}
-                disabled={loading}
-                className="btn btn-primary w-full text-base py-4 disabled:opacity-60"
-              >
-                {loading
-                  ? 'Envoi de la demande...'
-                  : `Payer ${config.montant} FCFA${provider === 'momo' ? ' via MTN MoMo' : ''}`}
-              </button>
-            ) : (
-              <Link
-                to="/connexion"
-                className="btn btn-primary w-full text-center block"
-              >
-                Se connecter pour payer
-              </Link>
-            )
+          {!(isLaunchPeriod && role === 'conducteur') && !user && (
+            <Link to="/connexion" className="btn btn-primary w-full text-center block">
+              Se connecter pour payer
+            </Link>
           )}
 
-          <p className="text-center text-xs text-gray-400 mt-4">
+          <p className="text-center text-xs text-gray-400 mt-6">
             Un problème ?{' '}
-            <a
-              href="https://wa.me/2250575421717"
-              target="_blank" rel="noopener noreferrer"
-              className="text-wikya-orange hover:underline"
-            >
+            <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener noreferrer"
+              className="text-wikya-orange hover:underline">
               WhatsApp 24/7
             </a>
           </p>

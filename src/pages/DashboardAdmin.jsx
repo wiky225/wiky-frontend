@@ -11,7 +11,8 @@ const TABS = [
   { id: 'avis', label: '⭐ Avis' },
   { id: 'whatsapp', label: '📱 WhatsApp' },
   { id: 'import', label: '📥 Import CSV' },
-  { id: 'annonces', label: '📢 Publicités' }
+  { id: 'annonces', label: '📢 Publicités' },
+  { id: 'abonnements', label: '💳 Abonnements' }
 ];
 
 const FORMATS = [
@@ -809,6 +810,114 @@ function TabImport({ token }) {
   );
 }
 
+// ── ABONNEMENTS ──────────────────────────────────────────────
+function TabAbonnements({ token }) {
+  const [conducteurs, setConducteurs] = useState([]);
+  const [recruteurs, setRecruteurs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [activating, setActivating] = useState({});
+  const [activated, setActivated] = useState({});
+
+  const headers = { Authorization: `Bearer ${token}` };
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    const [rc, rr] = await Promise.all([
+      fetch(`${API_URL}/api/admin/conducteurs?limit=200`, { headers }).then(r => r.json()),
+      fetch(`${API_URL}/api/admin/recruteurs?limit=200`, { headers }).then(r => r.json()),
+    ]);
+    setConducteurs((rc.data || []).filter(c => !c.abonnement_actif));
+    setRecruteurs((rr.data || []).filter(r => !r.abonnement_actif));
+    setLoading(false);
+  }, [token]);
+
+  useEffect(() => { load(); }, [load]);
+
+  const activer = async (role, id, nom) => {
+    if (!confirm(`Activer l'abonnement de ${nom} ?`)) return;
+    setActivating(a => ({ ...a, [`${role}-${id}`]: true }));
+    try {
+      const res = await fetch(`${API_URL}/api/admin/${role}s/${id}/abonnement`, { method: 'PATCH', headers });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || 'Erreur');
+      const dateStr = json.date_fin ? new Date(json.date_fin).toLocaleDateString('fr-FR') : '—';
+      setActivated(a => ({ ...a, [`${role}-${id}`]: dateStr }));
+      if (role === 'conducteur') setConducteurs(c => c.filter(x => x.id !== id));
+      else setRecruteurs(r => r.filter(x => x.id !== id));
+    } catch (err) {
+      alert('Erreur : ' + err.message);
+    } finally {
+      setActivating(a => ({ ...a, [`${role}-${id}`]: false }));
+    }
+  };
+
+  const Section = ({ title, items, role }) => (
+    <div className="mb-8">
+      <h3 className="text-lg font-semibold text-gray-700 mb-3">{title} <span className="text-sm font-normal text-gray-400">({items.length})</span></h3>
+      {items.length === 0 ? (
+        <p className="text-sm text-gray-400 italic">Aucun abonnement en attente.</p>
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm border-collapse">
+            <thead>
+              <tr className="bg-gray-50 text-gray-500 text-xs uppercase">
+                <th className="text-left px-3 py-2">Nom</th>
+                <th className="text-left px-3 py-2">Téléphone</th>
+                <th className="text-left px-3 py-2">Email</th>
+                {role === 'recruteur' && <th className="text-left px-3 py-2">Entreprise</th>}
+                <th className="text-left px-3 py-2">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {items.map(item => {
+                const key = `${role}-${item.id}`;
+                const nom = `${item.prenom || ''} ${item.nom || ''}`.trim();
+                return (
+                  <tr key={item.id} className="border-t border-gray-100 hover:bg-gray-50">
+                    <td className="px-3 py-2 font-medium">{nom}</td>
+                    <td className="px-3 py-2 text-gray-500">{item.telephone || '—'}</td>
+                    <td className="px-3 py-2 text-gray-500">{item.email}</td>
+                    {role === 'recruteur' && <td className="px-3 py-2 text-gray-500">{item.entreprise || '—'}</td>}
+                    <td className="px-3 py-2">
+                      {activated[key] ? (
+                        <span className="text-green-600 text-xs font-medium">✅ Actif jusqu'au {activated[key]}</span>
+                      ) : (
+                        <button
+                          onClick={() => activer(role, item.id, nom)}
+                          disabled={activating[key]}
+                          className="bg-wikya-blue text-white text-xs px-3 py-1.5 rounded-lg hover:bg-blue-700 disabled:opacity-50 transition"
+                        >
+                          {activating[key] ? 'Activation…' : 'Activer'}
+                        </button>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  );
+
+  if (loading) return <p className="text-gray-400 text-sm">Chargement…</p>;
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-xl font-bold text-gray-800">Abonnements à activer</h2>
+        <button onClick={load} className="text-sm text-wikya-blue hover:underline">↺ Rafraîchir</button>
+      </div>
+      <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-6 text-sm text-amber-700">
+        Activez un abonnement après réception du paiement Wave. Conducteur = 2 mois · Recruteur = 1 mois.
+      </div>
+      <Section title="🚗 Conducteurs sans abonnement actif" items={conducteurs} role="conducteur" />
+      <Section title="🏢 Recruteurs sans abonnement actif" items={recruteurs} role="recruteur" />
+    </div>
+  );
+}
+
 // ── PUBLICITÉS / CAMPAGNES ────────────────────────────────────
 function TabAnnonces({ token }) {
   const [campagnes, setCampagnes] = useState([]);
@@ -1192,6 +1301,7 @@ export default function DashboardAdmin() {
           {activeTab === 'whatsapp' && <TabWhatsapp token={token} />}
           {activeTab === 'import' && <TabImport token={token} />}
           {activeTab === 'annonces' && <TabAnnonces token={token} />}
+          {activeTab === 'abonnements' && <TabAbonnements token={token} />}
         </div>
       </div>
     </div>
