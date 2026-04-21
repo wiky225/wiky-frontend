@@ -267,7 +267,7 @@ function TabRecruteurs({ token }) {
             <tbody>
               {data.map(r => (
                 <tr key={r.id} className="border-t hover:bg-gray-50">
-                  <td className="p-3 font-medium">{r.nom} {r.prenom}</td>
+                  <td className="p-3 font-medium">{r.prenom_responsable} {r.nom_responsable}</td>
                   <td className="p-3 text-gray-500">{r.email}</td>
                   <td className="p-3 capitalize">{r.type_recruteur || 'particulier'}</td>
                   <td className="p-3">
@@ -871,13 +871,15 @@ function TabAbonnements({ token }) {
             <tbody>
               {items.map(item => {
                 const key = `${role}-${item.id}`;
-                const nom = `${item.prenom || ''} ${item.nom || ''}`.trim();
+                const nom = role === 'recruteur'
+                  ? `${item.prenom_responsable || ''} ${item.nom_responsable || ''}`.trim()
+                  : `${item.prenom || ''} ${item.nom || ''}`.trim();
                 return (
                   <tr key={item.id} className="border-t border-gray-100 hover:bg-gray-50">
                     <td className="px-3 py-2 font-medium">{nom}</td>
                     <td className="px-3 py-2 text-gray-500">{item.telephone || '—'}</td>
                     <td className="px-3 py-2 text-gray-500">{item.email}</td>
-                    {role === 'recruteur' && <td className="px-3 py-2 text-gray-500">{item.entreprise || '—'}</td>}
+                    {role === 'recruteur' && <td className="px-3 py-2 text-gray-500">{item.nom_entreprise || '—'}</td>}
                     <td className="px-3 py-2">
                       {activated[key] ? (
                         <span className="text-green-600 text-xs font-medium">✅ Actif jusqu'au {activated[key]}</span>
