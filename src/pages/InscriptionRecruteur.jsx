@@ -183,7 +183,7 @@ function InscriptionRecruteur() {
           <Link to="/connexion" className="btn btn-primary w-full mb-3">
             Aller à la Connexion
           </Link>
-          <Link to="/paiement" className="btn btn-secondary w-full">
+          <Link to="/paiement?role=recruteur" className="btn btn-secondary w-full">
             Accéder au Paiement maintenant
           </Link>
         </div>
