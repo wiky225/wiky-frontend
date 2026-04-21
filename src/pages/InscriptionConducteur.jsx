@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import PhoneInput from '../components/PhoneInput';
@@ -18,6 +18,7 @@ export default function InscriptionConducteur() {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
   const [captchaToken, setCaptchaToken] = useState(null);
+  const turnstileRef = useRef(null);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [form, setForm] = useState({
@@ -83,6 +84,8 @@ export default function InscriptionConducteur() {
       setSuccess(true);
     } catch (err) {
       setError(err.message);
+      setCaptchaToken(null);
+      turnstileRef.current?.reset();
     } finally {
       setLoading(false);
     }
@@ -232,7 +235,7 @@ export default function InscriptionConducteur() {
 
           {/* Turnstile */}
           <div className="flex justify-center">
-            <Turnstile siteKey={TURNSTILE_SITE_KEY} onSuccess={t => setCaptchaToken(t)} />
+            <Turnstile ref={turnstileRef} siteKey={TURNSTILE_SITE_KEY} onSuccess={t => setCaptchaToken(t)} onError={() => setCaptchaToken(null)} onExpire={() => setCaptchaToken(null)} />
           </div>
 
           <button type="submit" disabled={loading}

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import PhoneInput from '../components/PhoneInput';
@@ -53,6 +53,7 @@ function InscriptionRecruteur() {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
   const [captchaToken, setCaptchaToken] = useState(null);
+  const turnstileRef = useRef(null);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [logoFile, setLogoFile] = useState(null);
@@ -155,6 +156,8 @@ function InscriptionRecruteur() {
       setSuccess(true);
     } catch (err) {
       setError(err.message);
+      setCaptchaToken(null);
+      turnstileRef.current?.reset();
     } finally {
       setLoading(false);
     }
@@ -356,7 +359,7 @@ function InscriptionRecruteur() {
               </label>
 
               <div className="flex justify-center">
-                <Turnstile siteKey={TURNSTILE_SITE_KEY} onSuccess={(token) => setCaptchaToken(token)} />
+                <Turnstile ref={turnstileRef} siteKey={TURNSTILE_SITE_KEY} onSuccess={(token) => setCaptchaToken(token)} onError={() => setCaptchaToken(null)} onExpire={() => setCaptchaToken(null)} />
               </div>
 
               <div className="flex gap-3 pt-1">
