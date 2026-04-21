@@ -426,7 +426,7 @@ export default function Finalisation() {
           {/* Documents — Permis de conduire */}
           <div className="bg-white rounded-lg shadow p-6 space-y-4">
             <h2 className="text-xl font-bold text-wikya-blue border-b pb-2">📄 Permis de conduire</h2>
-            <p className="text-sm text-gray-500">Téléchargez une photo ou un scan de votre permis (recto et verso). Formats acceptés : JPG, PNG, PDF — 10 Mo max.</p>
+            <p className="text-sm text-gray-500">Prenez une photo de votre permis (recto et verso). Formats acceptés : JPG, PNG — 10 Mo max.</p>
             <div className="grid md:grid-cols-2 gap-4">
               {['recto', 'verso'].map(side => (
                 <div key={side}>
@@ -440,7 +440,7 @@ export default function Finalisation() {
                     </div>
                   ) : (
                     <label className={`flex items-center justify-center border-2 border-dashed rounded-lg p-4 cursor-pointer transition-colors ${uploadingPermis[side] ? 'opacity-60 cursor-not-allowed border-gray-300' : 'border-gray-300 hover:border-wikya-blue'}`}>
-                      <input type="file" className="hidden" accept="image/*,.pdf"
+                      <input type="file" className="hidden" accept="image/*"
                         disabled={uploadingPermis[side]}
                         onChange={e => handlePermisUpload(e.target.files[0], side)} />
                       {uploadingPermis[side]
