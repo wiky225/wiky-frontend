@@ -27,6 +27,7 @@ import RecruteurDetail from './pages/RecruteurDetail'
 import PrivateRoute from './components/PrivateRoute'
 import InstallPWA from './components/InstallPWA'
 import AIChatWidget from './components/AIChatWidget'
+import ScrollToTop from './components/ScrollToTop'
 
 function NotFound() {
   return (
@@ -52,6 +53,7 @@ function App() {
     <HelmetProvider>
     <Router>
       <div className="min-h-screen flex flex-col">
+        <ScrollToTop />
         <Header />
         <InstallPWA />
         <main className="flex-grow">
