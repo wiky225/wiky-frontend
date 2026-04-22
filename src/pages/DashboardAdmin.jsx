@@ -753,7 +753,8 @@ function TabWhatsapp({ token }) {
                   </thead>
                   <tbody>
                     {dataFiltree.map((d, i) => {
-                const link = waLink(d.telephone, d.message);
+                const telEffectif = editingId === d.id ? editTel : d.telephone;
+                const link = waLink(telEffectif, d.message);
                 return (
                   <tr key={i} className="border-t hover:bg-gray-50">
                     <td className="p-3">
