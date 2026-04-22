@@ -5,7 +5,7 @@ export default function ConditionsGenerales() {
         <div className="bg-white rounded-2xl shadow-sm p-8 md:p-12">
 
           <h1 className="text-3xl font-bold text-wikya-blue mb-2">Conditions Générales d'Utilisation</h1>
-          <p className="text-gray-400 text-sm mb-10">Dernière mise à jour : février 2026</p>
+          <p className="text-gray-400 text-sm mb-10">Dernière mise à jour : avril 2026</p>
 
           <section className="mb-10">
             <h2 className="text-lg font-bold text-wikya-blue mb-4 pb-2 border-b">1. Présentation de la plateforme</h2>
@@ -68,9 +68,12 @@ export default function ConditionsGenerales() {
                 </ul>
               </div>
 
-              <p>Les paiements sont effectués via <strong>Wave</strong> et sont non remboursables sauf en cas
-              d'erreur technique avérée de la plateforme. En cas de problème de paiement, contactez-nous
-              à <a href="mailto:contact@wikya.ci" className="text-wikya-blue hover:underline">contact@wikya.ci</a>.</p>
+              <p>Les paiements sont effectués via <strong>Wave</strong>. Après paiement, l'utilisateur confirme
+              sa transaction en envoyant un message WhatsApp pré-rempli à l'équipe Wikya. L'activation de
+              l'abonnement est effectuée manuellement par l'équipe dans les meilleurs délais. Les paiements sont
+              non remboursables sauf en cas d'erreur technique avérée de la plateforme. En cas de problème de
+              paiement, contactez-nous à{' '}
+              <a href="mailto:contact@wikya.ci" className="text-wikya-blue hover:underline">contact@wikya.ci</a>.</p>
             </div>
           </section>
 

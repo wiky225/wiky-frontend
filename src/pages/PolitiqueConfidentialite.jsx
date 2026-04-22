@@ -5,7 +5,7 @@ export default function PolitiqueConfidentialite() {
         <div className="bg-white rounded-2xl shadow-sm p-8 md:p-12">
 
           <h1 className="text-3xl font-bold text-wikya-blue mb-2">Politique de confidentialité</h1>
-          <p className="text-gray-400 text-sm mb-10">Dernière mise à jour : février 2026</p>
+          <p className="text-gray-400 text-sm mb-10">Dernière mise à jour : avril 2026</p>
 
           <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 mb-10 text-sm text-gray-600">
             Wikya by ATL Cars s'engage à protéger la vie privée de ses utilisateurs conformément à la{' '}
@@ -65,6 +65,7 @@ export default function PolitiqueConfidentialite() {
               <li>Affichage du profil conducteur dans le répertoire</li>
               <li>Gestion des abonnements et paiements</li>
               <li>Envoi de notifications (rappels d'abonnement) par WhatsApp et email</li>
+              <li>Assistance utilisateurs via l'agent IA intégré à la plateforme</li>
               <li>Amélioration de la qualité du service</li>
             </ul>
           </section>
@@ -149,7 +150,9 @@ export default function PolitiqueConfidentialite() {
                     ['Supabase', 'Base de données & authentification', 'Toutes les données utilisateurs'],
                     ['Cloudinary', 'Stockage des photos et documents', 'Photos de profil, permis de conduire'],
                     ['Wave', 'Paiement en ligne', 'Montant, référence de transaction'],
-                    ['Brevo', 'Envoi d\'emails', 'Email, prénom'],
+                    ['Resend', 'Envoi d\'emails transactionnels', 'Email, prénom'],
+                    ['Anthropic', 'Agent IA (assistant conversationnel)', 'Messages de conversation (non persistés)'],
+                    ['Cloudflare', 'Protection anti-spam (Turnstile)', 'Adresse IP, empreinte navigateur'],
                     ['Meta (WhatsApp)', 'Notifications WhatsApp', 'Numéro de téléphone, message'],
                     ['Vercel', 'Hébergement frontend', 'Aucune donnée personnelle'],
                     ['Render', 'Hébergement backend', 'Aucune donnée personnelle'],
