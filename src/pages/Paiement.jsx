@@ -1,7 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { QRCodeSVG } from 'qrcode.react';
 import { useAuth } from '../context/AuthContext';
+import { supabase } from '../lib/supabase';
+import API_URL from '../lib/api.js';
 
 const WAVE_LINKS = {
   conducteur: 'https://pay.wave.com/m/M_jmHLrVUQHD8r/c/ci/?amount=2500',
@@ -53,6 +55,8 @@ export default function Paiement() {
   const [searchParams] = useSearchParams();
   const { user } = useAuth();
   const [isMobile, setIsMobile] = useState(false);
+  const [notified, setNotified] = useState(false);
+  const [notifying, setNotifying] = useState(false);
 
   const status = searchParams.get('status');
   const roleParam = searchParams.get('role');
@@ -66,6 +70,21 @@ export default function Paiement() {
     : '';
 
   useEffect(() => { setIsMobile(isMobileDevice()); }, []);
+
+  const notifierAdmin = useCallback(async () => {
+    if (notified || notifying || !user) return;
+    setNotifying(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      await fetch(`${API_URL}/api/paiements/notifier-wave`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${session?.access_token}` },
+      });
+      setNotified(true);
+    } catch { /* silencieux */ } finally {
+      setNotifying(false);
+    }
+  }, [user, notified, notifying]);
 
   const waveLink = WAVE_LINKS[role] || '';
   const whatsappUrl = buildWhatsAppUrl({
@@ -204,6 +223,13 @@ export default function Paiement() {
                   <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mt-4 text-sm text-amber-800 text-center">
                     Après votre paiement, votre abonnement sera activé par notre équipe sous <strong>24h</strong>.
                   </div>
+                  <button
+                    onClick={notifierAdmin}
+                    disabled={notifying || notified}
+                    className={`mt-3 w-full py-3 rounded-xl text-sm font-medium transition-colors ${notified ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                  >
+                    {notified ? '✅ Équipe notifiée — activation sous 24h' : notifying ? 'Envoi...' : "J'ai effectué mon paiement"}
+                  </button>
                 </div>
               )}
 
@@ -239,6 +265,13 @@ export default function Paiement() {
                   <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mt-4 text-sm text-amber-800 text-center">
                     Après votre paiement, votre abonnement sera activé par notre équipe sous <strong>24h</strong>.
                   </div>
+                  <button
+                    onClick={notifierAdmin}
+                    disabled={notifying || notified}
+                    className={`mt-3 w-full py-3 rounded-xl text-sm font-medium transition-colors ${notified ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                  >
+                    {notified ? '✅ Équipe notifiée — activation sous 24h' : notifying ? 'Envoi...' : "J'ai effectué mon paiement"}
+                  </button>
                 </div>
               )}
 
