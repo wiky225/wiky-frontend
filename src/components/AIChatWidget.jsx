@@ -104,11 +104,7 @@ export default function AIChatWidget() {
           {/* Header */}
           <div className="bg-wikya-blue px-4 py-3 flex items-center justify-between shrink-0">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
-                <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M10 2a8 8 0 100 16A8 8 0 0010 2zm0 3a1 1 0 110 2 1 1 0 010-2zm0 4a1 1 0 011 1v4a1 1 0 11-2 0v-4a1 1 0 011-1z"/>
-                </svg>
-              </div>
+              <img src="/avatar-agent.png" alt="Assistant Wikya" className="w-9 h-9 rounded-full object-cover border-2 border-white/30" />
               <div>
                 <p className="text-white font-semibold text-sm leading-none">Assistant Wikya</p>
                 <p className="text-white/70 text-xs">Réponse immédiate</p>
@@ -198,17 +194,16 @@ export default function AIChatWidget() {
         <button
           onClick={handleOpenChat}
           aria-label="Assistant Wikya"
-          className="relative w-[52px] h-[52px] rounded-full bg-wikya-blue shadow-lg hover:shadow-xl hover:scale-105 transition-all flex items-center justify-center"
+          className="relative w-[52px] h-[52px] rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all flex items-center justify-center overflow-hidden bg-wikya-blue"
         >
           {open ? (
-            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/>
-            </svg>
+            <div className="w-full h-full bg-wikya-blue flex items-center justify-center">
+              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </div>
           ) : (
-            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z"/>
-            </svg>
+            <img src="/avatar-agent.png" alt="Assistant Wikya" className="w-full h-full object-cover" />
           )}
         </button>
       </div>
