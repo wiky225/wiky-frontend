@@ -26,6 +26,12 @@
   </url>
 
   <url>
+    <loc>https://wikya.ci/inscription-conducteur</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
     <loc>https://wikya.ci/inscription-recruteur</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>

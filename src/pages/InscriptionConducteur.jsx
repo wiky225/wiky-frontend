@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { supabase } from '../lib/supabase';
 import PhoneInput from '../components/PhoneInput';
 import { Turnstile } from '@marsidev/react-turnstile';
@@ -117,6 +118,11 @@ export default function InscriptionConducteur() {
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4">
+      <Helmet>
+        <title>Inscription conducteur VTC — Wikya Côte d'Ivoire</title>
+        <meta name="description" content="Créez votre profil conducteur VTC gratuitement sur Wikya et soyez visible par des centaines de recruteurs en Côte d'Ivoire." />
+        <link rel="canonical" href="https://wikya.ci/inscription-conducteur" />
+      </Helmet>
       <div className="max-w-xl mx-auto">
 
         <div className="text-center mb-8">

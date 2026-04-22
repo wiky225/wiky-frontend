@@ -1,4 +1,12 @@
 User-agent: *
 Allow: /
 
+Disallow: /dashboard-conducteur
+Disallow: /dashboard-recruteur
+Disallow: /dashboard-admin
+Disallow: /completer-profil
+Disallow: /finaliser/
+Disallow: /auth/
+Disallow: /paiement
+
 Sitemap: https://wikya.ci/sitemap.xml

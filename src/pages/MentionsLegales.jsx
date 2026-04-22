@@ -47,6 +47,11 @@ export default function MentionsLegales() {
                 <p>Cloudinary Ltd. — Petah Tikva, Israël</p>
                 <p><a href="https://cloudinary.com" target="_blank" rel="noopener noreferrer" className="text-wikya-blue hover:underline">cloudinary.com</a></p>
               </div>
+              <div>
+                <p className="font-semibold text-gray-700">Intelligence artificielle (assistant conversationnel)</p>
+                <p>Anthropic PBC — 548 Market St, San Francisco, CA 94104, États-Unis</p>
+                <p><a href="https://anthropic.com" target="_blank" rel="noopener noreferrer" className="text-wikya-blue hover:underline">anthropic.com</a></p>
+              </div>
             </div>
           </section>
 
