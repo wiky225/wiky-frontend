@@ -56,6 +56,8 @@ export default function Finalisation() {
           date_naissance: data.date_naissance || '',
           nationalite: natConnue || !nat ? nat : 'Autre',
           nationalite_autre: !natConnue && nat ? nat : '',
+          type_piece: data.type_piece || '',
+          numero_piece: data.numero_piece || '',
           ville: data.ville || '',
           commune: data.commune || '',
           quartier: data.quartier || '',
