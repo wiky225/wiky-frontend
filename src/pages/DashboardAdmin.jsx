@@ -465,6 +465,26 @@ function TabWhatsapp({ token }) {
     setTimeout(() => setCopiedRecruteur(false), 2000);
   };
 
+  // Rappel fin période de lancement — conducteurs
+  const messageRappelConducteur = `Bonjour [Prénom] 👋\n\nNous espérons que vous profitez bien de Wikya depuis votre inscription !\n\nNous vous informons que la *période de lancement gratuite* se termine le *1er mai 2026*.\n\nÀ partir de cette date, un abonnement à *2 500 FCFA / 2 mois* sera nécessaire pour que vos coordonnées restent visibles par les recruteurs.\n\n💳 Souscrivez maintenant pour ne pas perdre votre visibilité :\n👉 ${FRONTEND_URL}/paiement?role=conducteur\n\nMerci de votre confiance !\nL'équipe Wikya`;
+
+  const [copiedRappelConducteur, setCopiedRappelConducteur] = useState(false);
+  const copyRappelConducteur = () => {
+    navigator.clipboard.writeText(messageRappelConducteur);
+    setCopiedRappelConducteur(true);
+    setTimeout(() => setCopiedRappelConducteur(false), 2000);
+  };
+
+  // Rappel fin période de lancement — recruteurs
+  const messageRappelRecruteur = `Bonjour [Prénom] 👋\n\nNous espérons que vous avez trouvé des conducteurs qualifiés sur Wikya !\n\nNous vous informons que la *période de lancement gratuite* se termine le *1er mai 2026*.\n\nÀ partir de cette date, un abonnement à *10 000 FCFA / mois* sera nécessaire pour continuer à accéder aux coordonnées complètes des conducteurs.\n\n💳 Souscrivez maintenant pour ne pas perdre l'accès :\n👉 ${FRONTEND_URL}/paiement?role=recruteur\n\nMerci de votre confiance !\nL'équipe Wikya`;
+
+  const [copiedRappelRecruteur, setCopiedRappelRecruteur] = useState(false);
+  const copyRappelRecruteur = () => {
+    navigator.clipboard.writeText(messageRappelRecruteur);
+    setCopiedRappelRecruteur(true);
+    setTimeout(() => setCopiedRappelRecruteur(false), 2000);
+  };
+
   return (
     <div className="space-y-6">
 
@@ -544,6 +564,55 @@ function TabWhatsapp({ token }) {
           {`Bonjour [Prénom] 👋\n\nSuite à votre inscription lors de notre campagne *"Tu cherches position ? Inscris-toi ici"*, nous revenons vers vous comme promis.\n\nNous avons mis en place *Wikya*, une plateforme qui vous met en relation avec des recruteurs VTC — entreprises et particuliers — pour que vous puissiez proposer vos services et consulter leurs offres.\n\nBienvenue sur Wikya ! 🎉\nFinalisez votre inscription ici :\n👉 [lien personnalisé]`}
         </div>
         <p className="text-xs text-gray-400 mt-2">Le prénom et le lien sont automatiquement personnalisés pour chaque conducteur.</p>
+      </div>
+
+      {/* ── Rappels fin de lancement ── */}
+      <div className="border-t pt-4">
+        <h3 className="font-semibold text-gray-700 mb-3">⏰ Fin de période de lancement (1er mai 2026)</h3>
+        <p className="text-xs text-gray-400 mb-4">À envoyer J-3 à J-5 avant le 1er mai à tous les utilisateurs actifs sans abonnement payant.</p>
+        <div className="grid md:grid-cols-2 gap-4">
+
+          {/* Conducteurs */}
+          <div className="bg-amber-50 border-2 border-amber-200 rounded-xl p-4">
+            <div className="flex items-start gap-2 mb-3">
+              <span className="text-xl">🚗</span>
+              <div>
+                <h4 className="font-bold text-amber-700 text-sm">Rappel conducteurs</h4>
+                <p className="text-xs text-gray-500 mt-0.5">Pour tous les conducteurs inscrits sans abonnement actif.</p>
+              </div>
+            </div>
+            <div className="bg-white border rounded-lg p-3 text-xs text-gray-700 whitespace-pre-wrap font-mono leading-relaxed max-h-48 overflow-y-auto">
+              {messageRappelConducteur}
+            </div>
+            <button
+              onClick={copyRappelConducteur}
+              className={`mt-3 inline-flex items-center gap-2 px-3 py-1.5 rounded-lg font-semibold text-xs transition-colors ${copiedRappelConducteur ? 'bg-green-100 text-green-700' : 'bg-amber-600 text-white hover:bg-amber-700'}`}
+            >
+              {copiedRappelConducteur ? '✅ Copié !' : '📋 Copier'}
+            </button>
+          </div>
+
+          {/* Recruteurs */}
+          <div className="bg-red-50 border-2 border-red-200 rounded-xl p-4">
+            <div className="flex items-start gap-2 mb-3">
+              <span className="text-xl">🏢</span>
+              <div>
+                <h4 className="font-bold text-red-700 text-sm">Rappel recruteurs</h4>
+                <p className="text-xs text-gray-500 mt-0.5">Pour tous les recruteurs inscrits sans abonnement actif.</p>
+              </div>
+            </div>
+            <div className="bg-white border rounded-lg p-3 text-xs text-gray-700 whitespace-pre-wrap font-mono leading-relaxed max-h-48 overflow-y-auto">
+              {messageRappelRecruteur}
+            </div>
+            <button
+              onClick={copyRappelRecruteur}
+              className={`mt-3 inline-flex items-center gap-2 px-3 py-1.5 rounded-lg font-semibold text-xs transition-colors ${copiedRappelRecruteur ? 'bg-green-100 text-green-700' : 'bg-red-600 text-white hover:bg-red-700'}`}
+            >
+              {copiedRappelRecruteur ? '✅ Copié !' : '📋 Copier'}
+            </button>
+          </div>
+
+        </div>
       </div>
 
       {/* ── Séparateur ── */}
