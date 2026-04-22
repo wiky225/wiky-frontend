@@ -363,6 +363,8 @@ function TabWhatsapp({ token }) {
   const [savingTel, setSavingTel] = useState(false);
   const [search, setSearch] = useState('');
   const [filtreTel, setFiltreTel] = useState('');
+  const [filtreContact, setFiltreContact] = useState('tous'); // 'tous' | 'a_contacter' | 'contactes'
+  const [togglingId, setTogglingId] = useState(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -420,6 +422,22 @@ function TabWhatsapp({ token }) {
       alert('Erreur : ' + err.message);
     } finally {
       setSavingTel(false);
+    }
+  };
+
+  const toggleContacte = async (id, current) => {
+    setTogglingId(id);
+    try {
+      await fetch(`${API_URL}/api/admin/conducteurs/${id}`, {
+        method: 'PATCH',
+        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ whatsapp_envoye: !current }),
+      });
+      setData(prev => prev.map(d => d.id === id ? { ...d, whatsapp_envoye: !current } : d));
+    } catch (err) {
+      alert('Erreur : ' + err.message);
+    } finally {
+      setTogglingId(null);
     }
   };
 
@@ -617,12 +635,51 @@ function TabWhatsapp({ token }) {
 
       {/* ── Séparateur ── */}
       <div className="border-t pt-2">
-        <h3 className="font-semibold text-gray-700 mb-3">Conducteurs pré-inscrits à contacter</h3>
+        <div className="flex items-center justify-between flex-wrap gap-3">
+          <h3 className="font-semibold text-gray-700">Conducteurs pré-inscrits à contacter</h3>
+          {data.length > 0 && (
+            <div className="flex items-center gap-3">
+              <div className="text-sm font-semibold text-green-700 bg-green-100 rounded-full px-3 py-1">
+                ✅ {data.filter(d => d.whatsapp_envoye).length} contactés
+              </div>
+              <div className="text-sm font-semibold text-orange-700 bg-orange-100 rounded-full px-3 py-1">
+                ⏳ {data.filter(d => !d.whatsapp_envoye).length} restants
+              </div>
+              <div className="text-xs text-gray-400">/ {data.length} total</div>
+            </div>
+          )}
+        </div>
+        {/* Barre de progression */}
+        {data.length > 0 && (
+          <div className="mt-2 h-2 bg-gray-100 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-green-500 rounded-full transition-all duration-500"
+              style={{ width: `${(data.filter(d => d.whatsapp_envoye).length / data.length) * 100}%` }}
+            />
+          </div>
+        )}
       </div>
 
       <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-sm text-green-800">
         <p className="font-medium mb-1">Comment utiliser cette liste ?</p>
-        <p>Cliquez sur <strong>WhatsApp</strong> pour ouvrir une conversation avec le conducteur. Le message d'invitation est pré-rempli — il vous suffit d'envoyer.</p>
+        <p>Cliquez sur <strong>WhatsApp</strong> pour ouvrir une conversation avec le conducteur. Cochez <strong>Contacté</strong> après envoi pour suivre votre progression.</p>
+      </div>
+
+      {/* ── Filtres contact + recherche ── */}
+      <div className="flex flex-wrap gap-2 items-center">
+        {[
+          { value: 'tous', label: 'Tous' },
+          { value: 'a_contacter', label: '⏳ À contacter' },
+          { value: 'contactes', label: '✅ Contactés' },
+        ].map(f => (
+          <button
+            key={f.value}
+            onClick={() => setFiltreContact(f.value)}
+            className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${filtreContact === f.value ? 'bg-wikya-blue text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+          >
+            {f.label}
+          </button>
+        ))}
       </div>
 
       {/* ── Recherche et filtres ── */}
@@ -655,6 +712,8 @@ function TabWhatsapp({ token }) {
           if (q && !`${d.prenom} ${d.nom} ${d.email}`.toLowerCase().includes(q)) return false;
           if (filtreTel === 'avec' && !d.telephone) return false;
           if (filtreTel === 'sans' && d.telephone) return false;
+          if (filtreContact === 'a_contacter' && d.whatsapp_envoye) return false;
+          if (filtreContact === 'contactes' && !d.whatsapp_envoye) return false;
           return true;
         });
 
@@ -762,6 +821,14 @@ function TabWhatsapp({ token }) {
                         <button onClick={() => copyMessage(i, d.message)}
                           className="text-xs px-2 py-1 bg-gray-100 rounded hover:bg-gray-200 transition-colors">
                           {copied === i ? '✅' : '📋'}
+                        </button>
+                        <button
+                          onClick={() => toggleContacte(d.id, d.whatsapp_envoye)}
+                          disabled={togglingId === d.id}
+                          title={d.whatsapp_envoye ? 'Marquer comme non contacté' : 'Marquer comme contacté'}
+                          className={`text-xs px-2 py-1.5 rounded-lg font-semibold transition-colors disabled:opacity-50 ${d.whatsapp_envoye ? 'bg-green-100 text-green-700 hover:bg-green-200' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}
+                        >
+                          {togglingId === d.id ? '…' : d.whatsapp_envoye ? '✅ Contacté' : '○ Marquer'}
                         </button>
                       </div>
                     </td>
