@@ -20,15 +20,36 @@ function getWelcomeMessage(user) {
   return 'Bonjour ! Je suis l\'assistant Wikya. Comment puis-je vous aider ? (inscription, tarifs, fonctionnement…)';
 }
 
+const BUBBLE_KEY = 'wikya_chat_bubble_seen';
+
 export default function AIChatWidget() {
   const { user, loading } = useAuth();
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [thinking, setThinking] = useState(false);
+  const [showBubble, setShowBubble] = useState(false);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
   const sessionId = useRef(getOrCreateSessionId());
+
+  // Bulle de bienvenue — apparaît après 4s, une seule fois par navigateur
+  useEffect(() => {
+    if (loading) return;
+    if (localStorage.getItem(BUBBLE_KEY)) return;
+    const t1 = setTimeout(() => setShowBubble(true), 4000);
+    const t2 = setTimeout(() => {
+      setShowBubble(false);
+      localStorage.setItem(BUBBLE_KEY, '1');
+    }, 12000);
+    return () => { clearTimeout(t1); clearTimeout(t2); };
+  }, [loading]);
+
+  const handleOpenChat = () => {
+    setShowBubble(false);
+    localStorage.setItem(BUBBLE_KEY, '1');
+    setOpen(o => !o);
+  };
 
   useEffect(() => {
     if (open && messages.length === 0) {
@@ -151,23 +172,46 @@ export default function AIChatWidget() {
         </div>
       )}
 
-      {/* Bouton flottant */}
-      <button
-        onClick={() => setOpen(o => !o)}
-        aria-label="Assistant Wikya"
-        className="fixed bottom-24 right-4 sm:right-6 w-13 h-13 w-[52px] h-[52px] rounded-full bg-wikya-blue shadow-lg hover:shadow-xl hover:scale-105 transition-all z-40 flex items-center justify-center"
-      >
-        {open ? (
-          <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/>
-          </svg>
-        ) : (
-          <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z"/>
-          </svg>
+      {/* Bulle de bienvenue */}
+      {showBubble && !open && (
+        <div
+          onClick={handleOpenChat}
+          className="fixed bottom-[7.5rem] right-4 sm:right-6 z-40 cursor-pointer animate-bounce-soft"
+          style={{ animation: 'fadeSlideIn 0.4s ease-out' }}
+        >
+          <div className="bg-white text-gray-800 text-sm rounded-2xl rounded-br-sm shadow-xl border border-gray-100 px-4 py-3 max-w-[220px] relative">
+            👋 Bonjour ! Besoin d'aide pour vous inscrire ?
+            <button
+              onClick={e => { e.stopPropagation(); setShowBubble(false); localStorage.setItem(BUBBLE_KEY, '1'); }}
+              className="absolute -top-2 -right-2 w-5 h-5 bg-gray-300 hover:bg-gray-400 rounded-full text-white text-xs flex items-center justify-center"
+            >×</button>
+          </div>
+          <div className="w-3 h-3 bg-white border-r border-b border-gray-100 absolute -bottom-1.5 right-5 rotate-45"/>
+        </div>
+      )}
+
+      {/* Bouton flottant avec pulse */}
+      <div className="fixed bottom-24 right-4 sm:right-6 z-40">
+        {!open && (
+          <span className="absolute inset-0 rounded-full bg-wikya-orange opacity-40 animate-ping"/>
         )}
-      </button>
+        <button
+          onClick={handleOpenChat}
+          aria-label="Assistant Wikya"
+          className="relative w-[52px] h-[52px] rounded-full bg-wikya-blue shadow-lg hover:shadow-xl hover:scale-105 transition-all flex items-center justify-center"
+        >
+          {open ? (
+            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          ) : (
+            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z"/>
+            </svg>
+          )}
+        </button>
+      </div>
     </>
   );
 }
