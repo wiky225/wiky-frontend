@@ -26,6 +26,7 @@ import FAQ from './pages/FAQ'
 import RecruteurDetail from './pages/RecruteurDetail'
 import PrivateRoute from './components/PrivateRoute'
 import InstallPWA from './components/InstallPWA'
+import AIChatWidget from './components/AIChatWidget'
 
 function NotFound() {
   return (
@@ -80,6 +81,7 @@ function App() {
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
+        <AIChatWidget />
         <Footer />
       </div>
     </Router>
