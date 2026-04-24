@@ -89,13 +89,14 @@ function TabStats({ token, notifications = [], unreadCount = 0, markNotifRead, m
   }, [token]);
 
   if (!stats) return <p className="text-gray-400">Chargement des statistiques…</p>;
+  if (stats.error) return <p className="text-red-500">Erreur : {stats.error}</p>;
 
   const fmt = (n) => (n || 0).toLocaleString('fr-FR');
   const fcfa = (n) => `${(n || 0).toLocaleString('fr-FR')} FCFA`;
-  const c = stats.conducteurs;
-  const r = stats.recruteurs;
-  const p = stats.paiements;
-  const a = stats.avis;
+  const c = stats.conducteurs || {};
+  const r = stats.recruteurs || {};
+  const p = stats.paiements || {};
+  const a = stats.avis || {};
 
   return (
     <div className="space-y-8">
