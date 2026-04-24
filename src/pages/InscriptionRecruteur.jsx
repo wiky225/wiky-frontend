@@ -154,6 +154,7 @@ function InscriptionRecruteur() {
         throw new Error(data.error || 'Erreur lors de la création du profil.');
       }
 
+      if (window.fbq) window.fbq('track', 'CompleteRegistration', { content_name: 'recruteur' });
       setSuccess(true);
     } catch (err) {
       setError(err.message);

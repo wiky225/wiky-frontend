@@ -82,6 +82,7 @@ export default function InscriptionConducteur() {
         }
       });
 
+      if (window.fbq) window.fbq('track', 'CompleteRegistration', { content_name: 'conducteur' });
       setSuccess(true);
     } catch (err) {
       setError(err.message);
