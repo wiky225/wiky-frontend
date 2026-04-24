@@ -40,6 +40,45 @@ function StatCard({ label, value, sub, color = 'blue' }) {
   );
 }
 
+// ── MINI BARRE DE TENDANCE ───────────────────────────────────
+function TendanceBarre({ data = [], color = 'bg-wikya-blue' }) {
+  const max = Math.max(...data.map(d => d.count), 1);
+  return (
+    <div className="flex items-end gap-0.5 h-12">
+      {data.map((d, i) => (
+        <div key={i} className="flex-1 flex flex-col items-center gap-0.5 group relative">
+          <div
+            className={`w-full rounded-sm ${color} opacity-80 group-hover:opacity-100 transition-all`}
+            style={{ height: `${Math.max((d.count / max) * 100, 4)}%` }}
+            title={`${d.date} : ${d.count}`}
+          />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ── DISTRIBUTION DES ÉTOILES ─────────────────────────────────
+function DistribEtoiles({ parNote = {} }) {
+  const total = Object.values(parNote).reduce((s, n) => s + n, 0) || 1;
+  return (
+    <div className="space-y-1.5">
+      {[5,4,3,2,1].map(n => (
+        <div key={n} className="flex items-center gap-2 text-xs">
+          <span className="w-4 text-right text-gray-500 shrink-0">{n}★</span>
+          <div className="flex-1 bg-gray-100 rounded-full h-2 overflow-hidden">
+            <div
+              className="h-2 rounded-full bg-wikya-orange transition-all"
+              style={{ width: `${((parNote[n] || 0) / total) * 100}%` }}
+            />
+          </div>
+          <span className="w-6 text-right text-gray-500 shrink-0">{parNote[n] || 0}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 // ── VUE D'ENSEMBLE ──────────────────────────────────────────
 function TabStats({ token, notifications = [], unreadCount = 0, markNotifRead, markAllRead }) {
   const [stats, setStats] = useState(null);
@@ -49,28 +88,151 @@ function TabStats({ token, notifications = [], unreadCount = 0, markNotifRead, m
       .then(r => r.json()).then(setStats);
   }, [token]);
 
-  if (!stats) return <p className="text-gray-400">Chargement...</p>;
+  if (!stats) return <p className="text-gray-400">Chargement des statistiques…</p>;
+
+  const fmt = (n) => (n || 0).toLocaleString('fr-FR');
+  const fcfa = (n) => `${(n || 0).toLocaleString('fr-FR')} FCFA`;
+  const c = stats.conducteurs;
+  const r = stats.recruteurs;
+  const p = stats.paiements;
+  const a = stats.avis;
+
   return (
-    <div className="space-y-6">
-      <h2 className="text-xl font-bold text-wikya-blue">Conducteurs</h2>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <StatCard label="Total" value={stats.conducteurs.total} color="blue" />
-        <StatCard label="Finalisés" value={stats.conducteurs.finalises} color="green" />
-        <StatCard label="Non finalisés" value={stats.conducteurs.non_finalises} color="orange" />
-        <StatCard label="Archivés" value={stats.conducteurs.archives} color="gray" />
+    <div className="space-y-8">
+
+      {/* ── KPIs principaux ── */}
+      <div>
+        <h2 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Vue d'ensemble</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <StatCard label="Conducteurs inscrits" value={fmt(c.total)} sub={`+${c.nouveaux_7j} cette semaine`} color="blue" />
+          <StatCard label="Recruteurs inscrits" value={fmt(r.total)} sub={`${r.abonnes} abonnés actifs`} color="blue" />
+          <StatCard label="Chiffre d'affaires total" value={fcfa(p.montant_total)} sub={`${p.confirmes} paiements confirmés`} color="green" />
+          <StatCard label="CA ce mois" value={fcfa(p.montant_mois)} sub={`${p.echecs} échecs · ${p.en_attente} en attente`} color="green" />
+        </div>
       </div>
-      <h2 className="text-xl font-bold text-wikya-blue">Recruteurs</h2>
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-        <StatCard label="Total" value={stats.recruteurs.total} color="blue" />
-        <StatCard label="Abonnés actifs" value={stats.recruteurs.abonnes} color="green" />
-        <StatCard label="Avis publiés" value={stats.avis.total} color="orange" />
+
+      {/* ── Conducteurs ── */}
+      <div>
+        <h2 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Conducteurs</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+          <StatCard label="Total" value={fmt(c.total)} color="blue" />
+          <StatCard label="Finalisés" value={fmt(c.finalises)} sub={`${c.taux_finalisation}% de taux`} color="green" />
+          <StatCard label="Non finalisés" value={fmt(c.non_finalises)} color="orange" />
+          <StatCard label="Archivés" value={fmt(c.archives)} color="gray" />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Statuts */}
+          <div className="bg-white rounded-lg shadow p-5">
+            <p className="text-sm font-semibold text-wikya-blue mb-3">Statuts (profils finalisés)</p>
+            <div className="space-y-2">
+              {[
+                { label: 'Disponible', val: c.par_statut?.disponible || 0, color: 'bg-green-400' },
+                { label: 'En poste', val: c.par_statut?.en_poste || 0, color: 'bg-orange-400' },
+                { label: 'Indisponible', val: c.par_statut?.indisponible || 0, color: 'bg-gray-300' },
+              ].map(({ label, val, color }) => {
+                const tot = (c.par_statut?.disponible || 0) + (c.par_statut?.en_poste || 0) + (c.par_statut?.indisponible || 0) || 1;
+                return (
+                  <div key={label} className="flex items-center gap-2 text-sm">
+                    <span className={`w-2.5 h-2.5 rounded-full shrink-0 ${color}`} />
+                    <span className="flex-1 text-gray-600">{label}</span>
+                    <span className="font-bold text-wikya-blue">{val}</span>
+                    <span className="text-gray-400 w-10 text-right">{Math.round((val / tot) * 100)}%</span>
+                  </div>
+                );
+              })}
+            </div>
+            <div className="mt-3 pt-3 border-t border-gray-100 flex justify-between text-xs text-gray-500">
+              <span>Nouveaux 30j : <strong className="text-wikya-blue">{c.nouveaux_30j}</strong></span>
+              <span>Abonnés actifs : <strong className="text-wikya-blue">{c.avec_abonnement}</strong></span>
+            </div>
+          </div>
+          {/* Tendance conducteurs */}
+          <div className="bg-white rounded-lg shadow p-5">
+            <p className="text-sm font-semibold text-wikya-blue mb-1">Inscriptions conducteurs — 30 derniers jours</p>
+            <p className="text-xs text-gray-400 mb-3">{c.nouveaux_30j} nouveaux conducteurs</p>
+            <TendanceBarre data={stats.tendance?.conducteurs || []} color="bg-wikya-blue" />
+          </div>
+        </div>
+      </div>
+
+      {/* ── Recruteurs ── */}
+      <div>
+        <h2 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Recruteurs</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+          <StatCard label="Total recruteurs" value={fmt(r.total)} color="blue" />
+          <StatCard label="Abonnés actifs" value={fmt(r.abonnes)} color="green" />
+          <StatCard label="Non abonnés" value={fmt(r.non_abonnes)} color="orange" />
+          <StatCard label="Taux de conversion" value={`${r.taux_conversion}%`} sub="inscrits → abonnés" color="green" />
+        </div>
+        <div className="bg-white rounded-lg shadow p-5">
+          <p className="text-sm font-semibold text-wikya-blue mb-1">Inscriptions recruteurs — 30 derniers jours</p>
+          <p className="text-xs text-gray-400 mb-3">{r.nouveaux_30j} nouveaux recruteurs</p>
+          <TendanceBarre data={stats.tendance?.recruteurs || []} color="bg-wikya-orange" />
+        </div>
+      </div>
+
+      {/* ── Paiements ── */}
+      <div>
+        <h2 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Paiements</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+          <StatCard label="Total paiements" value={fmt(p.total)} color="blue" />
+          <StatCard label="Confirmés" value={fmt(p.confirmes)} color="green" />
+          <StatCard label="Échoués" value={fmt(p.echecs)} color="orange" />
+          <StatCard label="En attente" value={fmt(p.en_attente)} color="gray" />
+        </div>
+        {p.par_provider && Object.keys(p.par_provider).length > 0 && (
+          <div className="bg-white rounded-lg shadow p-5">
+            <p className="text-sm font-semibold text-wikya-blue mb-3">Répartition par provider</p>
+            <div className="flex flex-wrap gap-4">
+              {Object.entries(p.par_provider).map(([provider, count]) => (
+                <div key={provider} className="flex items-center gap-2 text-sm">
+                  <span className="w-2.5 h-2.5 rounded-full bg-wikya-blue shrink-0" />
+                  <span className="text-gray-600 capitalize">{provider}</span>
+                  <span className="font-bold text-wikya-blue">{count}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* ── Avis + Autres ── */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Avis */}
+        <div className="bg-white rounded-lg shadow p-5">
+          <p className="text-sm font-semibold text-wikya-blue mb-1">Avis conducteurs</p>
+          <div className="flex items-baseline gap-2 mb-3">
+            <span className="text-3xl font-bold text-wikya-orange">{a.note_moyenne || '—'}</span>
+            <span className="text-gray-400 text-sm">/ 5 · {fmt(a.total)} avis</span>
+          </div>
+          <DistribEtoiles parNote={a.par_note} />
+        </div>
+        {/* Autres métriques */}
+        <div className="bg-white rounded-lg shadow p-5">
+          <p className="text-sm font-semibold text-wikya-blue mb-3">Autres métriques</p>
+          <div className="space-y-3">
+            {[
+              { label: 'Offres publiées', val: stats.offres?.total || 0, sub: `${stats.offres?.actives || 0} actives` },
+              { label: 'Favoris ajoutés', val: stats.favoris?.total || 0, sub: 'conducteurs mis en favoris' },
+              { label: 'Campagnes publicitaires actives', val: stats.campagnes?.actives || 0, sub: '' },
+            ].map(({ label, val, sub }) => (
+              <div key={label} className="flex justify-between items-center py-2 border-b border-gray-50 last:border-0">
+                <div>
+                  <p className="text-sm text-gray-700">{label}</p>
+                  {sub && <p className="text-xs text-gray-400">{sub}</p>}
+                </div>
+                <span className="text-xl font-bold text-wikya-blue">{fmt(val)}</span>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* ── Notifications internes ── */}
       {notifications.length > 0 && (
         <div>
           <div className="flex justify-between items-center mb-3">
-            <h2 className="text-xl font-bold text-wikya-blue">
+            <h2 className="text-xs font-bold text-gray-400 uppercase tracking-widest">
               Finalisations récentes
               {unreadCount > 0 && (
                 <span className="ml-2 bg-red-500 text-white text-xs rounded-full px-2 py-0.5 align-middle">
