@@ -10,6 +10,7 @@ const TABS = [
   { id: 'recruteurs', label: '🏢 Recruteurs' },
   { id: 'avis', label: '⭐ Avis' },
   { id: 'whatsapp', label: '📱 WhatsApp' },
+  { id: 'emails', label: '📧 Emails' },
   { id: 'import', label: '📥 Import CSV' },
   { id: 'annonces', label: '📢 Publicités' },
   { id: 'abonnements', label: '💳 Abonnements' }
@@ -1010,6 +1011,155 @@ function TabWhatsapp({ token }) {
   );
 }
 
+// ── EMAILS ───────────────────────────────────────────────────
+function TabEmails({ token }) {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [sending, setSending] = useState({});
+  const [batchSending, setBatchSending] = useState(false);
+  const [batchResult, setBatchResult] = useState(null);
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    const res = await fetch(`${API_URL}/api/admin/emails`, { headers: { Authorization: `Bearer ${token}` } });
+    const json = await res.json();
+    setData(Array.isArray(json) ? json : []);
+    setLoading(false);
+  }, [token]);
+
+  useEffect(() => { load(); }, [load]);
+
+  const renvoyer = async (c) => {
+    setSending(s => ({ ...s, [c.id]: true }));
+    try {
+      const res = await fetch(`${API_URL}/api/admin/emails/renvoyer/${c.id}`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error);
+      setData(d => d.filter(x => x.id !== c.id));
+    } catch (err) {
+      alert('Erreur : ' + err.message);
+    } finally {
+      setSending(s => ({ ...s, [c.id]: false }));
+    }
+  };
+
+  const renvoyerBatch = async () => {
+    const nb = Math.min(data.length, 50);
+    if (!confirm(`Envoyer l'email de finalisation à ${nb} conducteur(s) ?`)) return;
+    setBatchSending(true);
+    setBatchResult(null);
+    try {
+      const ids = data.slice(0, 50).map(c => c.id);
+      const res = await fetch(`${API_URL}/api/admin/emails/renvoyer-batch`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ids })
+      });
+      const json = await res.json();
+      setBatchResult(json);
+      await load();
+    } catch (err) {
+      alert('Erreur : ' + err.message);
+    } finally {
+      setBatchSending(false);
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 text-sm text-amber-800">
+        <p className="font-semibold mb-1">⚠️ Limite Resend (plan gratuit)</p>
+        <p>100 emails/jour maximum. Envoyez par lots de 50 pour rester dans la limite. Les envois sont tracés dans la table <code className="bg-amber-100 px-1 rounded">logs_email</code> de Supabase.</p>
+      </div>
+
+      <div className="flex items-center justify-between flex-wrap gap-3">
+        <div>
+          <p className="text-lg font-bold text-wikya-blue">{data.length} email(s) à envoyer</p>
+          <p className="text-xs text-gray-400 mt-0.5">Conducteurs pré-inscrits · non finalisés · email jamais envoyé</p>
+        </div>
+        <div className="flex gap-2">
+          <button onClick={load} disabled={loading} className="text-sm px-3 py-2 border rounded-lg hover:bg-gray-50 transition">
+            🔄 Actualiser
+          </button>
+          {data.length > 0 && (
+            <button
+              onClick={renvoyerBatch}
+              disabled={batchSending}
+              className="bg-wikya-blue text-white px-4 py-2 rounded-lg font-semibold text-sm hover:bg-blue-700 disabled:opacity-50 transition"
+            >
+              {batchSending ? '⏳ Envoi en cours…' : `📤 Envoyer aux ${Math.min(data.length, 50)} premiers`}
+            </button>
+          )}
+        </div>
+      </div>
+
+      {batchResult && (
+        <div className={`rounded-lg p-4 text-sm border ${batchResult.echecs > 0 ? 'bg-orange-50 border-orange-200 text-orange-800' : 'bg-green-50 border-green-200 text-green-800'}`}>
+          <p className="font-semibold mb-1">Résultat du batch</p>
+          <p>✅ Envoyés avec succès : <strong>{batchResult.envoyes}</strong></p>
+          {batchResult.echecs > 0 && (
+            <p>❌ Échecs : <strong>{batchResult.echecs}</strong> — vérifiez <code>logs_email</code> dans Supabase</p>
+          )}
+        </div>
+      )}
+
+      {loading ? (
+        <p className="text-gray-400 text-sm">Chargement…</p>
+      ) : data.length === 0 ? (
+        <div className="text-center py-16 text-gray-400">
+          <p className="text-5xl mb-4">✅</p>
+          <p className="font-medium">Tous les emails ont été envoyés !</p>
+          <p className="text-xs mt-2">Consultez l'onglet Conducteurs pour suivre les finalisations.</p>
+        </div>
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="text-left p-3">Conducteur</th>
+                <th className="text-left p-3">Email</th>
+                <th className="text-left p-3">Téléphone</th>
+                <th className="text-left p-3">WhatsApp</th>
+                <th className="text-left p-3">Inscrit le</th>
+                <th className="text-left p-3">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.map(c => (
+                <tr key={c.id} className="border-t hover:bg-gray-50">
+                  <td className="p-3 font-medium">{c.prenom} {c.nom}</td>
+                  <td className="p-3 text-gray-600">{c.email}</td>
+                  <td className="p-3 text-gray-500 text-xs">{c.telephone || <span className="text-gray-300 italic">—</span>}</td>
+                  <td className="p-3">
+                    {c.whatsapp_envoye
+                      ? <span className="text-green-600 text-xs">✅ Contacté</span>
+                      : <span className="text-gray-400 text-xs">Non contacté</span>}
+                  </td>
+                  <td className="p-3 text-gray-500 text-xs">
+                    {new Date(c.created_at).toLocaleDateString('fr-FR')}
+                  </td>
+                  <td className="p-3">
+                    <button
+                      onClick={() => renvoyer(c)}
+                      disabled={sending[c.id]}
+                      className="text-xs px-3 py-1.5 bg-wikya-blue text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition"
+                    >
+                      {sending[c.id] ? '⏳…' : '📤 Envoyer'}
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ── IMPORT CSV ───────────────────────────────────────────────
 function TabImport({ token }) {
   const [file, setFile] = useState(null);
@@ -1601,6 +1751,7 @@ export default function DashboardAdmin() {
           {activeTab === 'recruteurs' && <TabRecruteurs token={token} />}
           {activeTab === 'avis' && <TabAvis token={token} />}
           {activeTab === 'whatsapp' && <TabWhatsapp token={token} />}
+          {activeTab === 'emails' && <TabEmails token={token} />}
           {activeTab === 'import' && <TabImport token={token} />}
           {activeTab === 'annonces' && <TabAnnonces token={token} />}
           {activeTab === 'abonnements' && <TabAbonnements token={token} />}
